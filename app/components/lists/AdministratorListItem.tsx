@@ -1,4 +1,4 @@
-import { Administrator } from "../../lib/administrator"
+import { Administrator } from "lib/administrator"
 import { Text, View } from "react-native"
 
 

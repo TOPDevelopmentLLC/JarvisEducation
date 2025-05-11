@@ -1,5 +1,5 @@
 import { Text, TouchableOpacity } from "react-native";
-import IconContainer, { IconProps } from "../IconContainer";
+import IconContainer, { IconProps } from "components/IconContainer";
 
 
 export enum LabelLocation {

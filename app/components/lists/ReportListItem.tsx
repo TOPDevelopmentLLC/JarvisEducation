@@ -1,5 +1,5 @@
 import { Text, View } from "react-native";
-import { Report } from "../../lib/report";
+import { Report } from "lib/report";
 
 
 export interface ReportListItemProps {

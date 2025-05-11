@@ -1,5 +1,5 @@
-import { Student } from "../../lib/student"
-import StudentListItem from "./StudentListItem";
+import { Student } from "lib/student"
+import StudentListItem from "components/lists/StudentListItem";
 
 
 export interface StudentListProps {

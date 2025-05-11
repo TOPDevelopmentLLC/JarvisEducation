@@ -1,5 +1,5 @@
-import { Teacher } from "../../lib/teacher";
-import TeacherListItem from "./TeacherListItem";
+import { Teacher } from "lib/teacher";
+import TeacherListItem from "components/lists/TeacherListItem";
 
 
 export interface TeacherListProps {

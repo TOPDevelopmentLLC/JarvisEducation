@@ -1,9 +1,9 @@
 import { useRouter } from "expo-router";
 import { StyleSheet } from "react-native";
-import { IconType } from "../IconContainer";
-import { IconButtonProps } from "../buttons/IconButton";
-import BaseHeader from "../headers/BaseHeader";
-import BasePage from "./BasePage";
+import { IconType } from "components/IconContainer";
+import { IconButtonProps } from "components/buttons/IconButton";
+import BaseHeader from "components/headers/BaseHeader";
+import BasePage from "components/pages/BasePage";
 
 interface MenuHeaderPageProps {
     backgroundColor: string;

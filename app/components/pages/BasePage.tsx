@@ -1,5 +1,5 @@
 import { View, Dimensions, StyleProp, ViewStyle } from "react-native";
-import BaseHeader from "../headers/BaseHeader";
+import BaseHeader from "components/headers/BaseHeader";
 
 export interface BasePageProps {
     backgroundColor: string;

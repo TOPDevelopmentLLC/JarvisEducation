@@ -1,5 +1,5 @@
 import { Text, View } from "react-native";
-import { Teacher } from "../../lib/teacher";
+import { Teacher } from "lib/teacher";
 
 
 export interface TeacherListItemProps {

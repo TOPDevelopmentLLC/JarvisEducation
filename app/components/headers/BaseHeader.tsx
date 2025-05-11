@@ -1,9 +1,7 @@
 import { useRouter } from "expo-router";
 import React from "react";
-import { TouchableOpacity, View, Text, StyleSheet } from "react-native";
-import Ionicons from '@expo/vector-icons/Ionicons';
-import IconContainer, { IconProps, IconType } from "../IconContainer";
-import IconButton, { IconButtonProps } from "../buttons/IconButton";
+import { View, Text, StyleSheet } from "react-native";
+import IconButton, { IconButtonProps } from "components/buttons/IconButton";
 
 interface BaseHeaderProps {
     title?: string;

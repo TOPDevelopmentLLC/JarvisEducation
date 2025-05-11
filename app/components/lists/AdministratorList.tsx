@@ -1,5 +1,5 @@
-import { Administrator } from "../../lib/administrator";
-import AdministratorListItem from "./AdministratorListItem";
+import { Administrator } from "lib/administrator";
+import AdministratorListItem from "components/lists/AdministratorListItem";
 
 
 export interface AdministratorListProps {

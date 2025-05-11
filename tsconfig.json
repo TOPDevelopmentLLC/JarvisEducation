@@ -1,9 +1,13 @@
 {
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
-    "baseUrl": ".",
+    "baseUrl": "./",
     "paths": {
-      "app/*": ["./app/*"]
+      "components/*": ["app/components/*"],
+      "lib/*": ["app/lib/*"],
+      "hook/*": ["app/hooks/*"],
+      "modals/*": ["app/modals/*"],
+      "app/*": ["app/*"]
     }
   },
   "include": [

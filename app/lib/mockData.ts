@@ -1,8 +1,8 @@
-import { Administrator } from "./administrator";
-import { Course } from "./course";
-import { Report, ReportType } from "./report";
-import { Student } from "./student";
-import { Teacher } from "./teacher";
+import { Administrator } from "lib/administrator";
+import { Course } from "lib/course";
+import { Report, ReportType } from "lib/report";
+import { Student } from "lib/student";
+import { Teacher } from "lib/teacher";
 
 export const mockStudentData: Student[] = [
     {

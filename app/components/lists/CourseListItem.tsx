@@ -1,5 +1,5 @@
 import { Text, View } from "react-native";
-import { Course } from "../../lib/course";
+import { Course } from "lib/course";
 
 
 export interface CourseListItemProps {

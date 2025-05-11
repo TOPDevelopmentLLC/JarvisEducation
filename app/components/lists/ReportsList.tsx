@@ -1,5 +1,5 @@
-import { Report } from "../../lib/report";
-import ReportListItem from "./ReportListItem";
+import { Report } from "lib/report";
+import ReportListItem from "components/lists/ReportListItem";
 
 
 export interface ReportsListProps {

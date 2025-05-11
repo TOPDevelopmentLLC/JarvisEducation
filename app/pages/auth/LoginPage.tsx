@@ -1,9 +1,9 @@
 import { useRef, useState } from "react";
-import JarvisButton, { JarvisButtonType } from "../../components/buttons/JarvisButton";
-import JarvisTextInput from "../../components/JarvisTextInput";
+import JarvisButton, { JarvisButtonType } from "components/buttons/JarvisButton";
+import JarvisTextInput from "components/JarvisTextInput";
 import { View, Image, Text, Dimensions } from "react-native";
 import { useRouter } from "expo-router";
-import BasePage from "../../components/pages/BasePage";
+import BasePage from "components/pages/BasePage";
 
 
 const LoginPage = () => {
@@ -29,7 +29,7 @@ const LoginPage = () => {
             }}
         >
             <Image 
-                source={require('../../../assets/images/NegativeJarvisEdLogo.png')}
+                source={require('../assets/images/NegativeJarvisEdLogo.png')}
                 style={{ width: 200, height: 150 }} 
             />
             <JarvisTextInput 

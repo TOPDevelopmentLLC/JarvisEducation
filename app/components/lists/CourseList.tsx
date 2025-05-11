@@ -1,5 +1,5 @@
-import { Course } from "../../lib/course";
-import CourseListItem from "./CourseListItem";
+import { Course } from "lib/course";
+import CourseListItem from "components/lists/CourseListItem";
 
 
 export interface CourseListProps {
