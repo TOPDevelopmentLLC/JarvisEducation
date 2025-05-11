@@ -4,6 +4,7 @@ import JarvisTextInput from "components/JarvisTextInput";
 import { View, Image, Text, Dimensions } from "react-native";
 import { useRouter } from "expo-router";
 import BasePage from "components/pages/BasePage";
+import { Images } from "assets/images";
 
 
 const LoginPage = () => {
@@ -29,7 +30,7 @@ const LoginPage = () => {
             }}
         >
             <Image 
-                source={require('../assets/images/NegativeJarvisEdLogo.png')}
+                source={Images.logo}
                 style={{ width: 200, height: 150 }} 
             />
             <JarvisTextInput 

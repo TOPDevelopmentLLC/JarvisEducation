@@ -1,5 +1,6 @@
 import BasePage from "components/pages/BasePage";
 import { View, Image, Dimensions } from "react-native";
+import { Images } from "assets/images";
 
 
 const SignUpPage = () => {
@@ -11,7 +12,7 @@ const SignUpPage = () => {
             backgroundColor={'#000000'}
         >
             <Image 
-                source={require('../assets/images/NegativeJarvisEdLogo.png')}
+                source={Images.logo}
                 style={{ width: 200, height: 150 }} 
             />
         </BasePage>
