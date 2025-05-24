@@ -24,10 +24,21 @@ const ReportsListPage = () => {
         <MenuHeaderPage 
             backgroundColor={'#000000'}
         >
-            <ReportsList reports={mockReportData} />
+            <ReportsList 
+                style={{
+                    flex: 1, 
+                    padding: 10, 
+                    alignItems: 'center' 
+                }}
+                reports={mockReportData} 
+            />
             <View
                 style={{
                     flexDirection: 'row',
+                    flex: 1,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: 10
                 }}>
                     <JarvisButton 
                         title={"Add"} 

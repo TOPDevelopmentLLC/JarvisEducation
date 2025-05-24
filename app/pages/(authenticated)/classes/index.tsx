@@ -24,10 +24,21 @@ const CourseListPage = () => {
         <MenuHeaderPage 
             backgroundColor={'#000000'}
         >
-            <CourseList courses={mockCourseData} />
+            <CourseList 
+                style={{
+                    flex: 1, 
+                    padding: 10, 
+                    alignItems: 'center' 
+                }}
+                courses={mockCourseData} 
+            />
             <View
                 style={{
                     flexDirection: 'row',
+                    flex: 1,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: 10
                 }}>
                     <JarvisButton 
                         title={"Add"} 

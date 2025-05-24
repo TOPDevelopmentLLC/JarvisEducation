@@ -24,10 +24,21 @@ const AdministratorListPage = () => {
         <MenuHeaderPage 
             backgroundColor={'#000000'}
         >
-            <AdministratorList style={{ flex: 1, padding: 10 }} administrators={mockAdminData} />
+            <AdministratorList 
+                style={{ 
+                    flex: 1, 
+                    padding: 10, 
+                    alignItems: 'center' 
+                }} 
+                administrators={mockAdminData} 
+            />
             <View
                 style={{
                     flexDirection: 'row',
+                    flex: 1,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: 10
                 }}>
                     <JarvisButton 
                         title={"Add"} 
