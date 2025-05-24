@@ -1,25 +1,35 @@
 import { Student } from "lib/student"
 import StudentListItem from "components/lists/StudentListItem";
+import { FlatList, StyleProp, ViewStyle } from "react-native";
 
 
 export interface StudentListProps {
     students: Student[];
+    style?: StyleProp<ViewStyle>;
 }
 
 const StudentList = ({
-    students
+    students,
+    style
 }: StudentListProps) => {
 
+    const handleDetailsButtonPressed = (student: Student) => {
+            
+    }
+
     return (
-        <>
-            {
-                students.map(student => {
-                    return (
-                        <StudentListItem student={student} />
-                    )
-                })
-            }
-        </>
+        <FlatList
+            style={style}
+            data={students}
+            renderItem={data => {
+                return (
+                    <StudentListItem 
+                        student={data.item} 
+                        detailsButtonPressed={handleDetailsButtonPressed}
+                    />
+                )
+            }}
+        />
     )
 }
 

@@ -1,25 +1,35 @@
 import { Course } from "lib/course";
 import CourseListItem from "components/lists/CourseListItem";
+import { FlatList, StyleProp, ViewStyle } from "react-native";
 
 
 export interface CourseListProps {
     courses: Course[];
+    style?: StyleProp<ViewStyle>;
 }
 
 const CourseList = ({
-    courses
+    courses,
+    style
 }: CourseListProps) => {
 
+    const handleDetailsButtonPressed = (course: Course) => {
+    
+    }
+
     return (
-        <>
-            {
-                courses.map(course => {
-                    return (
-                        <CourseListItem course={course} />
-                    )
-                })
-            }
-        </>
+        <FlatList
+            style={style}
+            data={courses}
+            renderItem={data => {
+                return (
+                    <CourseListItem 
+                        course={data.item} 
+                        detailsButtonPressed={handleDetailsButtonPressed}
+                    />
+                )
+            }}
+        />
     )
 }
 

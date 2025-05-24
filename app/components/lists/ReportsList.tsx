@@ -1,25 +1,35 @@
 import { Report } from "lib/report";
 import ReportListItem from "components/lists/ReportListItem";
+import { FlatList, StyleProp, ViewStyle } from "react-native";
 
 
 export interface ReportsListProps {
     reports: Report[];
+    style?: StyleProp<ViewStyle>;
 }
 
 const ReportsList = ({
-    reports
+    reports,
+    style
 }: ReportsListProps) => {
+
+    const handleDetailsButtonPressed = (report: Report) => {
+        
+    }
     
     return (
-        <>
-            {
-                reports.map(report => {
-                    return (
-                        <ReportListItem report={report} />
-                    )
-                })
-            }
-        </>
+        <FlatList
+            style={style}
+            data={reports}
+            renderItem={data => {
+                return (
+                    <ReportListItem 
+                        report={data.item} 
+                        detailsButtonPressed={handleDetailsButtonPressed}
+                    />
+                )
+            }}
+        />
     )
 }
 
