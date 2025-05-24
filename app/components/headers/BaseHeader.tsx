@@ -5,8 +5,8 @@ import IconButton, { IconButtonProps } from "components/buttons/IconButton";
 
 interface BaseHeaderProps {
     title?: string;
-    leftActionIcon?: IconButtonProps;
-    rightActionIcon?: IconButtonProps;
+    leftActionIcon?: IconButtonProps|undefined;
+    rightActionIcon?: IconButtonProps|undefined;
   }
   
 const BaseHeader = ({ 
@@ -18,19 +18,23 @@ const BaseHeader = ({
 
     return (
         <View style={styles.header}>
-            {leftActionIcon && (
-                <IconButton 
-                    iconProps={leftActionIcon.iconProps} 
-                    onIconClicked={leftActionIcon.onIconClicked} 
-                />
-            )}
+            <View style={{ flex: 1 }}>
+                {leftActionIcon && (
+                    <IconButton 
+                        iconProps={leftActionIcon.iconProps} 
+                        onIconClicked={leftActionIcon.onIconClicked} 
+                    />
+                )}
+            </View>
             <Text style={styles.title}>{title}</Text>
-            {rightActionIcon && (
-                <IconButton
-                    iconProps={rightActionIcon.iconProps}
-                    onIconClicked={rightActionIcon.onIconClicked}
-                />
-            )}
+            <View style={{ flex: 1 }}>
+                {rightActionIcon && (
+                    <IconButton
+                        iconProps={rightActionIcon.iconProps}
+                        onIconClicked={rightActionIcon.onIconClicked}
+                    />
+                )}
+            </View>
         </View>
     );
 };
@@ -38,15 +42,15 @@ const BaseHeader = ({
 const styles = StyleSheet.create({
     header: {
       backgroundColor: '#9cb43c',
-      height: 30,
       paddingHorizontal: 15,
       flexDirection: 'row',
-      alignItems: 'center',
       justifyContent: 'center',
     },
     title: {
       fontSize: 18,
       fontWeight: 'bold',
+      alignSelf: 'center',
+      verticalAlign: 'middle'
     },
 });
 

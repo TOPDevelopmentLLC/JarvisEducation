@@ -1,9 +1,10 @@
-import { useRouter } from "expo-router";
+import { useNavigation, useRouter } from "expo-router";
 import { StyleSheet } from "react-native";
 import { IconType } from "components/IconContainer";
 import { IconButtonProps } from "components/buttons/IconButton";
 import BaseHeader from "components/headers/BaseHeader";
 import BasePage from "components/pages/BasePage";
+import { DrawerActions } from "@react-navigation/native";
 
 interface MenuHeaderPageProps {
     backgroundColor: string;
@@ -17,10 +18,10 @@ const MenuHeaderPage: React.FC<React.PropsWithChildren<MenuHeaderPageProps>> = (
     rightActionIcon = undefined,
     children
 }) => {
-    const router = useRouter();
+    const nav = useNavigation();
 
     const handleMenuButtonClicked = () => {
-        //TODO: Open Menu Drawer
+        nav.dispatch(DrawerActions.toggleDrawer());
     }
 
     return (
@@ -31,7 +32,7 @@ const MenuHeaderPage: React.FC<React.PropsWithChildren<MenuHeaderPageProps>> = (
                     iconProps: {
                         name:'menu',
                         size:24,
-                        color:'white',
+                        color:'#000000',
                         type:IconType.Feather
                     },
                     onIconClicked: handleMenuButtonClicked
@@ -46,10 +47,7 @@ const MenuHeaderPage: React.FC<React.PropsWithChildren<MenuHeaderPageProps>> = (
 const styles = StyleSheet.create({
     header: {
       backgroundColor: '#9cb43c',
-      height: 30,
-      paddingHorizontal: 15,
       flexDirection: 'row',
-      alignItems: 'center',
       justifyContent: 'center',
     },
     title: {
