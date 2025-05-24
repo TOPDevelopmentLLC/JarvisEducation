@@ -14,7 +14,7 @@ const LoginPage = () => {
     const username = useRef("");
     const password = useRef("");
     const loginButtonClicked = () => {
-        router.push('/pages/HomePage');
+        router.push('/pages/home');
     }
     const signUpButtonClicked = () => {
         router.push('/pages/auth/SignUpPage');

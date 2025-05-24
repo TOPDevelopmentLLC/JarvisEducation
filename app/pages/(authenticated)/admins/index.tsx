@@ -24,7 +24,7 @@ const AdministratorListPage = () => {
         <MenuHeaderPage 
             backgroundColor={'#000000'}
         >
-            <AdministratorList administrators={mockAdminData} />
+            <AdministratorList style={{ flex: 1, padding: 10 }} administrators={mockAdminData} />
             <View
                 style={{
                     flexDirection: 'row',
