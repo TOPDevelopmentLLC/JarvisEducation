@@ -19,7 +19,7 @@ const AdministratorList = ({
 
     return (
         <FlatList
-            style={style}
+            contentContainerStyle={style}
             data={administrators}
             renderItem={data => {
                 return (

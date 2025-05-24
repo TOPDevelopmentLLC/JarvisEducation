@@ -19,7 +19,7 @@ const ReportsList = ({
     
     return (
         <FlatList
-            style={style}
+            contentContainerStyle={style}
             data={reports}
             renderItem={data => {
                 return (

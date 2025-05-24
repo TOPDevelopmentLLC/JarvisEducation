@@ -19,7 +19,7 @@ const StudentList = ({
 
     return (
         <FlatList
-            style={style}
+            contentContainerStyle={style}
             data={students}
             renderItem={data => {
                 return (
