@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 
 export interface Profile {
   id: string;
@@ -16,6 +16,11 @@ export const ProfileProvider = ({ children }: { children: ReactNode }) => {
 
   //TODO: Call API to get Profile data
   //TODO: Create mock data for profile data
+
+  useEffect(() => {
+    // Mock API call
+    setProfileState({ id: '1', name: 'Jane Doe' });
+  }, []);
 
   return (
     <ProfileContext.Provider value={{ profile }}>
