@@ -3,17 +3,28 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "components/*": ["app/components/*"],
-      "lib/*": ["app/lib/*"],
-      "hook/*": ["app/hooks/*"],
-      "modals/*": ["app/modals/*"],
-      "app/*": ["app/*"],
+      "components/*": [
+        "app/components/*"
+      ],
+      "lib/*": [
+        "app/lib/*"
+      ],
+      "hook/*": [
+        "app/hooks/*"
+      ],
+      "modals/*": [
+        "app/modals/*"
+      ],
+      "app/*": [
+        "app/*"
+      ]
     }
   },
   "include": [
     "**/*.ts",
     "**/*.tsx",
     ".expo/types/**/*.ts",
-    "expo-env.d.ts"
+    "expo-env.d.ts",
+    "nativewind-env.d.ts"
   ]
 }
