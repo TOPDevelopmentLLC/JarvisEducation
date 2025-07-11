@@ -1,6 +1,6 @@
 import { useRouter } from "expo-router";
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text } from "react-native";
 import IconButton, { IconButtonProps } from "components/buttons/IconButton";
 
 interface BaseHeaderProps {
@@ -17,8 +17,8 @@ const BaseHeader = ({
     const router = useRouter();
 
     return (
-        <View style={styles.header}>
-            <View style={{ flex: 1 }}>
+        <View className="px-4 items-center bg-jarvisPrimary flex-row">
+            <View className="flex-1 items-start h-full justify-center">
                 {leftActionIcon && (
                     <IconButton 
                         iconProps={leftActionIcon.iconProps} 
@@ -26,8 +26,8 @@ const BaseHeader = ({
                     />
                 )}
             </View>
-            <Text style={styles.title}>{title}</Text>
-            <View style={{ flex: 1 }}>
+            <Text className="text-xl font-bold">{title}</Text>
+            <View className="flex-1 h-full justify-center items-end">
                 {rightActionIcon && (
                     <IconButton
                         iconProps={rightActionIcon.iconProps}
@@ -38,20 +38,5 @@ const BaseHeader = ({
         </View>
     );
 };
-
-const styles = StyleSheet.create({
-    header: {
-      backgroundColor: '#9cb43c',
-      paddingHorizontal: 15,
-      flexDirection: 'row',
-      justifyContent: 'center',
-    },
-    title: {
-      fontSize: 18,
-      fontWeight: 'bold',
-      alignSelf: 'center',
-      verticalAlign: 'middle'
-    },
-});
 
 export default BaseHeader;

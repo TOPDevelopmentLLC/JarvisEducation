@@ -1,16 +1,16 @@
-import { Report } from "lib/report";
+import { Report } from "lib/models/report";
 import ReportListItem from "components/lists/ReportListItem";
-import { FlatList, StyleProp, ViewStyle } from "react-native";
+import { FlatList } from "react-native";
 
 
 export interface ReportsListProps {
+    className?: string;
     reports: Report[];
-    style?: StyleProp<ViewStyle>;
 }
 
 const ReportsList = ({
+    className,
     reports,
-    style
 }: ReportsListProps) => {
 
     const handleDetailsButtonPressed = (report: Report) => {
@@ -19,7 +19,7 @@ const ReportsList = ({
     
     return (
         <FlatList
-            contentContainerStyle={style}
+            className={className}
             data={reports}
             renderItem={data => {
                 return (

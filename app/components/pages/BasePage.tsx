@@ -1,27 +1,20 @@
-import { View, Dimensions, StyleProp, ViewStyle } from "react-native";
+import { View } from "react-native";
 import BaseHeader from "components/headers/BaseHeader";
+import clsx from "clsx";
 
 export interface BasePageProps {
-    backgroundColor: string;
+    className?: string;
     displayHeader?: boolean;
-    style?: StyleProp<ViewStyle>;
 }
 
 const BasePage: React.FC<React.PropsWithChildren<BasePageProps>> = ({
-    backgroundColor, 
+    className,
     displayHeader = true,
-    style,
     children
 }) => {
-    const windowWidth = Dimensions.get('window').width;
-    const windowHeight = Dimensions.get('window').height;
 
     return (
-        <View style={[{
-            backgroundColor: backgroundColor, 
-            width: windowWidth,
-            height: windowHeight,
-        }, style]}>
+        <View className={clsx(className, "flex-1 w-full h-full bg-black")}>
             {displayHeader && <BaseHeader />}
             {children}
         </View>

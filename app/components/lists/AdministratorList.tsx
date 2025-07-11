@@ -1,16 +1,16 @@
-import { Administrator } from "lib/administrator";
+import { Administrator } from "lib/models/administrator";
 import AdministratorListItem from "components/lists/AdministratorListItem";
-import { FlatList, StyleProp, ViewStyle } from "react-native";
+import { FlatList } from "react-native";
 
 
 export interface AdministratorListProps {
+    className?: string;
     administrators: Administrator[];
-    style?: StyleProp<ViewStyle>;
 }
 
 const AdministratorList = ({
+    className,
     administrators,
-    style
 }: AdministratorListProps) => {
 
     const handleDetailsButtonPressed = (admin: Administrator) => {
@@ -19,7 +19,7 @@ const AdministratorList = ({
 
     return (
         <FlatList
-            contentContainerStyle={style}
+            className={className}
             data={administrators}
             renderItem={data => {
                 return (

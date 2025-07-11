@@ -1,11 +1,12 @@
+import clsx from 'clsx';
 import React from 'react';
-import {StyleSheet, Text, View, Pressable, ViewStyle, StyleProp} from 'react-native';
+import { Text, View, Pressable } from 'react-native';
 
 export interface JarvisButtonProps {
+    className?: string;
     title: string;
     type?: JarvisButtonType;
     onPress: () => void;
-    style?: StyleProp<ViewStyle>;
 }  
 
 export enum JarvisButtonType {
@@ -15,12 +16,17 @@ export enum JarvisButtonType {
 }
 
 const JarvisButton = ({
+    className,
     title,
     type = JarvisButtonType.default,
     onPress,
-    style = {},
 } : JarvisButtonProps ) => {
     const buttonAccessibilityRole="button";
+    const finalClassName = clsx(className, 'items-center rounded-lg', {
+        'p-3 text-xs': type === JarvisButtonType.detail,
+        'bg-transparent text-base': type === JarvisButtonType.transparent,
+        'px-8 py-4 text-base bg-jarvisPrimary': type === JarvisButtonType.default
+    })
     
     var finalButton;
     switch (type) {
@@ -28,19 +34,12 @@ const JarvisButton = ({
             finalButton = (
                 <View>
                     <Pressable 
+                        className={finalClassName}
                         onPress={onPress}
                         accessible={true}
                         accessibilityRole={buttonAccessibilityRole}
-                        accessibilityLabel={title}
-                        style={
-                            ({pressed}) => [
-                                {
-                                    backgroundColor: pressed ? '#8080c2' : '#000085'
-                                }, 
-                                styles.detailButtonContainer,
-                                style
-                            ]}>
-                        <Text style={styles.detailButtonText}>{title}</Text>
+                        accessibilityLabel={title}>
+                        <Text className='text-white'>{title}</Text>
                     </Pressable>
                 </View>
             )
@@ -49,15 +48,12 @@ const JarvisButton = ({
             finalButton = (
                 <View>
                     <Pressable 
+                        className={finalClassName}
                         onPress={onPress}
                         accessible={true}
                         accessibilityRole={buttonAccessibilityRole}
-                        accessibilityLabel={title}
-                        style={[
-                            styles.transparentButtonContainer,
-                            style
-                        ]}>
-                        <Text style={styles.transparentButtonText}>{title}</Text>
+                        accessibilityLabel={title}>
+                        <Text className='text-jarvisPrimary'>{title}</Text>
                     </Pressable>
                 </View>
             )
@@ -66,19 +62,12 @@ const JarvisButton = ({
             finalButton = (
                 <View>
                     <Pressable 
+                        className={finalClassName}
                         onPress={onPress}
                         accessible={true}
                         accessibilityRole={buttonAccessibilityRole}
-                        accessibilityLabel={title}
-                        style={
-                            ({pressed}) => [
-                                {
-                                    backgroundColor: pressed ? '#ceda9e' : '#9cb43c'
-                                }, 
-                                styles.buttonContainer,
-                                style
-                            ]}>
-                        <Text style={styles.buttonText}>{title}</Text>
+                        accessibilityLabel={title}>
+                        <Text className='text-black'>{title}</Text>
                     </Pressable>
                 </View>
             )
@@ -89,32 +78,3 @@ const JarvisButton = ({
 };
 
 export default JarvisButton;
-
-const styles = StyleSheet.create({
-    buttonContainer: {
-        alignItems: 'center',
-        borderRadius: 5,
-        padding: 15,
-    },
-    detailButtonContainer: {
-        alignItems: 'center',
-        borderRadius: 5,
-        padding: 5,
-    },
-    transparentButtonContainer: {
-        alignItems: 'center',
-        backgroundColor: 'rgba(0,0,0,1)'
-    },
-    buttonText: {
-        color: 'black',
-        fontSize: 16,
-    },
-    detailButtonText: {
-        color: 'white',
-        fontSize: 12,
-    },
-    transparentButtonText: {
-        color: '#9cb43c',
-        fontSize: 16,
-    }
-});

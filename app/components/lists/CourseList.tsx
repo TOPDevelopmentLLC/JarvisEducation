@@ -1,16 +1,16 @@
-import { Course } from "lib/course";
+import { Course } from "lib/models/course";
 import CourseListItem from "components/lists/CourseListItem";
-import { FlatList, StyleProp, ViewStyle } from "react-native";
+import { FlatList } from "react-native";
 
 
 export interface CourseListProps {
+    className?: string;
     courses: Course[];
-    style?: StyleProp<ViewStyle>;
 }
 
 const CourseList = ({
+    className,
     courses,
-    style
 }: CourseListProps) => {
 
     const handleDetailsButtonPressed = (course: Course) => {
@@ -19,7 +19,7 @@ const CourseList = ({
 
     return (
         <FlatList
-            contentContainerStyle={style}
+            className={className}
             data={courses}
             renderItem={data => {
                 return (

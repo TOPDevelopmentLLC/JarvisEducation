@@ -1,17 +1,18 @@
+import clsx from 'clsx';
 import React, { useState } from 'react';
-import { StyleProp, TextInput, TextStyle } from "react-native";
+import { TextInput } from "react-native";
 
 export interface JarvisTextInputProps {
+    className?: string;
     placeholder: string;
     autoFocus?: boolean;
-    style?: StyleProp<TextStyle>;
     onTextChange: (value:string) => void;
 }
 
 const JarvisTextInput = ({
+    className,
     placeholder,
     autoFocus = false,
-    style = {},
     onTextChange
 } : JarvisTextInputProps) => {
     const [isSelected,setSelected] = useState(autoFocus);
@@ -19,21 +20,14 @@ const JarvisTextInput = ({
 
     return (
         <TextInput 
+            className={clsx(className, 'rounded-lg pl-8 text-black text-left h-12 bg-white')}
             placeholder={placeholder}
             placeholderTextColor='grey'
             autoFocus={autoFocus}
             onBlur={() => setSelected(false)}
             onFocus={() => setSelected(true)}
             onChangeText={(text) => { onTextChange(text) }}
-            style={[{
-                height:50,
-                backgroundColor:'#FFFFFF',
-                borderRadius:5,
-                textAlign: "left",
-                color: 'black',
-                paddingLeft:15
-            }, style]}>
-        </TextInput>
+        />
     )
 }
 

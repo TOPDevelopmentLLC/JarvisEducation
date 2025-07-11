@@ -1,19 +1,15 @@
 import BasePage from "components/pages/BasePage";
-import { View, Image, Dimensions } from "react-native";
+import { Image } from "react-native";
 import { Images } from "assets/images";
 
 
 const SignUpPage = () => {
-    const windowWidth = Dimensions.get('window').width;
-    const windowHeight = Dimensions.get('window').height;
 
     return (
-        <BasePage
-            backgroundColor={'#000000'}
-        >
+        <BasePage>
             <Image 
+                className="w-1/2 h-1/12"
                 source={Images.logo}
-                style={{ width: 200, height: 150 }} 
             />
         </BasePage>
     );

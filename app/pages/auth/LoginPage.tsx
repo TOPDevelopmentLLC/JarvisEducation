@@ -1,15 +1,13 @@
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import JarvisButton, { JarvisButtonType } from "components/buttons/JarvisButton";
 import JarvisTextInput from "components/JarvisTextInput";
-import { View, Image, Text, Dimensions } from "react-native";
+import { View, Image, Text } from "react-native";
 import { useRouter } from "expo-router";
 import BasePage from "components/pages/BasePage";
 import { Images } from "assets/images";
 
 
 const LoginPage = () => {
-    const windowWidth = Dimensions.get('window').width;
-    const windowHeight = Dimensions.get('window').height;
     const router = useRouter();
     const username = useRef("");
     const password = useRef("");
@@ -22,52 +20,35 @@ const LoginPage = () => {
 
     return (
         <BasePage
-            backgroundColor={'#000000'}
+            className="items-center"
             displayHeader={false}
-            style={{
-                alignItems: "center", 
-                justifyContent: "center",
-            }}
         >
-            <Image 
-                source={Images.logo}
-                style={{ width: 200, height: 150 }} 
-            />
+            <View className="w-60 h-32 bg-red-200">
+                <Image
+                    className="w-[10%] h-[25%]"
+                    source={Images.logo}
+                    resizeMode="contain"
+                />
+            </View>
             <JarvisTextInput 
-                placeholder={"Username"}  
-                style={{
-                    width: windowWidth * 0.8,
-                    marginTop: 10,
-                }}          
+                className="mt-5 w-[80%]"
+                placeholder={"Username"}         
                 onTextChange={(value) => {username.current = value}}
             />
             <JarvisTextInput 
-                placeholder={"Password"}  
-                style={{
-                    width: windowWidth * 0.8,
-                    marginTop: 10,
-                }}          
+                className="mt-5 w-[80%]"
+                placeholder={"Password"}
                 onTextChange={(value) => {password.current = value}}
             />
             <JarvisButton 
+                className="mt-5 w-[80%]"
                 title={"Login"} 
                 onPress={loginButtonClicked} 
-                style={{
-                    width: windowWidth * 0.8,
-                    marginTop: 10,
-                }}
             />
-            <View
-                style={{
-                    flexDirection: "row",
-                    marginTop: 20
-                }}
-            >
-                <Text style={{
-                    color: 'lightgray',
-                    marginRight: 10,
-                    fontSize: 16
-                }}>Don't have an account yet?</Text>
+            <View className="flex-row items-center mt-10">
+                <Text
+                    className="mr-5 text-base text-gray-300"
+                >Don't have an account yet?</Text>
                 <JarvisButton 
                 title={"Sign Up"} 
                 onPress={signUpButtonClicked} 

@@ -1,13 +1,11 @@
+import JarvisFAB from "components/JarvisFAB";
 import MenuHeaderPage from "components/pages/MenuHeaderPage";
 
 
 const HomePage = () => {
     return (
-        <MenuHeaderPage 
-            backgroundColor={'#000000'}
-            title="Home"
-        >
-
+        <MenuHeaderPage title="Home">
+            
         </MenuHeaderPage>
     )
 }
