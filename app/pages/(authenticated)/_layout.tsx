@@ -1,9 +1,13 @@
 import { Drawer } from 'expo-router/drawer';
+import React from 'react';
+import AuthenticatedDrawer from 'components/AuthenticatedDrawer';
 
 export default function AuthenticatedDrawerLayout() {
+  
   return (
   <Drawer
     screenOptions={{ headerShown: false }}
+    drawerContent={(props) => <AuthenticatedDrawer {...props} />}
   >
     <Drawer.Screen
       name="home/index"
@@ -33,5 +37,6 @@ export default function AuthenticatedDrawerLayout() {
       name="settings/index"
       options={{ drawerLabel: 'Settings', title: '' }}
     />
-  </Drawer>);
+  </Drawer>
+  );
 }
