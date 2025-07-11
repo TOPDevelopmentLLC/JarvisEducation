@@ -1,58 +1,30 @@
-import { View } from "react-native";
 import ReportsList from "components/lists/ReportsList";
 import MenuHeaderPage from "components/pages/MenuHeaderPage";
 import { mockReportData } from "lib/mockData";
-import JarvisButton from "components/buttons/JarvisButton";
-
+import JarvisFAB from "components/JarvisFAB";
+import { router } from 'expo-router';
 
 const ReportsListPage = () => {
 
     const handleAddButtonPressed = () => {
-
+        router.push('/pages/reports/NewReportPage');
     }
 
     const handleEditButtonPressed = () => {
-        
+        //todo: check if user is owner of report before allowing edits
+        router.push('/pages/reports/ReportDetailsPage');
     }
-
-    const handleDeleteButtonPressed = () => {
-        
-    }
-
 
     return (
-        <MenuHeaderPage 
-            backgroundColor={'#000000'}
-        >
+        <MenuHeaderPage>
             <ReportsList 
-                style={{
-                    flex: 1, 
-                    padding: 10, 
-                    alignItems: 'center' 
-                }}
+                className="flex-1 p-5 items-center"
                 reports={mockReportData} 
             />
-            <View
-                style={{
-                    flexDirection: 'row',
-                    flex: 1,
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: 10
-                }}>
-                    <JarvisButton 
-                        title={"Add"} 
-                        onPress={handleAddButtonPressed} 
-                    />
-                    <JarvisButton 
-                        title={"Edit"} 
-                        onPress={handleEditButtonPressed} 
-                    />
-                    <JarvisButton 
-                        title={"Delete"} 
-                        onPress={handleDeleteButtonPressed} 
-                    />
-            </View>
+            <JarvisFAB
+                handleAddButtonPressed={handleAddButtonPressed}
+                handleEditButtonPressed={handleEditButtonPressed}
+            />
         </MenuHeaderPage>
     )
 }

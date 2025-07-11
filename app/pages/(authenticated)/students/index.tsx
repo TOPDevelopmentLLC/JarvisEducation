@@ -1,58 +1,38 @@
-import { View } from "react-native";
 import StudentList from "components/lists/StudentList";
 import MenuHeaderPage from "components/pages/MenuHeaderPage";
 import { mockStudentData } from "lib/mockData";
-import JarvisButton from "components/buttons/JarvisButton";
+import JarvisFAB from "components/JarvisFAB";
+import { router } from 'expo-router';
+import { useState } from "react";
+import AddStudentModal from "components/modals/AddStudentModal";
 
 
 const StudentListPage = () => {
+    const [addStudentModalIsVisible,setAddStudentModalIsVisible] = useState(false);
 
     const handleAddButtonPressed = () => {
-
+        setAddStudentModalIsVisible(true);
     }
 
     const handleEditButtonPressed = () => {
-        
+        //todo: pass params to allow user to edit student
+        router.push('/pages/students/StudentDetailsPage');
     }
-
-    const handleDeleteButtonPressed = () => {
-        
-    }
-
 
     return (
-        <MenuHeaderPage 
-            backgroundColor={'#000000'}
-        >
+        <MenuHeaderPage>
             <StudentList 
-                style={{
-                    flex: 1, 
-                    padding: 10, 
-                    alignItems: 'center' 
-                }}
+                className="flex-1 p-5 items-center"
                 students={mockStudentData} 
             />
-            <View
-                style={{
-                    flexDirection: 'row',
-                    flex: 1,
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: 10
-                }}>
-                    <JarvisButton 
-                        title={"Add"} 
-                        onPress={handleAddButtonPressed} 
-                    />
-                    <JarvisButton 
-                        title={"Edit"} 
-                        onPress={handleEditButtonPressed} 
-                    />
-                    <JarvisButton 
-                        title={"Delete"} 
-                        onPress={handleDeleteButtonPressed} 
-                    />
-            </View>
+            <AddStudentModal 
+                isVisible={addStudentModalIsVisible} 
+                onDismiss={() => setAddStudentModalIsVisible(false)}
+            />
+            <JarvisFAB
+                handleAddButtonPressed={handleAddButtonPressed}
+                handleEditButtonPressed={handleEditButtonPressed}
+            />
         </MenuHeaderPage>
     )
 }
