@@ -11,16 +11,17 @@ export default function JarvisFAB({
     handleEditButtonPressed
 }: JarvisFABProps) {
     const [isFABOpen,setIsFABOpen] = useState(false);
+
+    const actions = [];
+    if (handleAddButtonPressed) actions.push({ icon: 'plus', onPress: handleAddButtonPressed });
+    if (handleEditButtonPressed) actions.push({ icon: 'circle-edit-outline', onPress: handleEditButtonPressed })
     
     return (
         <FAB.Group
             open={isFABOpen}
             icon={isFABOpen ? 'close' : 'plus'}
             visible={true}
-            actions={[
-                { icon: 'circle-edit-outline', onPress: handleEditButtonPressed },
-                { icon: 'plus', onPress: handleAddButtonPressed },
-            ]}
+            actions={actions}
             onStateChange={({open}) => setIsFABOpen(open)}
             color={'#000000'}
             fabStyle={{
