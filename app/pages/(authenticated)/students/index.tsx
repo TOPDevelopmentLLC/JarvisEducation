@@ -21,10 +21,7 @@ const StudentListPage = () => {
 
     return (
         <MenuHeaderPage>
-            <StudentList 
-                className="flex-1 p-5 items-center"
-                students={mockStudentData} 
-            />
+            <StudentList students={mockStudentData} />
             <AddStudentModal 
                 isVisible={addStudentModalIsVisible} 
                 onDismiss={() => setAddStudentModalIsVisible(false)}

@@ -1,6 +1,6 @@
 import { Text, View } from "react-native";
 import { Course } from "lib/models/course";
-import JarvisButton from "components/buttons/JarvisButton";
+import JarvisButton, { JarvisButtonType } from "components/buttons/JarvisButton";
 import clsx from "clsx";
 
 
@@ -17,9 +17,15 @@ const CourseListItem = ({
 }: CourseListItemProps) => {
 
     return (
-        <View className={clsx(className, 'flex-row items-center')}>
-            <Text className="text-white">{course.title}</Text>
-            <JarvisButton title={"Details"} onPress={() => detailsButtonPressed(course)} />
+        <View className="w-screen items-center">
+            <View className={clsx("flex-row items-center w-1/2 bg-listItemBackgroundColor rounded-lg p-2 my-1 justify-between", className)}>
+                <Text className="">{course.title}</Text>
+                <JarvisButton 
+                    type={JarvisButtonType.transparentBorder} 
+                    title={"Details"} 
+                    onPress={() => detailsButtonPressed(course)} 
+                />
+            </View>
         </View>
     )
 }

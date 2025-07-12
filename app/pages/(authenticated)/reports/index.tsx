@@ -17,10 +17,7 @@ const ReportsListPage = () => {
 
     return (
         <MenuHeaderPage>
-            <ReportsList 
-                className="flex-1 p-5 items-center"
-                reports={mockReportData} 
-            />
+            <ReportsList reports={mockReportData} />
             <JarvisFAB
                 handleAddButtonPressed={handleAddButtonPressed}
                 handleEditButtonPressed={handleEditButtonPressed}

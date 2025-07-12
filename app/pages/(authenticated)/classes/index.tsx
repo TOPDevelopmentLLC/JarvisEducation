@@ -17,10 +17,7 @@ const CourseListPage = () => {
 
     return (
         <MenuHeaderPage>
-            <CourseList 
-                className="flex-1 p-5 items-center"
-                courses={mockCourseData} 
-            />
+            <CourseList courses={mockCourseData} />
             <JarvisFAB
                 handleAddButtonPressed={handleAddButtonPressed}
                 handleEditButtonPressed={handleEditButtonPressed}
