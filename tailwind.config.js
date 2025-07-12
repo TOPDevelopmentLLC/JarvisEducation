@@ -6,6 +6,7 @@ module.exports = {
       colors: {
         jarvisPrimary: '#9cb43c',
         listItemBackgroundColor: '#ceda9e',
+        selectedListItemBackgroundColor: '#8080c2',
         unpressedDetailButton: '#000085',
         pressedDetailButton: '#8080c2',
         pressedDefaultButton: '#ceda9e',

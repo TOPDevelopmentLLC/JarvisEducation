@@ -1,6 +1,7 @@
 
 
 export interface Report {
+    reportId: string;
     type: ReportType;
     description?: string;
 }
