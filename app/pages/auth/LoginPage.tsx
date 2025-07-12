@@ -21,40 +21,37 @@ const LoginPage = () => {
     return (
         <BasePage
             className="items-center"
-            displayHeader={false}
-        >
-            <View className="w-60 h-32 bg-red-200">
-                <Image
-                    className="w-[10%] h-[25%]"
-                    source={Images.logo}
-                    resizeMode="contain"
+            displayHeader={false}>
+                <View className="w-60 h-32 bg-red-200">
+                    <Image
+                        className="w-[10%] h-[25%]"
+                        source={Images.logo}
+                        resizeMode="contain"
+                    />
+                </View>
+                <JarvisTextInput 
+                    className="mt-5 w-[80%]"
+                    placeholder={"Username"}         
+                    onTextChange={(value) => {username.current = value}}
                 />
-            </View>
-            <JarvisTextInput 
-                className="mt-5 w-[80%]"
-                placeholder={"Username"}         
-                onTextChange={(value) => {username.current = value}}
-            />
-            <JarvisTextInput 
-                className="mt-5 w-[80%]"
-                placeholder={"Password"}
-                onTextChange={(value) => {password.current = value}}
-            />
-            <JarvisButton 
-                className="mt-5 w-[80%]"
-                title={"Login"} 
-                onPress={loginButtonClicked} 
-            />
-            <View className="flex-row items-center mt-10">
-                <Text
-                    className="mr-5 text-base text-gray-300"
-                >Don't have an account yet?</Text>
+                <JarvisTextInput 
+                    className="mt-5 w-[80%]"
+                    placeholder={"Password"}
+                    onTextChange={(value) => {password.current = value}}
+                />
                 <JarvisButton 
-                title={"Sign Up"} 
-                onPress={signUpButtonClicked} 
-                type={JarvisButtonType.transparent}
-            />
-            </View>
+                    className="mt-5 w-[80%]"
+                    title={"Login"} 
+                    onPress={loginButtonClicked} 
+                />
+                <View className="flex-row items-center mt-10">
+                    <Text className="mr-5 text-base text-gray-300">Don't have an account yet?</Text>
+                    <JarvisButton 
+                        title={"Sign Up"} 
+                        onPress={signUpButtonClicked} 
+                        type={JarvisButtonType.transparent}
+                    />
+                </View>
         </BasePage>
     );
 
