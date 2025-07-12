@@ -12,7 +12,8 @@ export interface JarvisButtonProps {
 export enum JarvisButtonType {
     default,
     detail,
-    transparent
+    transparent,
+    transparentBorder
 }
 
 const JarvisButton = ({
@@ -25,6 +26,7 @@ const JarvisButton = ({
     const finalClassName = clsx(className, 'items-center rounded-lg', {
         'p-3 text-xs': type === JarvisButtonType.detail,
         'bg-transparent text-base': type === JarvisButtonType.transparent,
+        'bg-transparent text-base border-black border-2 p-2': type === JarvisButtonType.transparentBorder,
         'px-8 py-4 text-base bg-jarvisPrimary': type === JarvisButtonType.default
     })
     
@@ -54,6 +56,20 @@ const JarvisButton = ({
                         accessibilityRole={buttonAccessibilityRole}
                         accessibilityLabel={title}>
                         <Text className='text-jarvisPrimary'>{title}</Text>
+                    </Pressable>
+                </View>
+            )
+            break;
+        case JarvisButtonType.transparentBorder:
+            finalButton = (
+                <View>
+                    <Pressable 
+                        className={finalClassName}
+                        onPress={onPress}
+                        accessible={true}
+                        accessibilityRole={buttonAccessibilityRole}
+                        accessibilityLabel={title}>
+                        <Text className='text-black'>{title}</Text>
                     </Pressable>
                 </View>
             )

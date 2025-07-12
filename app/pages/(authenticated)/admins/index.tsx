@@ -20,10 +20,7 @@ const AdministratorListPage = () => {
 
     return (
         <MenuHeaderPage>
-            <AdministratorList 
-                className="flex-1 p-5 items-center"
-                administrators={mockAdminData} 
-            />
+            <AdministratorList administrators={mockAdminData} />
             <AddAdminModal 
                 isVisible={addAdminModalIsVisible} 
                 onDismiss={() => setAddAdminModalIsVisible(false)}

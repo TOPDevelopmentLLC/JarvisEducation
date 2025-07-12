@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import JarvisButton from "components/buttons/JarvisButton";
+import JarvisButton, { JarvisButtonType } from "components/buttons/JarvisButton";
 import { Administrator } from "lib/models/administrator"
 import { Text, View } from "react-native"
 
@@ -17,9 +17,15 @@ const AdministratorListItem = ({
 }: AdministratorListItemProps) => {
 
     return (
-        <View className={clsx("flex-row items-center")}>
-            <Text className="text-white">{admin.name}</Text>
-            <JarvisButton title={"Details"} onPress={() => detailsButtonPressed(admin)} />
+        <View className="w-screen items-center">
+            <View className={clsx("flex-row items-center w-1/2 bg-listItemBackgroundColor rounded-lg p-2 my-1 justify-between", className)}>
+                <Text className="">{admin.name}</Text>
+                <JarvisButton 
+                    type={JarvisButtonType.transparentBorder} 
+                    title={"Details"} 
+                    onPress={() => detailsButtonPressed(admin)} 
+                />
+            </View>
         </View>
     )
 }
