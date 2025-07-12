@@ -19,7 +19,7 @@ const AdministratorListPage = () => {
     }
 
     return (
-        <MenuHeaderPage>
+        <MenuHeaderPage title="Administrators">
             <AdministratorList administrators={mockAdminData} />
             <AddAdminModal 
                 isVisible={addAdminModalIsVisible} 

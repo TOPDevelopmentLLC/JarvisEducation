@@ -20,7 +20,7 @@ const TeacherListPage = () => {
     }
 
     return (
-        <MenuHeaderPage>
+        <MenuHeaderPage title="Teachers">
             <TeacherList teachers={mockTeacherData} />
             <AddTeacherModal 
                 isVisible={addTeacherModalIsVisible} 

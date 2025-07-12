@@ -16,7 +16,7 @@ const ReportsListPage = () => {
     }
 
     return (
-        <MenuHeaderPage>
+        <MenuHeaderPage title="Reports">
             <ReportsList reports={mockReportData} />
             <JarvisFAB
                 handleAddButtonPressed={handleAddButtonPressed}

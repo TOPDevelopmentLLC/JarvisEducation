@@ -16,7 +16,7 @@ const CourseListPage = () => {
     }
 
     return (
-        <MenuHeaderPage>
+        <MenuHeaderPage title="Class Catalogue">
             <CourseList courses={mockCourseData} />
             <JarvisFAB
                 handleAddButtonPressed={handleAddButtonPressed}
