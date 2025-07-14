@@ -2,17 +2,27 @@ import { Course } from "lib/models/course";
 import { createContext, ReactNode, useContext, useState } from "react";
 
 
-const CourseContext = createContext(null);
-
-export const CourseProvider = ({ children }: {children:ReactNode}) => {
-    const [selectedCourse,setSelectedCourse] = useState<Course|null>(null);
-
-      return (
-        <CourseContext.Provider value={{ selectedCourse, setSelectedCourse }}>
-            {children}
-        </CourseContext.Provider>
-      )
-      
+interface CourseContextType {
+  selectedCourse: Course | null;
+  setSelectedCourse: (course: Course | null) => void;
 }
 
-export const useSelectedCourse = () => useContext(CourseContext);
+const CourseContext = createContext<CourseContextType|undefined>(undefined);
+
+export const CourseProvider = ({ children }: {children:ReactNode}) => {
+  const [selectedCourse,setSelectedCourse] = useState<Course|null>(null);
+
+  return (
+    <CourseContext.Provider value={{ selectedCourse, setSelectedCourse }}>
+      {children}
+    </CourseContext.Provider>
+  ) 
+}
+
+export const useStoredCourseData = (): CourseContextType => {
+  const context = useContext(CourseContext);
+  if (!context) {
+    throw new Error('useStoredCourseData must be used within a CourseProvider');
+  }
+  return context;
+}
