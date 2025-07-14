@@ -2,6 +2,7 @@ import { Administrator } from "lib/models/administrator";
 import AdministratorListItem from "components/lists/AdministratorListItem";
 import { FlatList } from "react-native";
 import { useState } from "react";
+import { useStoredAdminData } from "components/contexts/AdminContext";
 
 
 export interface AdministratorListProps {
@@ -13,17 +14,17 @@ const AdministratorList = ({
     className,
     administrators,
 }: AdministratorListProps) => {
-    const [selectedId, setSelectedId] = useState<string|null>(null);
+    const { selectedAdmin, setSelectedAdmin } = useStoredAdminData();
 
     const handleDetailsButtonPressed = (admin: Administrator) => {
 
     }
 
-    const handleListItemClicked = (adminId:string) => {
-        if (selectedId === adminId) {
-            setSelectedId(null);
+    const handleListItemClicked = (admin: Administrator) => {
+        if (selectedAdmin?.adminId === admin.adminId) {
+            setSelectedAdmin(null);
         } else {
-            setSelectedId(adminId);
+            setSelectedAdmin(admin);
         }
     }
 
@@ -35,10 +36,10 @@ const AdministratorList = ({
             renderItem={data => {
                 return (
                     <AdministratorListItem 
-                        className={data.item.adminId === selectedId ? 'bg-selectedListItemBackgroundColor' : 'bg-listItemBackgroundColor'}
+                        className={data.item.adminId === selectedAdmin?.adminId ? 'bg-selectedListItemBackgroundColor' : 'bg-listItemBackgroundColor'}
                         admin={data.item} 
                         detailsButtonPressed={handleDetailsButtonPressed}
-                        onListItemClicked={() => handleListItemClicked(data.item.adminId)}
+                        onListItemClicked={() => handleListItemClicked(data.item)}
                     />
                 )
             }}

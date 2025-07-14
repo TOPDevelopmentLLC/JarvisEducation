@@ -5,16 +5,22 @@ import JarvisFAB from "components/JarvisFAB";
 import { router } from 'expo-router';
 import AddAdminModal from "components/modals/AddAdminModal";
 import { useState } from "react";
+import { useStoredAdminData } from "components/contexts/AdminContext";
 
 
 const AdministratorListPage = () => {
     const [addAdminModalIsVisible,setAddAdminModalIsVisible] = useState(false);
+    const { selectedAdmin } = useStoredAdminData();
 
     const handleAddButtonPressed = () => {
         setAddAdminModalIsVisible(true);
     }
 
     const handleEditButtonPressed = () => {
+        if (selectedAdmin === null) {
+            //todo: display error to the user
+            return;
+        }
         router.push('/pages/admins/AdministratorDetailsPage');
     }
 

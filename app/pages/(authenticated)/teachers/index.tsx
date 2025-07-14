@@ -5,17 +5,22 @@ import JarvisFAB from "components/JarvisFAB";
 import { router } from 'expo-router';
 import AddTeacherModal from "components/modals/AddTeacherModal";
 import { useState } from "react";
+import { useStoredTeacherData } from "components/contexts/TeacherContext";
 
 
 const TeacherListPage = () => {
     const [addTeacherModalIsVisible,setAddTeacherModalIsVisible] = useState(false);
+    const { selectedTeacher } = useStoredTeacherData();
 
     const handleAddButtonPressed = () => {
         setAddTeacherModalIsVisible(true);
     }
 
     const handleEditButtonPressed = () => {
-        //todo: pass params to allow the user to edit the teacher
+        if (selectedTeacher === null) {
+            //todo: display error to the user
+            return;
+        }
         router.push('/pages/teachers/TeacherDetailsPage');
     }
 

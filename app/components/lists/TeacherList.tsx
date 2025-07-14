@@ -1,7 +1,7 @@
 import { Teacher } from "lib/models/teacher";
 import TeacherListItem from "components/lists/TeacherListItem";
 import { FlatList } from "react-native";
-import { useState } from "react";
+import { useStoredTeacherData } from "components/contexts/TeacherContext";
 
 
 export interface TeacherListProps {
@@ -13,17 +13,17 @@ const TeacherList = ({
     className,
     teachers,
 }: TeacherListProps) => {
-    const [selectedId, setSelectedId] = useState<string|null>(null);
+    const { selectedTeacher, setSelectedTeacher } = useStoredTeacherData();
 
     const handleDetailsButtonPressed = (teacher: Teacher) => {
                 
     }
 
-    const handleListItemClicked = (adminId:string) => {
-        if (selectedId === adminId) {
-            setSelectedId(null);
+    const handleListItemClicked = (teacher:Teacher) => {
+        if (selectedTeacher?.teacherId === teacher.teacherId) {
+            setSelectedTeacher(null);
         } else {
-            setSelectedId(adminId);
+            setSelectedTeacher(teacher);
         }
     }
 
@@ -35,10 +35,10 @@ const TeacherList = ({
             renderItem={data => {
                 return (
                     <TeacherListItem 
-                        className={data.item.teacherId === selectedId ? 'bg-selectedListItemBackgroundColor' : 'bg-listItemBackgroundColor'}
+                        className={data.item.teacherId === selectedTeacher?.teacherId ? 'bg-selectedListItemBackgroundColor' : 'bg-listItemBackgroundColor'}
                         teacher={data.item} 
                         detailsButtonPressed={handleDetailsButtonPressed}
-                        onListItemClicked={() => handleListItemClicked(data.item.teacherId)}
+                        onListItemClicked={() => handleListItemClicked(data.item)}
                     />
                 )
             }}

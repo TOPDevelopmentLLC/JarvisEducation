@@ -3,15 +3,20 @@ import MenuHeaderPage from "components/pages/MenuHeaderPage";
 import { mockReportData } from "lib/mockData";
 import JarvisFAB from "components/JarvisFAB";
 import { router } from 'expo-router';
+import { useStoredReportData } from "components/contexts/ReportContext";
 
 const ReportsListPage = () => {
+    const { selectedReport } = useStoredReportData();
 
     const handleAddButtonPressed = () => {
         router.push('/pages/reports/NewReportPage');
     }
 
     const handleEditButtonPressed = () => {
-        //todo: check if user is owner of report before allowing edits
+        if (selectedReport === null) {
+            //todo: display error to user
+            return;
+        }
         router.push('/pages/reports/ReportDetailsPage');
     }
 

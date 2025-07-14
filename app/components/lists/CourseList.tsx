@@ -1,7 +1,7 @@
 import { Course } from "lib/models/course";
 import CourseListItem from "components/lists/CourseListItem";
 import { FlatList } from "react-native";
-import { useState } from "react";
+import { useStoredCourseData } from "components/contexts/CourseContext";
 
 
 export interface CourseListProps {
@@ -13,17 +13,17 @@ const CourseList = ({
     className,
     courses,
 }: CourseListProps) => {
-    const [selectedId, setSelectedId] = useState<string|null>(null);
+    const { selectedCourse, setSelectedCourse } = useStoredCourseData();
 
     const handleDetailsButtonPressed = (course: Course) => {
     
     }
 
-    const handleListItemClicked = (adminId:string) => {
-        if (selectedId === adminId) {
-            setSelectedId(null);
+    const handleListItemClicked = (course: Course) => {
+        if (selectedCourse?.courseId === course.courseId) {
+            setSelectedCourse(null);
         } else {
-            setSelectedId(adminId);
+            setSelectedCourse(course);
         }
     }
 
@@ -35,10 +35,10 @@ const CourseList = ({
             renderItem={data => {
                 return (
                     <CourseListItem 
-                        className={data.item.courseId === selectedId ? 'bg-selectedListItemBackgroundColor' : 'bg-listItemBackgroundColor'}
+                        className={data.item.courseId === selectedCourse?.courseId ? 'bg-selectedListItemBackgroundColor' : 'bg-listItemBackgroundColor'}
                         course={data.item} 
                         detailsButtonPressed={handleDetailsButtonPressed}
-                        onListItemClicked={() => handleListItemClicked(data.item.courseId)}
+                        onListItemClicked={() => handleListItemClicked(data.item)}
                     />
                 )
             }}

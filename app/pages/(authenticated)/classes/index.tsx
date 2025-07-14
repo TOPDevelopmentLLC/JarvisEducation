@@ -3,8 +3,10 @@ import MenuHeaderPage from "components/pages/MenuHeaderPage";
 import { mockCourseData } from "lib/mockData";
 import JarvisFAB from "components/JarvisFAB";
 import { router } from 'expo-router';
+import { useStoredCourseData } from "components/contexts/CourseContext";
 
 const CourseListPage = () => {
+    const { selectedCourse } = useStoredCourseData();
 
     const handleAddButtonPressed = () => {
         //todo: pass params to edit page
@@ -12,6 +14,10 @@ const CourseListPage = () => {
     }
 
     const handleEditButtonPressed = () => {
+        if (selectedCourse === null) {
+            //todo: display error to user
+            return;
+        }
         router.push('/pages/classes/CourseDetailsPage');
     }
 

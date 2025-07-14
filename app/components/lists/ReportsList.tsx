@@ -1,7 +1,7 @@
 import { Report } from "lib/models/report";
 import ReportListItem from "components/lists/ReportListItem";
 import { FlatList } from "react-native";
-import { useState } from "react";
+import { useStoredReportData } from "components/contexts/ReportContext";
 
 
 export interface ReportsListProps {
@@ -13,17 +13,17 @@ const ReportsList = ({
     className,
     reports,
 }: ReportsListProps) => {
-    const [selectedId, setSelectedId] = useState<string|null>(null);
+    const { selectedReport, setSelectedReport } = useStoredReportData();
 
     const handleDetailsButtonPressed = (report: Report) => {
         
     }
 
-    const handleListItemClicked = (adminId:string) => {
-        if (selectedId === adminId) {
-            setSelectedId(null);
+    const handleListItemClicked = (report:Report) => {
+        if (selectedReport?.reportId === report.reportId) {
+            setSelectedReport(null);
         } else {
-            setSelectedId(adminId);
+            setSelectedReport(report);
         }
     }
     
@@ -35,10 +35,10 @@ const ReportsList = ({
             renderItem={data => {
                 return (
                     <ReportListItem 
-                        className={data.item.reportId === selectedId ? 'bg-selectedListItemBackgroundColor' : 'bg-listItemBackgroundColor'}
+                        className={data.item.reportId === selectedReport?.reportId ? 'bg-selectedListItemBackgroundColor' : 'bg-listItemBackgroundColor'}
                         report={data.item} 
                         detailsButtonPressed={handleDetailsButtonPressed}
-                        onListItemClicked={() => handleListItemClicked(data.item.reportId)}
+                        onListItemClicked={() => handleListItemClicked(data.item)}
                     />
                 )
             }}

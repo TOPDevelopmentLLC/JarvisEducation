@@ -1,7 +1,7 @@
 import { Student } from "lib/models/student"
 import StudentListItem from "components/lists/StudentListItem";
 import { FlatList } from "react-native";
-import { useState } from "react";
+import { useStoredStudentData } from "components/contexts/StudentContext";
 
 
 export interface StudentListProps {
@@ -13,17 +13,17 @@ const StudentList = ({
     className,
     students,
 }: StudentListProps) => {
-    const [selectedId, setSelectedId] = useState<string|null>(null);
+    const { selectedStudent, setSelectedStudent } = useStoredStudentData();
 
     const handleDetailsButtonPressed = (student: Student) => {
             
     }
 
-    const handleListItemClicked = (adminId:string) => {
-        if (selectedId === adminId) {
-            setSelectedId(null);
+    const handleListItemClicked = (student: Student) => {
+        if (selectedStudent?.studentId === student.studentId) {
+            setSelectedStudent(null);
         } else {
-            setSelectedId(adminId);
+            setSelectedStudent(student);
         }
     }
 
@@ -35,10 +35,10 @@ const StudentList = ({
             renderItem={data => {
                 return (
                     <StudentListItem 
-                        className={data.item.studentId === selectedId ? 'bg-selectedListItemBackgroundColor' : 'bg-listItemBackgroundColor'}
+                        className={data.item.studentId === selectedStudent?.studentId ? 'bg-selectedListItemBackgroundColor' : 'bg-listItemBackgroundColor'}
                         student={data.item} 
                         detailsButtonPressed={handleDetailsButtonPressed}
-                        onListItemClicked={() => handleListItemClicked(data.item.studentId)}
+                        onListItemClicked={() => handleListItemClicked(data.item)}
                     />
                 )
             }}
