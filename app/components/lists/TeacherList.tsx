@@ -2,6 +2,7 @@ import { Teacher } from "lib/models/teacher";
 import TeacherListItem from "components/lists/TeacherListItem";
 import { FlatList } from "react-native";
 import { useStoredTeacherData } from "components/contexts/TeacherContext";
+import { router } from "expo-router";
 
 
 export interface TeacherListProps {
@@ -16,7 +17,13 @@ const TeacherList = ({
     const { selectedTeacher, setSelectedTeacher } = useStoredTeacherData();
 
     const handleDetailsButtonPressed = (teacher: Teacher) => {
-                
+        setSelectedTeacher(teacher);
+        router.push({
+            pathname: '/pages/teachers/TeacherDetailsPage',
+            params: {
+                edit: 0
+            }
+        })
     }
 
     const handleListItemClicked = (teacher:Teacher) => {

@@ -21,7 +21,12 @@ const TeacherListPage = () => {
             //todo: display error to the user
             return;
         }
-        router.push('/pages/teachers/TeacherDetailsPage');
+        router.push({
+            pathname: '/pages/teachers/TeacherDetailsPage',
+            params: {
+                edit: 1
+            }
+        });
     }
 
     return (

@@ -21,7 +21,12 @@ const AdministratorListPage = () => {
             //todo: display error to the user
             return;
         }
-        router.push('/pages/admins/AdministratorDetailsPage');
+        router.push({
+            pathname: '/pages/admins/AdministratorDetailsPage',
+            params: {
+                edit: 1
+            }
+        });
     }
 
     return (

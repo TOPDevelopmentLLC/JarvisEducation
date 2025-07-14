@@ -3,6 +3,7 @@ import AdministratorListItem from "components/lists/AdministratorListItem";
 import { FlatList } from "react-native";
 import { useState } from "react";
 import { useStoredAdminData } from "components/contexts/AdminContext";
+import { router } from "expo-router";
 
 
 export interface AdministratorListProps {
@@ -17,7 +18,13 @@ const AdministratorList = ({
     const { selectedAdmin, setSelectedAdmin } = useStoredAdminData();
 
     const handleDetailsButtonPressed = (admin: Administrator) => {
-
+        setSelectedAdmin(admin);
+        router.push({
+            pathname: '/pages/admins/AdministratorDetailsPage',
+            params: {
+                edit: 0
+            }
+        })
     }
 
     const handleListItemClicked = (admin: Administrator) => {

@@ -18,7 +18,12 @@ const CourseListPage = () => {
             //todo: display error to user
             return;
         }
-        router.push('/pages/classes/CourseDetailsPage');
+        router.push({
+            pathname: '/pages/classes/CourseDetailsPage',
+            params: {
+                edit: 1
+            }
+        });
     }
 
     return (

@@ -2,6 +2,7 @@ import { Report } from "lib/models/report";
 import ReportListItem from "components/lists/ReportListItem";
 import { FlatList } from "react-native";
 import { useStoredReportData } from "components/contexts/ReportContext";
+import { router } from "expo-router";
 
 
 export interface ReportsListProps {
@@ -16,7 +17,13 @@ const ReportsList = ({
     const { selectedReport, setSelectedReport } = useStoredReportData();
 
     const handleDetailsButtonPressed = (report: Report) => {
-        
+        setSelectedReport(report);
+        router.push({
+            pathname: '/pages/reports/ReportDetailsPage',
+            params: {
+                edit: 0
+            }
+        })
     }
 
     const handleListItemClicked = (report:Report) => {

@@ -21,7 +21,12 @@ const StudentListPage = () => {
             //todo: push a toast message to display an error to the user
             return;
         }
-        router.push('/pages/students/StudentDetailsPage');
+        router.push({
+            pathname: '/pages/students/StudentDetailsPage',
+            params: {
+                edit: 1
+            }
+        });
     }
 
     return (

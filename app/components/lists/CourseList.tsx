@@ -2,6 +2,7 @@ import { Course } from "lib/models/course";
 import CourseListItem from "components/lists/CourseListItem";
 import { FlatList } from "react-native";
 import { useStoredCourseData } from "components/contexts/CourseContext";
+import { router } from "expo-router";
 
 
 export interface CourseListProps {
@@ -16,7 +17,13 @@ const CourseList = ({
     const { selectedCourse, setSelectedCourse } = useStoredCourseData();
 
     const handleDetailsButtonPressed = (course: Course) => {
-    
+        setSelectedCourse(course);
+        router.push({
+            pathname: '/pages/classes/CourseDetailsPage',
+            params: {
+                edit: 0
+            }
+        });
     }
 
     const handleListItemClicked = (course: Course) => {

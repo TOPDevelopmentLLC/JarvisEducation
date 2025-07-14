@@ -17,7 +17,12 @@ const ReportsListPage = () => {
             //todo: display error to user
             return;
         }
-        router.push('/pages/reports/ReportDetailsPage');
+        router.push({
+            pathname: '/pages/reports/ReportDetailsPage',
+            params: {
+                edit: 1
+            }
+        });
     }
 
     return (
