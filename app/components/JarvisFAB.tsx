@@ -14,12 +14,12 @@ export default function JarvisFAB({
 
     const actions = [];
     if (handleAddButtonPressed) actions.push({ icon: 'plus', onPress: handleAddButtonPressed });
-    if (handleEditButtonPressed) actions.push({ icon: 'circle-edit-outline', onPress: handleEditButtonPressed })
+    if (handleEditButtonPressed) actions.push({ icon: 'account-edit-outline', onPress: handleEditButtonPressed })
     
     return (
         <FAB.Group
             open={isFABOpen}
-            icon={isFABOpen ? 'close' : 'plus'}
+            icon={isFABOpen ? 'close' : 'dots-horizontal'}
             visible={true}
             actions={actions}
             onStateChange={({open}) => setIsFABOpen(open)}
