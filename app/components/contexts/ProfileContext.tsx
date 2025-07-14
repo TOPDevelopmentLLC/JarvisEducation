@@ -15,7 +15,6 @@ export const ProfileProvider = ({ children }: { children: ReactNode }) => {
   const [profile, setProfileState] = useState<Profile | null>(null);
 
   //TODO: Call API to get Profile data
-  //TODO: Create mock data for profile data
 
   useEffect(() => {
     // Mock API call
