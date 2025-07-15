@@ -4,12 +4,14 @@ import { TextInput } from "react-native-paper";
 
 export interface JarvisPaperTextInputProps {
     style?: StyleProp<TextStyle>;
+    defaultValue?: string;
     placeholder: string;
     onTextChange: (string) => void;
 }
 
 const JarvisPaperTextInput = ({
     style,
+    defaultValue,
     placeholder,
     onTextChange,
 }: JarvisPaperTextInputProps) => {
@@ -24,6 +26,7 @@ const JarvisPaperTextInput = ({
             style={[style, {
                 backgroundColor: '#FFFFFF'
             }]}
+            value={defaultValue}
             onChangeText={(text) => onTextChange(text)}
         />
     )
