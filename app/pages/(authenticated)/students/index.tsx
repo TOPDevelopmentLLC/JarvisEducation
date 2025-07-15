@@ -1,7 +1,7 @@
 import StudentList from "components/lists/StudentList";
 import MenuHeaderPage from "components/pages/MenuHeaderPage";
 import { mockStudentData } from "lib/mockData";
-import JarvisFAB from "components/JarvisFAB";
+import JarvisFAB from "components/buttons/JarvisFAB";
 import { router } from 'expo-router';
 import { useState } from "react";
 import AddStudentModal from "components/modals/AddStudentModal";

@@ -1,7 +1,7 @@
 import CourseList from "components/lists/CourseList";
 import MenuHeaderPage from "components/pages/MenuHeaderPage";
 import { mockCourseData } from "lib/mockData";
-import JarvisFAB from "components/JarvisFAB";
+import JarvisFAB from "components/buttons/JarvisFAB";
 import { router } from 'expo-router';
 import { useStoredCourseData } from "components/contexts/CourseContext";
 

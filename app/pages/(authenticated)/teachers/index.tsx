@@ -1,7 +1,7 @@
 import TeacherList from "components/lists/TeacherList";
 import MenuHeaderPage from "components/pages/MenuHeaderPage";
 import { mockTeacherData } from "lib/mockData";
-import JarvisFAB from "components/JarvisFAB";
+import JarvisFAB from "components/buttons/JarvisFAB";
 import { router } from 'expo-router';
 import AddTeacherModal from "components/modals/AddTeacherModal";
 import { useState } from "react";

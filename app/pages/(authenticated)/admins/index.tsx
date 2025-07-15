@@ -1,7 +1,7 @@
 import { mockAdminData } from "lib/mockData";
 import AdministratorList from "components/lists/AdministratorList";
 import MenuHeaderPage from "components/pages/MenuHeaderPage";
-import JarvisFAB from "components/JarvisFAB";
+import JarvisFAB from "components/buttons/JarvisFAB";
 import { router } from 'expo-router';
 import AddAdminModal from "components/modals/AddAdminModal";
 import { useState } from "react";

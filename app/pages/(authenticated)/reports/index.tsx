@@ -1,7 +1,7 @@
 import ReportsList from "components/lists/ReportsList";
 import MenuHeaderPage from "components/pages/MenuHeaderPage";
 import { mockReportData } from "lib/mockData";
-import JarvisFAB from "components/JarvisFAB";
+import JarvisFAB from "components/buttons/JarvisFAB";
 import { router } from 'expo-router';
 import { useStoredReportData } from "components/contexts/ReportContext";
 
