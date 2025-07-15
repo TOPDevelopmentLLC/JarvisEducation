@@ -1,16 +1,17 @@
-import { useNavigation } from "expo-router";
-import { IconType } from "components/IconContainer";
 import { IconButtonProps } from "components/buttons/IconButton";
-import BaseHeader from "components/headers/BaseHeader";
 import BasePage from "components/pages/BasePage";
+import DetailsHeader from "components/headers/DetailsHeader";
+import { IconType } from "components/IconContainer";
+import { useNavigation } from "expo-router";
 import { DrawerActions } from "@react-navigation/native";
+
 
 interface MenuHeaderPageProps {
     title?: string;
     rightActionIcon?: IconButtonProps;
 }
-  
-const MenuHeaderPage: React.FC<React.PropsWithChildren<MenuHeaderPageProps>> = ({ 
+
+const DetailsHeaderPage: React.FC<React.PropsWithChildren<MenuHeaderPageProps>> = ({
     title = '', 
     rightActionIcon = undefined,
     children
@@ -22,8 +23,9 @@ const MenuHeaderPage: React.FC<React.PropsWithChildren<MenuHeaderPageProps>> = (
 
     return (
         <BasePage>
-            <BaseHeader 
+            <DetailsHeader 
                 title={title}
+                rightActionIcon={rightActionIcon}
                 leftActionIcon={{
                     iconProps: {
                         name:'menu',
@@ -33,11 +35,10 @@ const MenuHeaderPage: React.FC<React.PropsWithChildren<MenuHeaderPageProps>> = (
                     },
                     onIconClicked: handleMenuButtonClicked
                 }}
-                rightActionIcon={rightActionIcon}
             />
             {children}
         </BasePage>
     );
-};
+}
 
-export default MenuHeaderPage;
+export default DetailsHeaderPage;
