@@ -18,21 +18,23 @@ const DetailsHeader = ({
     return (
         <View className="px-4 items-center bg-jarvisPrimary flex-row">
             <View className="flex-1 items-start h-full justify-center">
-                {leftActionIcon && (
+                <View className="flex-row">
+                    {leftActionIcon && (
+                        <IconButton 
+                            iconProps={leftActionIcon.iconProps} 
+                            onIconClicked={leftActionIcon.onIconClicked} 
+                        />
+                    )}
                     <IconButton 
-                        iconProps={leftActionIcon.iconProps} 
-                        onIconClicked={leftActionIcon.onIconClicked} 
+                        iconProps={{
+                            type: IconType.MaterialIcons,
+                            color: '#000000',
+                            size: 24,
+                            name: 'arrow-back'
+                        }} 
+                        onIconClicked={() => router.back()}                
                     />
-                )}
-                <IconButton 
-                    iconProps={{
-                        type: IconType.Feather,
-                        color: '#000000',
-                        size: 24,
-                        name: ''
-                    }} 
-                    onIconClicked={() => router.back()}                
-                />
+                </View>
             </View>
             <Text className="text-xl font-bold">{title}</Text>
             <View className="flex-1 h-full justify-center items-end">
