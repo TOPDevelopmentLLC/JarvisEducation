@@ -4,12 +4,15 @@ import { mockReportData } from "lib/mockData";
 import JarvisFAB from "components/buttons/JarvisFAB";
 import { router } from 'expo-router';
 import { useStoredReportData } from "components/contexts/ReportContext";
+import { useState } from "react";
+import AddReportModal from "components/modals/AddReportModal";
 
 const ReportsListPage = () => {
+    const [addReportModalIsVisible,setAddReportModalIsVisible] = useState(false);
     const { selectedReport } = useStoredReportData();
 
     const handleAddButtonPressed = () => {
-        router.push('/pages/reports/NewReportPage');
+        setAddReportModalIsVisible(true);
     }
 
     const handleEditButtonPressed = () => {
@@ -28,6 +31,10 @@ const ReportsListPage = () => {
     return (
         <MenuHeaderPage title="Reports">
             <ReportsList reports={mockReportData} />
+            <AddReportModal 
+                isVisible={addReportModalIsVisible} 
+                onDismiss={() => setAddReportModalIsVisible(false)}
+            />
             <JarvisFAB
                 handleAddButtonPressed={handleAddButtonPressed}
                 handleEditButtonPressed={handleEditButtonPressed}
