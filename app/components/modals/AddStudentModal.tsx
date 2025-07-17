@@ -30,19 +30,17 @@ const AddStudentModal = ({
 
     return (
         <JarvisModal 
+            headerProps={{
+                title: 'Add Student',
+                icon: {
+                    type: IconType.FontAwesome5,
+                    name: 'user-graduate',
+                    color: '#000000',
+                    size: 42
+                }
+            }}
             isVisible={isVisible}
             onDismiss={onDismiss}>
-                <View className="items-center">
-                    <IconContainer 
-                        iconProps={{
-                            type: IconType.FontAwesome5,
-                            name: 'user-graduate',
-                            color: '#000000',
-                            size: 42
-                        }}
-                    />
-                    <Text className="text-2xl text-black font-bold">Add Student</Text>
-                </View>
                 <JarvisPaperTextInput 
                     placeholder={"Student Name"} 
                     onTextChange={(studentName) => setStudentName(studentName)}                

@@ -29,19 +29,17 @@ const AddTeacherModal = ({
 
     return (
         <JarvisModal 
+            headerProps={{
+                title: 'Add Teacher',
+                icon: {
+                    type: IconType.FontAwesome6,
+                    name: 'chalkboard-user',
+                    color: '#000000',
+                    size: 42
+                }
+            }}
             isVisible={isVisible}
             onDismiss={onDismiss}>
-                <View className="items-center">
-                    <IconContainer 
-                        iconProps={{
-                            type: IconType.FontAwesome6,
-                            name: 'chalkboard-user',
-                            color: '#000000',
-                            size: 42
-                        }}
-                    />
-                    <Text className="text-2xl text-black font-bold">Add Teacher</Text>
-                </View>
                 <JarvisPaperTextInput 
                     placeholder={"Teacher Name"} 
                     onTextChange={(teacherName) => setTeacherName(teacherName)} 

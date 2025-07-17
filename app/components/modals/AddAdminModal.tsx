@@ -29,19 +29,17 @@ const AddAdminModal = ({
 
     return (
         <JarvisModal 
+            headerProps={{
+                title: 'Add Admin',
+                icon: {
+                    type: IconType.FontAwesome6,
+                    name: 'user-tie',
+                    color: '#000000',
+                    size: 42
+                }
+            }}
             isVisible={isVisible} 
             onDismiss={onDismiss}>
-                <View className="items-center">
-                    <IconContainer 
-                        iconProps={{
-                            type: IconType.FontAwesome6,
-                            name: 'user-tie',
-                            color: '#000000',
-                            size: 42
-                        }}
-                    />
-                    <Text className="text-2xl text-black font-bold">Add Admin</Text>
-                </View>
                 <JarvisPaperTextInput 
                     placeholder={"Admin Name"} 
                     onTextChange={(adminName) => setAdminName(adminName)} 

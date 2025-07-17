@@ -1,13 +1,16 @@
+import ModalHeader, { ModalHeaderProps } from "components/headers/ModalHeader";
 import { Dimensions } from "react-native";
 import { Modal } from "react-native-paper";
 
 
 export interface JarvisModalProps {
+    headerProps: ModalHeaderProps;
     isVisible: boolean;
     onDismiss?: () => void;
 }
 
 const JarvisModal: React.FC<React.PropsWithChildren<JarvisModalProps>> = ({
+    headerProps,
     isVisible,
     onDismiss,
     children
@@ -26,7 +29,8 @@ const JarvisModal: React.FC<React.PropsWithChildren<JarvisModalProps>> = ({
                 padding: 8,
                 borderRadius: 4,
             }}>
-            {children}
+                <ModalHeader {...headerProps} />
+                {children}
         </Modal>
     )
 }
