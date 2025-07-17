@@ -8,11 +8,13 @@ import { router } from "expo-router";
 export interface StudentListProps {
     className?: string;
     students: Student[];
+    displayDetailsButton?: boolean;
 }
 
 const StudentList = ({
     className,
     students,
+    displayDetailsButton = true
 }: StudentListProps) => {
     const { selectedStudent, setSelectedStudent } = useStoredStudentData();
 
@@ -44,7 +46,7 @@ const StudentList = ({
                     <StudentListItem 
                         className={data.item.studentId === selectedStudent?.studentId ? 'bg-selectedListItemBackgroundColor' : 'bg-listItemBackgroundColor'}
                         student={data.item} 
-                        detailsButtonPressed={handleDetailsButtonPressed}
+                        detailsButtonPressed={displayDetailsButton ? handleDetailsButtonPressed : undefined}
                         onListItemClicked={() => handleListItemClicked(data.item)}
                     />
                 )
