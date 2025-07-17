@@ -16,7 +16,7 @@ export interface LabeledIconButtonProps {
     labelLocation?: LabelLocation;
 }
 
-const IconButton = ({
+const LabeledIconButton = ({
     className,
     label,
     iconProps,
@@ -33,4 +33,4 @@ const IconButton = ({
     )
 }
 
-export default IconButton;
+export default LabeledIconButton;
