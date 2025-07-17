@@ -7,6 +7,7 @@ export interface JarvisPaperTextInputProps {
     defaultValue?: string;
     placeholder: string;
     onTextChange: (string) => void;
+    disabled?: boolean;
 }
 
 const JarvisPaperTextInput = ({
@@ -14,6 +15,7 @@ const JarvisPaperTextInput = ({
     defaultValue,
     placeholder,
     onTextChange,
+    disabled = false
 }: JarvisPaperTextInputProps) => {
 
     return (
@@ -28,6 +30,7 @@ const JarvisPaperTextInput = ({
             }]}
             value={defaultValue}
             onChangeText={(text) => onTextChange(text)}
+            disabled={disabled}
         />
     )
 }
