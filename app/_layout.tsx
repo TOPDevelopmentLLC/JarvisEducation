@@ -16,17 +16,17 @@ export default function RootLayout() {
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <ProfileProvider>
         <StateDataProvider>
-          <SnackbarProvider>
-            <PaperProvider
-              settings={{
-                icon: (props) => <MaterialCommunityIcons {...props} />,
-              }}
-            >
+          <PaperProvider
+            settings={{
+              icon: (props) => <MaterialCommunityIcons {...props} />,
+            }}
+          >
+            <SnackbarProvider>
               <Stack screenOptions={{
                 headerShown: false
               }}/>
-            </PaperProvider> 
-          </SnackbarProvider>
+            </SnackbarProvider> 
+          </PaperProvider>
         </StateDataProvider>
       </ProfileProvider>
     </ThemeProvider>
