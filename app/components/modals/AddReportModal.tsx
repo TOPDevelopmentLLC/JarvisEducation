@@ -11,6 +11,7 @@ import { useStoredStudentData } from "components/contexts/StudentContext";
 import JarvisPaperTextInput from "components/JarvisPaperTextInput";
 import MoodLabelList from "components/lists/MoodLabelList";
 import ReportTypeList from "components/lists/ReportTypeList";
+import { useErrorSnackbar } from "components/contexts/SnackbarContext";
 
 
 export interface AddReportModalProps {
@@ -26,14 +27,28 @@ const AddReportModal = ({
     const [reportDescription,setReportDescription] = useState('');
     const [selectedMoodtype,setSelectedMoodType] = useState<MoodType|null>(null);
     const { selectedStudent } = useStoredStudentData();
+    const showErrorMessage = useErrorSnackbar();
 
     const addButtonPressed = () => {
         if (selectedStudent === null) {
-            //todo: display snackbar error to the user
+            showErrorMessage('Please select a student to continue.');
             return;
         }
         if (selectedReportType === null) {
-            //todo: display snackbar error to the user
+            showErrorMessage('Please select a report type to continue.');
+            return;
+        }
+        if (selectedReportType === ReportType.Mood && selectedMoodtype === null) {
+            showErrorMessage('Please select a mood type to continue.');
+            return;
+        }
+        if ((selectedReportType === ReportType.Behavior ||
+            selectedReportType === ReportType.Conflict ||
+            selectedReportType === ReportType.Expelled ||
+            selectedReportType === ReportType.Secluded ||
+            selectedReportType === ReportType.SIP) && 
+            reportDescription.length === 0) {
+            showErrorMessage('Please enter a description to continue.');
             return;
         }
         //todo: start activity indicator
