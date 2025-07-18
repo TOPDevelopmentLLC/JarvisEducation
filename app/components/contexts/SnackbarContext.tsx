@@ -1,4 +1,5 @@
-import React, { createContext, useCallback, useContext, useState } from 'react';
+import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
+import { Text } from 'react-native';
 import { Snackbar } from 'react-native-paper';
 
 enum SnackbarType { default, success, error };
@@ -13,6 +14,11 @@ export const SnackbarProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const [visible, setVisible] = useState(false);
   const [message, setMessage] = useState('');
   const [type, setType] = useState<SnackbarType>(SnackbarType.default);
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   const showMessage = useCallback((text: string, variant: SnackbarType = SnackbarType.default) => {
     setMessage(text);
@@ -33,20 +39,35 @@ export const SnackbarProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     }
   };
 
+  const getTextColor = () => {
+    switch (type) {
+      case SnackbarType.success:
+      case SnackbarType.error:
+        return '#ffffff';
+      default:
+        return '#000000';
+    }
+  };
+
   return (
     <SnackbarContext.Provider value={{ showMessage }}>
       {children}
-      <Snackbar
-        visible={visible}
-        onDismiss={onDismissSnackBar}
-        duration={3000}
-        style={{
-          marginBottom: 20,
-          backgroundColor: getBackgroundColor(),
-        }}
-      >
-        {message}
-      </Snackbar>
+      {
+        isClient && (
+          <Snackbar
+            visible={visible}
+            onDismiss={onDismissSnackBar}
+            duration={3000}
+            style={{
+              marginBottom: 20,
+              backgroundColor: getBackgroundColor(),
+            }}
+          >
+            <Text style={{ color: getTextColor() }}>{message}</Text>
+          </Snackbar>
+        )
+      }
+      
     </SnackbarContext.Provider>
   );
 };
