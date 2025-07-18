@@ -7,6 +7,7 @@ import "../global.css";
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React from 'react';
 import StateDataProvider from 'components/contexts/StateDataProvider';
+import { SnackbarProvider } from 'components/contexts/SnackbarContext';
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
@@ -15,15 +16,17 @@ export default function RootLayout() {
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <ProfileProvider>
         <StateDataProvider>
-          <PaperProvider
-            settings={{
-              icon: (props) => <MaterialCommunityIcons {...props} />,
-            }}
-          >
-            <Stack screenOptions={{
-              headerShown: false
-            }}/>
-          </PaperProvider> 
+          <SnackbarProvider>
+            <PaperProvider
+              settings={{
+                icon: (props) => <MaterialCommunityIcons {...props} />,
+              }}
+            >
+              <Stack screenOptions={{
+                headerShown: false
+              }}/>
+            </PaperProvider> 
+          </SnackbarProvider>
         </StateDataProvider>
       </ProfileProvider>
     </ThemeProvider>
