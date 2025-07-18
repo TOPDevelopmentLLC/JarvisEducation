@@ -1,4 +1,5 @@
 import JarvisButton from "components/buttons/JarvisButton";
+import { useErrorSnackbar } from "components/contexts/SnackbarContext";
 import IconContainer, { IconType } from "components/IconContainer";
 import JarvisCheckbox from "components/JarvisCheckbox";
 import JarvisPaperTextInput from "components/JarvisPaperTextInput";
@@ -20,8 +21,17 @@ const AddAdminModal = ({
     const [addUserAccountIsChecked,setAddUserAccountIsChecked] = useState(false);
     const [adminName,setAdminName] = useState('');
     const [adminAccountEmail,setAdminAccountEmail] = useState('');
+    const showErrorMessage = useErrorSnackbar();
 
     const addButtonPressed = () => {
+        if (adminName.length === 0) {
+            showErrorMessage("Please enter the Administrator's name");
+            return;
+        }
+        if (adminAccountEmail.length === 0) {
+            showErrorMessage('Please enter a valid email for the new Administrator.');
+            return;
+        }
         //todo: start activity indicator
         //todo: add api call to add admin
         //todo: end activity indicator on response
