@@ -99,7 +99,8 @@ const AddReportModal = ({
                             placeholder={"Description"} 
                             onTextChange={(description) => setReportDescription(description)} 
                             disabled={selectedReportType === ReportType.Mood}
-                            defaultValue={selectedReportType === ReportType.Mood ? selectedMoodtype?.toString() : ''}
+                            defaultValue={selectedReportType === ReportType.Mood ? selectedMoodtype?.toString() : reportDescription}
+                            multiline={true}
                             style={{
                                 width: 500,
                                 marginTop: 12
