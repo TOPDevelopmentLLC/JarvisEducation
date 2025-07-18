@@ -8,11 +8,13 @@ import { DrawerActions } from "@react-navigation/native";
 
 interface MenuHeaderPageProps {
     title?: string;
+    backButtonAction?: () => void;
     rightActionIcon?: IconButtonProps;
 }
 
 const DetailsHeaderPage: React.FC<React.PropsWithChildren<MenuHeaderPageProps>> = ({
     title = '', 
+    backButtonAction,
     rightActionIcon = undefined,
     children
 }) => {
@@ -25,6 +27,7 @@ const DetailsHeaderPage: React.FC<React.PropsWithChildren<MenuHeaderPageProps>> 
         <BasePage>
             <DetailsHeader 
                 title={title}
+                backButtonAction={backButtonAction}
                 rightActionIcon={rightActionIcon}
                 leftActionIcon={{
                     iconProps: {

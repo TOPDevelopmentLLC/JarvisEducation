@@ -8,7 +8,7 @@ import { View } from "react-native";
 
 
 const ReportDetailsPage = () => {
-    const { selectedReport } = useStoredReportData();
+    const { selectedReport, setSelectedReport } = useStoredReportData();
     const { edit } = useLocalSearchParams();
     const [inEditMode,setEditMode] = useState<boolean>(edit === '1');
     const [currentReportDescription,setCurrentReportDescription] = useState(selectedReport.description ?? '');
@@ -23,7 +23,10 @@ const ReportDetailsPage = () => {
     }
     
     return (
-        <DetailsHeaderPage title="Details">
+        <DetailsHeaderPage 
+            title="Details"
+            backButtonAction={() => setSelectedReport(null)}
+        >
             <View className="mx-auto h-screen w-1/2 flex-1 justify-between items-center p-4">
                 <EditableDataField 
                     title={"Description:"} 

@@ -7,14 +7,21 @@ import { View, Text } from "react-native";
 interface DetailsHeaderProps {
     title?: string;
     leftActionIcon?: IconButtonProps|undefined;
+    backButtonAction?: () => void;
     rightActionIcon?: IconButtonProps|undefined;
 }
 
 const DetailsHeader = ({
     title = '', 
     leftActionIcon,
+    backButtonAction,
     rightActionIcon,
 }: DetailsHeaderProps) => {
+    const backButtonPressed = () => {
+        backButtonAction?.();
+        router.back()
+    }
+    
     return (
         <View className="px-4 items-center bg-jarvisPrimary flex-row">
             <View className="flex-1 items-start h-full justify-center">
@@ -32,7 +39,7 @@ const DetailsHeader = ({
                             size: 24,
                             name: 'arrow-back'
                         }} 
-                        onIconClicked={() => router.back()}                
+                        onIconClicked={backButtonPressed}                
                     />
                 </View>
             </View>

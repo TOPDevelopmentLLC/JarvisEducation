@@ -8,7 +8,7 @@ import { View } from "react-native";
 
 
 const AdministratorDetailsPage = () => {
-    const { selectedAdmin } = useStoredAdminData();
+    const { selectedAdmin, setSelectedAdmin } = useStoredAdminData();
     const { edit } = useLocalSearchParams();
     const [inEditMode,setEditMode] = useState<boolean>(edit === '1');
     const [currentAdminName,setCurrentAdminName] = useState(selectedAdmin.name);
@@ -23,7 +23,10 @@ const AdministratorDetailsPage = () => {
     }
     
     return (
-        <DetailsHeaderPage title="Details">
+        <DetailsHeaderPage 
+            title="Details"
+            backButtonAction={() => setSelectedAdmin(null)}
+        >
             <View className="mx-auto h-screen w-1/2 flex-1 justify-between items-center p-4">
                 <EditableDataField 
                     title={"Full Name:"} 

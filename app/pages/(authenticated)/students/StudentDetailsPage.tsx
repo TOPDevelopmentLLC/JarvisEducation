@@ -8,7 +8,7 @@ import { View } from "react-native";
 
 
 const StudentDetailsPage = () => {
-    const { selectedStudent } = useStoredStudentData();
+    const { selectedStudent, setSelectedStudent } = useStoredStudentData();
     const { edit } = useLocalSearchParams();
     const [inEditMode,setEditMode] = useState<boolean>(edit === '1');
     const [currentStudentName,setCurrentStudentName] = useState(selectedStudent.name);
@@ -23,7 +23,10 @@ const StudentDetailsPage = () => {
     }
 
     return (
-        <DetailsHeaderPage title="Details">
+        <DetailsHeaderPage 
+            title="Details"
+            backButtonAction={() => setSelectedStudent(null)}
+        >
             <View className="mx-auto h-screen w-1/2 flex-1 justify-between items-center p-4">
                 <EditableDataField 
                     title={"Full Name:"} 
