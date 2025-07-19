@@ -1,8 +1,18 @@
 import { Drawer } from 'expo-router/drawer';
-import React from 'react';
+import React, { useEffect } from 'react';
 import AuthenticatedDrawer from 'components/AuthenticatedDrawer';
+import { useRouter } from 'expo-router';
+import { useProfile } from 'components/contexts/ProfileContext';
 
 export default function AuthenticatedDrawerLayout() {
+  const router = useRouter();
+  const { profile } = useProfile();
+
+  useEffect(() => {
+    if (profile === null) {
+      router.replace('/pages/auth/LoginPage');
+    }
+  }, []);
   
   return (
   <Drawer
