@@ -44,14 +44,14 @@ const LoginPage = () => {
                     title={"Login"} 
                     onPress={loginButtonClicked} 
                 />
-                <View className="flex-row items-center mt-10">
+                { false && (<View className="flex-row items-center mt-10">
                     <Text className="mr-5 text-base text-gray-300">Don't have an account yet?</Text>
                     <JarvisButton 
                         title={"Sign Up"} 
                         onPress={signUpButtonClicked} 
                         type={JarvisButtonType.transparent}
                     />
-                </View>
+                </View>)}
         </BasePage>
     );
 
