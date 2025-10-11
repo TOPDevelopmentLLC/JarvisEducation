@@ -21,7 +21,7 @@ module.exports = function (api) {
                     ".android.ts",
                     ".ios.tsx",
                     ".android.tsx"
-                  ],
+                ],
                 alias: {
                     components: './app/components',
                     lib: './app/lib',

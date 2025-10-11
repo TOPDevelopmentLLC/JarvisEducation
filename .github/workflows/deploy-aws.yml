@@ -1,0 +1,49 @@
+name: Build & Deploy Web to AWS
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install deps
+        run: npm ci
+
+      - name: Build static site
+        run: npx expo export -p web
+
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: ${{ vars.AWS_REGION }}
+
+      # Deploy all assets
+      - name: Sync to S3
+        run: aws s3 sync dist/ s3://${{ vars.S3_BUCKET }}/ --delete
+
+      # Optional: set better cache headers
+      - name: Cache headers (index.html no-cache)
+        run: |
+          aws s3 cp s3://${{ vars.S3_BUCKET }}/index.html s3://${{ vars.S3_BUCKET }}/index.html \
+            --metadata-directive REPLACE \
+            --content-type text/html \
+            --cache-control "no-cache, no-store, must-revalidate"
+      # (If you fingerprint assets, you can long-cache them similarly.)
+
+      - name: Invalidate CloudFront
+        run: aws cloudfront create-invalidation --distribution-id ${{ vars.CLOUDFRONT_DISTRIBUTION_ID }} --paths "/*"
