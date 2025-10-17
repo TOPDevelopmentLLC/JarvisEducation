@@ -43,43 +43,43 @@ const AddStudentModal = ({
     }
 
     return (
-        <JarvisModal 
+        <JarvisModal
             headerProps={{
                 title: 'Add Student',
                 icon: {
                     type: IconType.FontAwesome5,
                     name: 'user-graduate',
                     color: '#000000',
-                    size: 42
+                    size: 32
                 }
             }}
             isVisible={isVisible}
             onDismiss={onDismiss}>
-                <JarvisPaperTextInput 
-                    placeholder={"Student Name"} 
-                    onTextChange={(studentName) => setStudentName(studentName)}                
+                <JarvisPaperTextInput
+                    placeholder={"Student Name"}
+                    onTextChange={(studentName) => setStudentName(studentName)}
                 />
                 <View className={`flex-row items-center gap-2 ${addUserAccountIsChecked ? 'my-2' : 'mt-2'}`}>
-                    <JarvisCheckbox 
-                        checked={addUserAccountIsChecked} 
-                        onToggle={() => setAddUserAccountIsChecked(!addUserAccountIsChecked)} 
+                    <JarvisCheckbox
+                        checked={addUserAccountIsChecked}
+                        onToggle={() => setAddUserAccountIsChecked(!addUserAccountIsChecked)}
                     />
-                    <Text>Add Student Account?</Text>
+                    <Text className="text-white">Add Student Account?</Text>
                 </View>
                 {
                     addUserAccountIsChecked && (
-                        <JarvisPaperTextInput 
-                            placeholder="Student Email" 
+                        <JarvisPaperTextInput
+                            placeholder="Student Email"
                             onTextChange={(studentEmail) => setStudentAccountEmail(studentEmail)}
                         />
                     )
                 }
                 <View className={`flex-row items-center gap-2 ${addParentAccountIsChecked ? 'my-2' : 'mt-2'}`}>
-                    <JarvisCheckbox 
-                        checked={addParentAccountIsChecked} 
-                        onToggle={() => setAddParentAccountIsChecked(!addParentAccountIsChecked)} 
+                    <JarvisCheckbox
+                        checked={addParentAccountIsChecked}
+                        onToggle={() => setAddParentAccountIsChecked(!addParentAccountIsChecked)}
                     />
-                    <Text>Add Parent Account?</Text>
+                    <Text className="text-white">Add Parent Account?</Text>
                 </View>
                 {
                     addParentAccountIsChecked && (

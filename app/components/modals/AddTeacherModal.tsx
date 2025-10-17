@@ -38,28 +38,28 @@ const AddTeacherModal = ({
     }
 
     return (
-        <JarvisModal 
+        <JarvisModal
             headerProps={{
                 title: 'Add Teacher',
                 icon: {
                     type: IconType.FontAwesome6,
                     name: 'chalkboard-user',
                     color: '#000000',
-                    size: 42
+                    size: 32
                 }
             }}
             isVisible={isVisible}
             onDismiss={onDismiss}>
-                <JarvisPaperTextInput 
-                    placeholder={"Teacher Name"} 
-                    onTextChange={(teacherName) => setTeacherName(teacherName)} 
+                <JarvisPaperTextInput
+                    placeholder={"Teacher Name"}
+                    onTextChange={(teacherName) => setTeacherName(teacherName)}
                 />
                 <View className={`flex-row items-center gap-2 ${addUserAccountIsChecked ? 'my-2' : 'mt-2'}`}>
-                    <JarvisCheckbox 
-                        checked={addUserAccountIsChecked} 
-                        onToggle={() => setAddUserAccountIsChecked(!addUserAccountIsChecked)} 
+                    <JarvisCheckbox
+                        checked={addUserAccountIsChecked}
+                        onToggle={() => setAddUserAccountIsChecked(!addUserAccountIsChecked)}
                     />
-                    <Text>Add Teacher Account?</Text>
+                    <Text className="text-white">Add Teacher Account?</Text>
                 </View>
                 {
                     addUserAccountIsChecked && (

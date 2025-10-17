@@ -12,6 +12,7 @@ import JarvisPaperTextInput from "components/JarvisPaperTextInput";
 import MoodLabelList from "components/lists/MoodLabelList";
 import ReportTypeList from "components/lists/ReportTypeList";
 import { useErrorSnackbar } from "components/contexts/SnackbarContext";
+import { Student } from "lib/models/student";
 
 
 export interface AddReportModalProps {
@@ -26,7 +27,7 @@ const AddReportModal = ({
     const [selectedReportType,setSelectedReportType] = useState<ReportType|null>(null);
     const [reportDescription,setReportDescription] = useState('');
     const [selectedMoodtype,setSelectedMoodType] = useState<MoodType|null>(null);
-    const { selectedStudent } = useStoredStudentData();
+    const [selectedStudent,setSelectedStudent] = useState<Student|null>();
     const showErrorMessage = useErrorSnackbar();
 
     const addButtonPressed = () => {
@@ -75,7 +76,7 @@ const AddReportModal = ({
                     type: IconType.Feather,
                     name: 'file-plus',
                     color: '#000000',
-                    size: 42
+                    size: 32
                 }
             }}
             isVisible={isVisible}
@@ -83,9 +84,10 @@ const AddReportModal = ({
         >
             <View className="items-center">
                 <StudentList 
-                    className="w-1/2"
-                    students={mockStudentData} 
-                    displayDetailsButton={false}
+                    className="w-[100%]"
+                    students={mockStudentData}  
+                    selectedStudent={selectedStudent}
+                    studentItemPressed={setSelectedStudent}            
                 />
                 <ReportTypeList 
                     className="mt-2"

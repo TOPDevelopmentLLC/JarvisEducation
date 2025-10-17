@@ -1,57 +1,56 @@
 import { Student } from "lib/models/student"
 import StudentListItem from "components/lists/StudentListItem";
-import { FlatList } from "react-native";
+import { FlatList, ScrollView } from "react-native";
 import { useStoredStudentData } from "components/contexts/StudentContext";
 import { router } from "expo-router";
+import NoDataView, { DataType } from "components/NoDataView";
 
 
 export interface StudentListProps {
     className?: string;
     students: Student[];
-    displayDetailsButton?: boolean;
+    currentSearchText?: string;
+    selectedStudent?: Student | null;
+    editButtonPressed?: (student:Student) => void;
+    deleteButtonPressed?: (student:Student) => void;
+    studentItemPressed?: (student:Student) => void;
 }
 
 const StudentList = ({
     className,
     students,
-    displayDetailsButton = true
+    currentSearchText = '',
+    selectedStudent,
+    editButtonPressed,
+    deleteButtonPressed,
+    studentItemPressed,
 }: StudentListProps) => {
-    const { selectedStudent, setSelectedStudent } = useStoredStudentData();
 
-    const handleDetailsButtonPressed = (student: Student) => {
-        setSelectedStudent(student);
-        router.push({
-            pathname: '/pages/students/StudentDetailsPage',
-            params: {
-                edit: 0
-            }
-        })
-    }
-
-    const handleListItemClicked = (student: Student) => {
-        if (selectedStudent?.studentId === student.studentId) {
-            setSelectedStudent(null);
-        } else {
-            setSelectedStudent(student);
-        }
-    }
 
     return (
-        <FlatList
+        <ScrollView
             className={className}
-            data={students}
-            keyExtractor={(item) => item.studentId}
-            renderItem={data => {
-                return (
-                    <StudentListItem 
-                        className={data.item.studentId === selectedStudent?.studentId ? 'bg-selectedListItemBackgroundColor' : 'bg-listItemBackgroundColor'}
-                        student={data.item} 
-                        detailsButtonPressed={displayDetailsButton ? handleDetailsButtonPressed : undefined}
-                        onListItemClicked={() => handleListItemClicked(data.item)}
+            showsVerticalScrollIndicator={false}>
+                {students.length > 0 ? (
+                    students.map((student) => (
+                        <StudentListItem
+                            key={student.studentId}
+                            student={student}
+                            isSelected={selectedStudent?.studentId === student.studentId}
+                            onEdit={editButtonPressed}
+                            onDelete={deleteButtonPressed}
+                            onPress={studentItemPressed}
+                        />
+                    ))
+                ) : (
+                    <NoDataView
+                        className="flex-1 py-20"
+                        dataType={DataType.STUDENT}
+                        currentSearchText={currentSearchText}
                     />
                 )
-            }}
-        />
+            }
+        </ScrollView>
     )
 }
 

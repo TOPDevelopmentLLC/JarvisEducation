@@ -16,7 +16,7 @@ const IconButton = ({
 }: IconButtonProps) => {
 
     return (
-        <TouchableOpacity className={clsx('p-2', className)} onPress={onIconClicked}>
+        <TouchableOpacity className={clsx('rounded-lg p-3 active:opacity-70', className)} onPress={onIconClicked}>
             <IconContainer iconProps={iconProps}/>
         </TouchableOpacity>
     )

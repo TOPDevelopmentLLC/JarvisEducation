@@ -1,16 +1,73 @@
+import { useRef } from "react";
 import BasePage from "components/pages/BasePage";
-import { Image } from "react-native";
+import { Image, View, Text } from "react-native";
 import { Images } from "assets/images";
+import JarvisTextInput from "components/JarvisTextInput";
+import JarvisButton, { JarvisButtonType } from "components/buttons/JarvisButton";
+import { useRouter } from "expo-router";
 
 
 const SignUpPage = () => {
+    const router = useRouter();
+    const username = useRef("");
+    const email = useRef("");
+    const password = useRef("");
+    const confirmPassword = useRef("");
+
+    const signUpButtonClicked = () => {
+        router.push('/pages/home');
+    }
+
+    const loginButtonClicked = () => {
+        router.push('/pages/auth/LoginPage');
+    }
 
     return (
-        <BasePage>
-            <Image 
-                className="w-1/2 h-1/12"
-                source={Images.logo}
-            />
+        <BasePage
+            className="items-center justify-center px-8"
+            displayHeader={false}>
+                <View className="w-full max-w-md items-center">
+                    <Image
+                        source={Images.logo}
+                        resizeMode="contain"
+                        style={{ width: 200, height: 200, marginBottom: 48 }}
+                    />
+
+                    <View className="w-full gap-4">
+                        <JarvisTextInput
+                            placeholder="Username"
+                            onTextChange={(value) => {username.current = value}}
+                        />
+                        <JarvisTextInput
+                            placeholder="Email"
+                            onTextChange={(value) => {email.current = value}}
+                        />
+                        <JarvisTextInput
+                            placeholder="Password"
+                            onTextChange={(value) => {password.current = value}}
+                        />
+                        <JarvisTextInput
+                            placeholder="Confirm Password"
+                            onTextChange={(value) => {confirmPassword.current = value}}
+                        />
+
+                        <JarvisButton
+                            className="mt-4"
+                            title="Sign Up"
+                            onPress={signUpButtonClicked}
+                        />
+
+                        <View className="flex-row items-center justify-center mt-8">
+                            <Text className="text-base text-gray-400">Already have an account?</Text>
+                            <JarvisButton
+                                className="ml-2"
+                                title="Login"
+                                onPress={loginButtonClicked}
+                                type={JarvisButtonType.transparent}
+                            />
+                        </View>
+                    </View>
+                </View>
         </BasePage>
     );
 
