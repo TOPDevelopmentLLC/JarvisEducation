@@ -28,7 +28,7 @@ const MenuHeaderPage: React.FC<React.PropsWithChildren<MenuHeaderPageProps>> = (
                     iconProps: {
                         name:'menu',
                         size:24,
-                        color:'#000000',
+                        color:'#FFFFFF',
                         type:IconType.Feather
                     },
                     onIconClicked: handleMenuButtonClicked

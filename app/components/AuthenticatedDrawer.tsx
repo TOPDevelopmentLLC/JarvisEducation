@@ -1,6 +1,6 @@
 import { DrawerContentScrollView } from '@react-navigation/drawer';
 import React, { useEffect, useState } from 'react';
-import { Drawer } from 'react-native-paper';
+import { View, Text, Pressable } from 'react-native';
 import { router, usePathname } from 'expo-router';
 
 export default function AuthenticatedDrawer({ navigation, state }: any) {
@@ -53,45 +53,51 @@ export default function AuthenticatedDrawer({ navigation, state }: any) {
         }
     }
 
+    const renderDrawerItem = (label: string, index: number) => {
+        const isActive = activeIndex === index;
+        return (
+            <Pressable
+                key={index}
+                onPress={() => handleClickEvent(index)}
+                style={{
+                    backgroundColor: isActive ? '#9cb43c' : 'transparent',
+                    paddingVertical: 12,
+                    paddingHorizontal: 16,
+                }}
+            >
+                <Text
+                    style={{
+                        color: isActive ? '#000000' : '#FFFFFF',
+                        fontSize: 16,
+                        fontWeight: isActive ? 'bold' : 'normal',
+                    }}
+                >
+                    {label}
+                </Text>
+            </Pressable>
+        );
+    };
+
     return (
-        <DrawerContentScrollView className='bg-red-100'>
-            <Drawer.Section title="JarvisEd">
-                <Drawer.Item
-                    label="Home"
-                    active={activeIndex === 0}
-                    onPress={() => handleClickEvent(0)}
-                />
-                <Drawer.Item
-                    label="Administrators"
-                    active={activeIndex === 1}
-                    onPress={() => handleClickEvent(1)}
-                />
-                <Drawer.Item
-                    label="Teachers"
-                    active={activeIndex === 2}
-                    onPress={() => handleClickEvent(2)}
-                />
-                <Drawer.Item
-                    label="Students"
-                    active={activeIndex === 3}
-                    onPress={() => handleClickEvent(3)}
-                />
-                <Drawer.Item
-                    label="Class Catalogue"
-                    active={activeIndex === 4}
-                    onPress={() => handleClickEvent(4)}
-                />
-                <Drawer.Item
-                    label="Reports"
-                    active={activeIndex === 5}
-                    onPress={() => handleClickEvent(5)}
-                />
-                <Drawer.Item
-                    label="Settings"
-                    active={activeIndex === 6}
-                    onPress={() => handleClickEvent(6)}
-                />
-            </Drawer.Section>
+        <DrawerContentScrollView
+            style={{ backgroundColor: '#111827' }}
+            contentContainerStyle={{ paddingTop: 0 }}
+        >
+            <View style={{ backgroundColor: '#111827', paddingVertical: 16, paddingHorizontal: 16 }}>
+                <Text style={{ color: '#FFFFFF', fontWeight: 'bold', fontSize: 24 }}>
+                    JarvisEd
+                </Text>
+            </View>
+
+            <View style={{ marginTop: 8 }}>
+                {renderDrawerItem('Home', 0)}
+                {renderDrawerItem('Administrators', 1)}
+                {renderDrawerItem('Teachers', 2)}
+                {renderDrawerItem('Students', 3)}
+                {renderDrawerItem('Class Catalogue', 4)}
+                {renderDrawerItem('Reports', 5)}
+                {renderDrawerItem('Settings', 6)}
+            </View>
         </DrawerContentScrollView>
     )
 }

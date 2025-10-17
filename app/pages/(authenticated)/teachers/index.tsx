@@ -11,9 +11,11 @@ import TeacherList from "components/lists/TeacherList";
 import SearchBar from "components/SearchBar";
 import IconButton from "components/buttons/IconButton";
 import { IconType } from "components/IconContainer";
+import { useStoredTeacherData } from "components/contexts/TeacherContext";
 
 
 const TeacherListPage = () => {
+    const { setSelectedTeacher } = useStoredTeacherData();
     const [addTeacherModalIsVisible, setAddTeacherModalIsVisible] = useState(false);
     const [confirmDeleteModalIsVisible, setConfirmDeleteModalIsVisible] = useState(false);
     const [teacherToDelete, setTeacherToDelete] = useState<Teacher | null>(null);
@@ -28,6 +30,7 @@ const TeacherListPage = () => {
     }
 
     const handleEditTeacher = (teacher: Teacher) => {
+        setSelectedTeacher(teacher);
         router.push({
             pathname: '/pages/teachers/TeacherDetailsPage',
             params: {
@@ -56,6 +59,7 @@ const TeacherListPage = () => {
     }
 
     const handleViewTeacher = (teacher: Teacher) => {
+        setSelectedTeacher(teacher);
         router.push({
             pathname: '/pages/teachers/TeacherDetailsPage',
             params: {

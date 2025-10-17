@@ -9,8 +9,10 @@ import ReportsList from "components/lists/ReportsList";
 import SearchBar from "components/SearchBar";
 import IconButton from "components/buttons/IconButton";
 import { IconType } from "components/IconContainer";
+import { useStoredReportData } from "components/contexts/ReportContext";
 
 const ReportsListPage = () => {
+    const { setSelectedReport } = useStoredReportData();
     const [addReportModalIsVisible, setAddReportModalIsVisible] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
 
@@ -24,6 +26,7 @@ const ReportsListPage = () => {
     }
 
     const handleEditReport = (report: Report) => {
+        setSelectedReport(report);
         router.push({
             pathname: '/pages/reports/ReportDetailsPage',
             params: {
@@ -33,6 +36,7 @@ const ReportsListPage = () => {
     }
 
     const handleViewReport = (report: Report) => {
+        setSelectedReport(report);
         router.push({
             pathname: '/pages/reports/ReportDetailsPage',
             params: {

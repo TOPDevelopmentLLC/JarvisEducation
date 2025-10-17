@@ -12,8 +12,11 @@ import NoDataView, { DataType } from "components/NoDataView";
 import CourseList from "components/lists/CourseList";
 import IconButton from "components/buttons/IconButton";
 import { IconType } from "components/IconContainer";
+import { useStoredCourseData } from "components/contexts/CourseContext";
+import SearchBar from "components/SearchBar";
 
 const CourseListPage = () => {
+    const { setSelectedCourse } = useStoredCourseData();
     const [searchQuery, setSearchQuery] = useState("");
     const [addClassModalIsVisible, setAddClassModalIsVisible] = useState(false);
     const [confirmDeleteModalIsVisible, setConfirmDeleteModalIsVisible] = useState(false);
@@ -29,6 +32,7 @@ const CourseListPage = () => {
     }
 
     const handleEditCourse = (course: Course) => {
+        setSelectedCourse(course);
         router.push({
             pathname: '/pages/classes/CourseDetailsPage',
             params: {
@@ -57,6 +61,7 @@ const CourseListPage = () => {
     }
 
     const handleViewCourse = (course: Course) => {
+        setSelectedCourse(course);
         router.push({
             pathname: '/pages/classes/CourseDetailsPage',
             params: {
@@ -72,13 +77,11 @@ const CourseListPage = () => {
                 {/* Header Section with Search and Add Button */}
                 <View className="mb-4">
                     <View className="flex-row items-center gap-3 mb-4">
-                        <CourseList 
+                        <SearchBar 
                             className="flex-1 px-4 py-3"
-                            courses={filteredCourses} 
-                            currentSearchText={searchQuery} 
-                            editButtonPressed={handleEditCourse} 
-                            deleteButtonPressed={handleDeleteCourse} 
-                            courseItemPressed={handleViewCourse} 
+                            placeholder={"Search courses..."} 
+                            value={searchQuery} 
+                            onValueChanged={setSearchQuery} 
                         />
                         <IconButton 
                             className="bg-jarvisPrimary"

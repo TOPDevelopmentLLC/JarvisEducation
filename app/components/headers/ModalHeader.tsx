@@ -15,11 +15,13 @@ const ModalHeader = ({
 
     return (
         <>
-            <View className="items-center">
-                <IconContainer iconProps={icon} />
-                <Text className="text-2xl text-black font-bold">{title}</Text>
+            <View className="items-center mb-4">
+                <View className="bg-jarvisPrimary rounded-full p-4 mb-3">
+                    <IconContainer iconProps={icon} />
+                </View>
+                <Text className="text-2xl text-white font-bold">{title}</Text>
             </View>
-            <Divider className="mb-2"/>
+            <Divider className="mb-4 bg-gray-700"/>
         </>
     )
 }

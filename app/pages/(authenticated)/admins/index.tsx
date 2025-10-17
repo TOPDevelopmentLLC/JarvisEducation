@@ -10,9 +10,11 @@ import AdministratorList from "components/lists/AdministratorList";
 import SearchBar from "components/SearchBar";
 import IconButton from "components/buttons/IconButton";
 import { IconType } from "components/IconContainer";
+import { useStoredAdminData } from "components/contexts/AdminContext";
 
 
 const AdministratorListPage = () => {
+    const { setSelectedAdmin } = useStoredAdminData();
     const [addAdminModalIsVisible, setAddAdminModalIsVisible] = useState(false);
     const [confirmDeleteModalIsVisible, setConfirmDeleteModalIsVisible] = useState(false);
     const [adminToDelete, setAdminToDelete] = useState<Administrator | null>(null);
@@ -27,6 +29,7 @@ const AdministratorListPage = () => {
     }
 
     const handleEditAdmin = (admin: Administrator) => {
+        setSelectedAdmin(admin);
         router.push({
             pathname: '/pages/admins/AdministratorDetailsPage',
             params: {
@@ -55,6 +58,7 @@ const AdministratorListPage = () => {
     }
 
     const handleViewAdmin = (admin: Administrator) => {
+        setSelectedAdmin(admin);
         router.push({
             pathname: '/pages/admins/AdministratorDetailsPage',
             params: {

@@ -28,7 +28,7 @@ const ConfirmationModal = ({
             onDismiss={onCancel}
             dismissable={true}
             contentContainerStyle={{
-                backgroundColor: '#1F2937',
+                backgroundColor: '#374151',
                 marginHorizontal: 32,
                 borderRadius: 16,
                 padding: 24,

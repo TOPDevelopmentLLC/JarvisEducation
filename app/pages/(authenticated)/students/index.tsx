@@ -10,9 +10,11 @@ import StudentList from "components/lists/StudentList";
 import SearchBar from "components/SearchBar";
 import IconButton from "components/buttons/IconButton";
 import { IconType } from "components/IconContainer";
+import { useStoredStudentData } from "components/contexts/StudentContext";
 
 
 const StudentListPage = () => {
+    const { setSelectedStudent } = useStoredStudentData();
     const [addStudentModalIsVisible, setAddStudentModalIsVisible] = useState(false);
     const [confirmDeleteModalIsVisible, setConfirmDeleteModalIsVisible] = useState(false);
     const [studentToDelete, setStudentToDelete] = useState<Student | null>(null);
@@ -27,6 +29,7 @@ const StudentListPage = () => {
     }
 
     const handleEditStudent = (student: Student) => {
+        setSelectedStudent(student);
         router.push({
             pathname: '/pages/students/StudentDetailsPage',
             params: {
@@ -55,6 +58,7 @@ const StudentListPage = () => {
     }
 
     const handleViewStudent = (student: Student) => {
+        setSelectedStudent(student);
         router.push({
             pathname: '/pages/students/StudentDetailsPage',
             params: {

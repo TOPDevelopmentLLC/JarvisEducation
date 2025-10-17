@@ -9,25 +9,25 @@ interface BaseHeaderProps {
     rightActionIcon?: IconButtonProps|undefined;
   }
   
-const BaseHeader = ({ 
-    title = '', 
+const BaseHeader = ({
+    title = '',
     leftActionIcon,
     rightActionIcon,
 }: BaseHeaderProps) => {
     const router = useRouter();
 
     return (
-        <View className="px-4 items-center bg-jarvisPrimary flex-row">
-            <View className="flex-1 items-start h-full justify-center">
+        <View className="px-6 py-2 items-center bg-gray-800 flex-row border-b border-gray-700">
+            <View className="flex-1 items-start justify-center">
                 {leftActionIcon && (
-                    <IconButton 
-                        iconProps={leftActionIcon.iconProps} 
-                        onIconClicked={leftActionIcon.onIconClicked} 
+                    <IconButton
+                        iconProps={leftActionIcon.iconProps}
+                        onIconClicked={leftActionIcon.onIconClicked}
                     />
                 )}
             </View>
-            <Text className="text-xl font-bold">{title}</Text>
-            <View className="flex-1 h-full justify-center items-end">
+            <Text className="text-2xl font-bold text-white">{title}</Text>
+            <View className="flex-1 justify-center items-end">
                 {rightActionIcon && (
                     <IconButton
                         iconProps={rightActionIcon.iconProps}

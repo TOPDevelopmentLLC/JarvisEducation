@@ -41,7 +41,7 @@ const AddClassModal = ({
                     type: IconType.FontAwesome5,
                     name: 'book',
                     color: '#000000',
-                    size: 42
+                    size: 32
                 }
             }}
             isVisible={isVisible}
