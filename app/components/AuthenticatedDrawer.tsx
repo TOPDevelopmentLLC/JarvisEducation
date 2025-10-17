@@ -1,13 +1,32 @@
 import { DrawerContentScrollView } from '@react-navigation/drawer';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Drawer } from 'react-native-paper';
-import { router } from 'expo-router';
+import { router, usePathname } from 'expo-router';
 
 export default function AuthenticatedDrawer({ navigation, state }: any) {
-    const [activeIndex, setActiveIndex] = React.useState(0);
+    const pathname = usePathname();
+    const [activeIndex, setActiveIndex] = useState(0);
 
-    const handleClickEvent = (index:number) => {
-        setActiveIndex(index);
+    // Update active index based on current route
+    useEffect(() => {
+        if (pathname.includes('/admins')) {
+            setActiveIndex(1);
+        } else if (pathname.includes('/teachers')) {
+            setActiveIndex(2);
+        } else if (pathname.includes('/students')) {
+            setActiveIndex(3);
+        } else if (pathname.includes('/classes')) {
+            setActiveIndex(4);
+        } else if (pathname.includes('/reports')) {
+            setActiveIndex(5);
+        } else if (pathname.includes('/settings')) {
+            setActiveIndex(6);
+        } else if (pathname.includes('/home')) {
+            setActiveIndex(0);
+        }
+    }, [pathname]);
+
+    const handleClickEvent = (index: number) => {
         switch (index) {
             case 1:
                 router.push('/pages/admins');
