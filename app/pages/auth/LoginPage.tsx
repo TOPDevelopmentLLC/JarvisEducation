@@ -20,38 +20,44 @@ const LoginPage = () => {
 
     return (
         <BasePage
-            className="items-center"
+            className="items-center justify-center px-8"
             displayHeader={false}>
-                <View className="w-60 h-32 bg-red-200">
+                <View className="w-full max-w-md items-center">
                     <Image
-                        className="w-[10%] h-[25%]"
                         source={Images.logo}
                         resizeMode="contain"
+                        style={{ width: 200, height: 200, marginBottom: 48 }}
                     />
+
+                    <View className="w-full gap-4">
+                        <JarvisTextInput
+                            placeholder="Username"
+                            onTextChange={(value) => {username.current = value}}
+                        />
+                        <JarvisTextInput
+                            placeholder="Password"
+                            onTextChange={(value) => {password.current = value}}
+                        />
+
+                        <JarvisButton
+                            className="mt-4"
+                            title="Login"
+                            onPress={loginButtonClicked}
+                        />
+
+                        { true && (
+                            <View className="flex-row items-center justify-center mt-8">
+                                <Text className="text-base text-gray-400">Don't have an account yet?</Text>
+                                <JarvisButton
+                                    className="ml-2"
+                                    title="Sign Up"
+                                    onPress={signUpButtonClicked}
+                                    type={JarvisButtonType.transparent}
+                                />
+                            </View>
+                        )}
+                    </View>
                 </View>
-                <JarvisTextInput 
-                    className="mt-5 w-[80%]"
-                    placeholder={"Username"}         
-                    onTextChange={(value) => {username.current = value}}
-                />
-                <JarvisTextInput 
-                    className="mt-5 w-[80%]"
-                    placeholder={"Password"}
-                    onTextChange={(value) => {password.current = value}}
-                />
-                <JarvisButton 
-                    className="mt-5 w-[80%]"
-                    title={"Login"} 
-                    onPress={loginButtonClicked} 
-                />
-                { false && (<View className="flex-row items-center mt-10">
-                    <Text className="mr-5 text-base text-gray-300">Don't have an account yet?</Text>
-                    <JarvisButton 
-                        title={"Sign Up"} 
-                        onPress={signUpButtonClicked} 
-                        type={JarvisButtonType.transparent}
-                    />
-                </View>)}
         </BasePage>
     );
 

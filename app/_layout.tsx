@@ -1,8 +1,8 @@
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { ProfileProvider } from 'components/contexts/ProfileContext';
-import { useColorScheme, View } from 'react-native';
+import { useColorScheme } from 'react-native';
 import { PaperProvider } from 'react-native-paper';
-import { Stack } from "expo-router";
+import { Slot } from "expo-router";
 import "../global.css";
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React from 'react';
@@ -22,14 +22,11 @@ export default function RootLayout() {
             }}
           >
             <SnackbarProvider>
-              <Stack screenOptions={{
-                headerShown: false
-              }}/>
-            </SnackbarProvider> 
+              <Slot />
+            </SnackbarProvider>
           </PaperProvider>
         </StateDataProvider>
       </ProfileProvider>
     </ThemeProvider>
-  )
-  ;
+  );
 }
