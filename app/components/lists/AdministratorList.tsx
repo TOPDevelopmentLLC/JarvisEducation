@@ -1,56 +1,50 @@
 import { Administrator } from "lib/models/administrator";
 import AdministratorListItem from "components/lists/AdministratorListItem";
-import { FlatList } from "react-native";
-import { useState } from "react";
-import { useStoredAdminData } from "components/contexts/AdminContext";
-import { router } from "expo-router";
+import { ScrollView } from "react-native";
+import NoDataView, { DataType } from "components/NoDataView";
 
 
 export interface AdministratorListProps {
     className?: string;
     administrators: Administrator[];
+    currentSearchText: string;
+    editButtonPressed: (admin:Administrator) => void;
+    deleteButtonPressed: (admin:Administrator) => void;
+    adminItemPressed: (admin:Administrator) => void;
 }
 
 const AdministratorList = ({
     className,
     administrators,
+    currentSearchText,
+    editButtonPressed,
+    deleteButtonPressed,
+    adminItemPressed,
 }: AdministratorListProps) => {
-    const { selectedAdmin, setSelectedAdmin } = useStoredAdminData();
-
-    const handleDetailsButtonPressed = (admin: Administrator) => {
-        setSelectedAdmin(admin);
-        router.push({
-            pathname: '/pages/admins/AdministratorDetailsPage',
-            params: {
-                edit: 0
-            }
-        })
-    }
-
-    const handleListItemClicked = (admin: Administrator) => {
-        if (selectedAdmin?.adminId === admin.adminId) {
-            setSelectedAdmin(null);
-        } else {
-            setSelectedAdmin(admin);
-        }
-    }
 
     return (
-        <FlatList
+        <ScrollView 
             className={className}
-            data={administrators}
-            keyExtractor={(item) => item.adminId}
-            renderItem={data => {
-                return (
-                    <AdministratorListItem 
-                        className={data.item.adminId === selectedAdmin?.adminId ? 'bg-selectedListItemBackgroundColor' : 'bg-listItemBackgroundColor'}
-                        admin={data.item} 
-                        detailsButtonPressed={handleDetailsButtonPressed}
-                        onListItemClicked={() => handleListItemClicked(data.item)}
+            showsVerticalScrollIndicator={false}>
+                {administrators.length > 0 ? (
+                    administrators.map((admin) => (
+                        <AdministratorListItem
+                            key={admin.adminId}
+                            admin={admin}
+                            onEdit={editButtonPressed}
+                            onDelete={deleteButtonPressed}
+                            onPress={adminItemPressed}
+                        />
+                    ))
+                ) : (
+                    <NoDataView 
+                        className="flex-1 py-20" 
+                        dataType={DataType.ADMIN} 
+                        currentSearchText={currentSearchText}
                     />
                 )
-            }}
-        />
+            }
+        </ScrollView>
     )
 }
 
