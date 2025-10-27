@@ -1,7 +1,6 @@
-import { View, Text } from "react-native";
+import { View, Text, Dimensions } from "react-native";
 import JarvisModal from "./JarvisModal";
 import IconContainer, { IconType } from "components/IconContainer";
-import JarvisButton from "components/buttons/JarvisButton";
 import { useState } from "react";
 import { MoodType, ReportType } from "lib/models/report";
 import { Chip } from "react-native-paper";
@@ -29,6 +28,7 @@ const AddReportModal = ({
     const [selectedMoodtype,setSelectedMoodType] = useState<MoodType|null>(null);
     const [selectedStudent,setSelectedStudent] = useState<Student|null>();
     const showErrorMessage = useErrorSnackbar();
+    const windowHeight = Dimensions.get('window').height;
 
     const addButtonPressed = () => {
         if (selectedStudent === null) {
@@ -81,13 +81,20 @@ const AddReportModal = ({
             }}
             isVisible={isVisible}
             onDismiss={onDismiss}
+            confirmButtonProps={{
+                title: "Add",
+                onPress: addButtonPressed
+            }}
         >
             <View className="items-center">
-                <StudentList 
+                <StudentList
                     className="w-[100%]"
-                    students={mockStudentData}  
+                    students={mockStudentData}
                     selectedStudent={selectedStudent}
-                    studentItemPressed={setSelectedStudent}            
+                    studentItemPressed={setSelectedStudent}
+                    style={{
+                        maxHeight: windowHeight * 0.4
+                    }}
                 />
                 <ReportTypeList 
                     className="mt-2"
@@ -126,8 +133,6 @@ const AddReportModal = ({
                     )
                 }
             </View>
-            <JarvisButton className="mt-4" title={"Add"} onPress={addButtonPressed} />
-            <JarvisButton className="mt-2" title={"Cancel"} onPress={onDismiss} />
         </JarvisModal>
     )
 }

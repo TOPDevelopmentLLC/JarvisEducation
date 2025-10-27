@@ -1,6 +1,6 @@
 import { Student } from "lib/models/student"
 import StudentListItem from "components/lists/StudentListItem";
-import { FlatList, ScrollView } from "react-native";
+import { FlatList, ScrollView, ViewStyle } from "react-native";
 import { useStoredStudentData } from "components/contexts/StudentContext";
 import { router } from "expo-router";
 import NoDataView, { DataType } from "components/NoDataView";
@@ -14,6 +14,7 @@ export interface StudentListProps {
     editButtonPressed?: (student:Student) => void;
     deleteButtonPressed?: (student:Student) => void;
     studentItemPressed?: (student:Student) => void;
+    style?: ViewStyle;
 }
 
 const StudentList = ({
@@ -24,12 +25,14 @@ const StudentList = ({
     editButtonPressed,
     deleteButtonPressed,
     studentItemPressed,
+    style,
 }: StudentListProps) => {
 
 
     return (
         <ScrollView
             className={className}
+            style={style}
             showsVerticalScrollIndicator={false}>
                 {students.length > 0 ? (
                     students.map((student) => (

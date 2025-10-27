@@ -49,20 +49,22 @@ const AddAdminModal = ({
                 }
             }}
             isVisible={isVisible}
-            onDismiss={onDismiss}>
-                <JarvisPaperTextInput 
-                    placeholder={"Admin Name"} 
-                    onTextChange={(adminName) => setAdminName(adminName)} 
+            onDismiss={onDismiss}
+            confirmButtonProps={{
+                title: "Add",
+                onPress: addButtonPressed
+            }}>
+                <JarvisPaperTextInput
+                    placeholder={"Admin Name"}
+                    onTextChange={(adminName) => setAdminName(adminName)}
                 />
-                <JarvisPaperTextInput 
-                    placeholder={"Admin Email"} 
-                    onTextChange={(adminEmail) => setAdminAccountEmail(adminEmail)} 
+                <JarvisPaperTextInput
+                    placeholder={"Admin Email"}
+                    onTextChange={(adminEmail) => setAdminAccountEmail(adminEmail)}
                     style={{
                         marginTop: 8
                     }}
                 />
-                <JarvisButton className="mt-4" title={"Add"} onPress={addButtonPressed} />
-                <JarvisButton className="mt-2" title={"Cancel"} onPress={onDismiss} />
         </JarvisModal>
     )
 }
