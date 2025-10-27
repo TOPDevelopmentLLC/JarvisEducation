@@ -1,5 +1,6 @@
 import JarvisButton from "components/buttons/JarvisButton";
 import { useErrorSnackbar } from "components/contexts/SnackbarContext";
+import { useStoredStudentData } from "components/contexts/StudentContext";
 import IconContainer, { IconType } from "components/IconContainer";
 import JarvisCheckbox from "components/JarvisCheckbox";
 import JarvisPaperTextInput from "components/JarvisPaperTextInput";
@@ -23,6 +24,7 @@ const AddStudentModal = ({
     const [studentAccountEmail,setStudentAccountEmail] = useState('');
     const [parentAccountEmail,setParentAccountEmail] = useState('');
     const showErrorMessage = useErrorSnackbar();
+    const { addStudent, students } = useStoredStudentData();
 
     const addButtonPressed = () => {
         if (studentName.length === 0) {
@@ -37,9 +39,23 @@ const AddStudentModal = ({
             showErrorMessage('Please enter a valid email for the Parent.');
             return;
         }
-        //todo: start activity indicator
-        //todo: add api call to add student
-        //todo: end activity indicator on response
+
+        // Generate a new ID
+        const newId = (students.length + 1).toString();
+
+        // Add the student to context
+        addStudent({
+            studentId: newId,
+            name: studentName
+        });
+
+        // Reset form and close modal
+        setStudentName('');
+        setStudentAccountEmail('');
+        setParentAccountEmail('');
+        setAddUserAccountIsChecked(false);
+        setAddParentAccountIsChecked(false);
+        onDismiss?.();
     }
 
     return (

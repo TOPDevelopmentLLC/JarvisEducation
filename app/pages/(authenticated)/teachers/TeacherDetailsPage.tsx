@@ -1,4 +1,5 @@
 import { useStoredTeacherData } from "components/contexts/TeacherContext";
+import { useStoredCourseData } from "components/contexts/CourseContext";
 import DetailsHeaderPage from "components/pages/DetailsHeaderPage";
 import { useLocalSearchParams } from "expo-router";
 import { useState } from "react";
@@ -8,9 +9,15 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 const TeacherDetailsPage = () => {
     const { selectedTeacher, setSelectedTeacher } = useStoredTeacherData();
+    const { courses } = useStoredCourseData();
     const { edit } = useLocalSearchParams();
     const [inEditMode, setEditMode] = useState<boolean>(edit === '1');
     const [currentTeacherName, setCurrentTeacherName] = useState(selectedTeacher.name);
+
+    // Get all courses assigned to this teacher
+    const assignedCourses = courses.filter(course =>
+        selectedTeacher.assignedCourseIds?.includes(course.courseId)
+    );
 
     const saveButtonPressed = () => {
         setEditMode(false);
@@ -67,11 +74,22 @@ const TeacherDetailsPage = () => {
                             )}
                         </View>
 
-                        {/* Teacher ID Field (Read-only) */}
+                        {/* Assigned Courses Field */}
                         <View className="mb-6">
-                            <Text className="text-gray-400 text-sm mb-2">Teacher ID</Text>
+                            <Text className="text-gray-400 text-sm mb-2">Assigned Courses</Text>
                             <View className="px-4 py-3">
-                                <Text className="text-gray-500 text-base">{selectedTeacher.teacherId}</Text>
+                                {assignedCourses.length > 0 ? (
+                                    <View>
+                                        {assignedCourses.map((course, index) => (
+                                            <Text key={course.courseId} className="text-white text-base">
+                                                {index > 0 && '\n'}
+                                                • {course.title}
+                                            </Text>
+                                        ))}
+                                    </View>
+                                ) : (
+                                    <Text className="text-white text-base">None</Text>
+                                )}
                             </View>
                         </View>
                     </View>

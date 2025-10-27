@@ -1,5 +1,4 @@
 import MenuHeaderPage from "components/pages/MenuHeaderPage";
-import { mockTeacherData } from "lib/mockData";
 import { router } from 'expo-router';
 import AddTeacherModal from "components/modals/AddTeacherModal";
 import ConfirmationModal from "components/modals/ConfirmationModal";
@@ -15,13 +14,13 @@ import { useStoredTeacherData } from "components/contexts/TeacherContext";
 
 
 const TeacherListPage = () => {
-    const { setSelectedTeacher } = useStoredTeacherData();
+    const { teachers, setSelectedTeacher, deleteTeacher } = useStoredTeacherData();
     const [addTeacherModalIsVisible, setAddTeacherModalIsVisible] = useState(false);
     const [confirmDeleteModalIsVisible, setConfirmDeleteModalIsVisible] = useState(false);
     const [teacherToDelete, setTeacherToDelete] = useState<Teacher | null>(null);
     const [searchQuery, setSearchQuery] = useState("");
 
-    const filteredTeachers = mockTeacherData.filter(teacher =>
+    const filteredTeachers = teachers.filter(teacher =>
         teacher.name.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
@@ -46,8 +45,7 @@ const TeacherListPage = () => {
 
     const confirmDelete = () => {
         if (teacherToDelete) {
-            // TODO: Implement delete logic
-            console.log("Delete teacher:", teacherToDelete.teacherId);
+            deleteTeacher(teacherToDelete.teacherId);
         }
         setConfirmDeleteModalIsVisible(false);
         setTeacherToDelete(null);

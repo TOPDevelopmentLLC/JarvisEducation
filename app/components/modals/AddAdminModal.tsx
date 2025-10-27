@@ -1,5 +1,6 @@
 import JarvisButton from "components/buttons/JarvisButton";
 import { useErrorSnackbar } from "components/contexts/SnackbarContext";
+import { useStoredAdminData } from "components/contexts/AdminContext";
 import IconContainer, { IconType } from "components/IconContainer";
 import JarvisCheckbox from "components/JarvisCheckbox";
 import JarvisPaperTextInput from "components/JarvisPaperTextInput";
@@ -22,6 +23,7 @@ const AddAdminModal = ({
     const [adminName,setAdminName] = useState('');
     const [adminAccountEmail,setAdminAccountEmail] = useState('');
     const showErrorMessage = useErrorSnackbar();
+    const { addAdmin, admins } = useStoredAdminData();
 
     const addButtonPressed = () => {
         if (adminName.length === 0) {
@@ -32,9 +34,18 @@ const AddAdminModal = ({
             showErrorMessage('Please enter a valid email for the new Administrator.');
             return;
         }
-        //todo: start activity indicator
-        //todo: add api call to add admin
-        //todo: end activity indicator on response
+
+        // Generate new ID and add admin
+        const newId = (admins.length + 1).toString();
+        addAdmin({
+            adminId: newId,
+            name: adminName
+        });
+
+        // Reset form and close modal
+        setAdminName('');
+        setAdminAccountEmail('');
+        onDismiss?.();
     }
 
     return (

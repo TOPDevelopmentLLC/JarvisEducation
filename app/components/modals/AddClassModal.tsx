@@ -1,5 +1,6 @@
 import JarvisButton from "components/buttons/JarvisButton";
 import { useErrorSnackbar } from "components/contexts/SnackbarContext";
+import { useStoredCourseData } from "components/contexts/CourseContext";
 import { IconType } from "components/IconContainer";
 import JarvisPaperTextInput from "components/JarvisPaperTextInput";
 import JarvisModal from "components/modals/JarvisModal";
@@ -18,6 +19,7 @@ const AddClassModal = ({
     const [courseTitle, setCourseTitle] = useState('');
     const [courseDescription, setCourseDescription] = useState('');
     const showErrorMessage = useErrorSnackbar();
+    const { addCourse, courses } = useStoredCourseData();
 
     const addButtonPressed = () => {
         if (courseTitle.length === 0) {
@@ -28,9 +30,19 @@ const AddClassModal = ({
             showErrorMessage('Please enter a description for the Course.');
             return;
         }
-        //todo: start activity indicator
-        //todo: add api call to add course
-        //todo: end activity indicator on response
+
+        // Generate new ID and add course
+        const newId = (courses.length + 1).toString();
+        addCourse({
+            courseId: newId,
+            title: courseTitle,
+            description: courseDescription
+        });
+
+        // Reset form and close modal
+        setCourseTitle('');
+        setCourseDescription('');
+        onDismiss?.();
     }
 
     return (

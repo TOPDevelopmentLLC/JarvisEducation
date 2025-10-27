@@ -80,14 +80,6 @@ const ReportDetailsPage = () => {
                                 </View>
                             )}
                         </View>
-
-                        {/* Report ID Field (Read-only) */}
-                        <View className="mb-6">
-                            <Text className="text-gray-400 text-sm mb-2">Report ID</Text>
-                            <View className="px-4 py-3">
-                                <Text className="text-gray-500 text-base">{selectedReport.reportId}</Text>
-                            </View>
-                        </View>
                     </View>
 
                     {/* Action Buttons */}

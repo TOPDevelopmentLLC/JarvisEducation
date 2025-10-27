@@ -36,9 +36,9 @@ const StudentListItem = ({
             </View>
 
             <View className="flex-row gap-2">
-                {isSelected && (
-                    <View className="bg-black rounded-lg p-2 justify-center items-center">
-                        <MaterialCommunityIcons name="check" size={24} color="#9cb43c" />
+                {!onEdit && !onDelete && (
+                    <View className="bg-black rounded-lg p-2 justify-center items-center" style={{ width: 40, height: 40 }}>
+                        {isSelected && <MaterialCommunityIcons name="check" size={24} color="#9cb43c" />}
                     </View>
                 )}
                 {onEdit && (

@@ -1,5 +1,4 @@
 import MenuHeaderPage from "components/pages/MenuHeaderPage";
-import { mockReportData } from "lib/mockData";
 import { router } from 'expo-router';
 import { useState } from "react";
 import AddReportModal from "components/modals/AddReportModal";
@@ -12,11 +11,11 @@ import { IconType } from "components/IconContainer";
 import { useStoredReportData } from "components/contexts/ReportContext";
 
 const ReportsListPage = () => {
-    const { setSelectedReport } = useStoredReportData();
+    const { reports, setSelectedReport } = useStoredReportData();
     const [addReportModalIsVisible, setAddReportModalIsVisible] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
 
-    const filteredReports = mockReportData.filter(report =>
+    const filteredReports = reports.filter(report =>
         report.type.toString().toLowerCase().includes(searchQuery.toLowerCase()) ||
         (report.description && report.description.toLowerCase().includes(searchQuery.toLowerCase()))
     );

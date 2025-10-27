@@ -7,6 +7,7 @@ import clsx from "clsx";
 export interface TeacherListItemProps {
     className?: string;
     teacher: Teacher;
+    isSelected?: boolean;
     onEdit?: (teacher: Teacher) => void;
     onDelete?: (teacher: Teacher) => void;
     onPress?: (teacher: Teacher) => void;
@@ -15,19 +16,31 @@ export interface TeacherListItemProps {
 const TeacherListItem = ({
     className,
     teacher,
+    isSelected = false,
     onEdit,
     onDelete,
     onPress
 }: TeacherListItemProps) => {
     return (
         <Pressable
-            className={clsx("flex-row items-center bg-gray-800 rounded-xl p-4 mb-3 justify-between active:opacity-80", className)}
+            className={clsx(
+                "flex-row items-center rounded-xl p-4 mb-3 justify-between active:opacity-80",
+                isSelected ? "bg-jarvisPrimary" : "bg-gray-800",
+                className
+            )}
             onPress={() => onPress?.(teacher)}>
             <View className="flex-1">
-                <Text className="text-white text-lg font-semibold">{teacher.name}</Text>
+                <Text className={clsx("text-lg font-semibold", isSelected ? "text-black" : "text-white")}>
+                    {teacher.name}
+                </Text>
             </View>
 
             <View className="flex-row gap-2">
+                {!onEdit && !onDelete && (
+                    <View className="bg-black rounded-lg p-2 justify-center items-center" style={{ width: 40, height: 40 }}>
+                        {isSelected && <MaterialCommunityIcons name="check" size={24} color="#9cb43c" />}
+                    </View>
+                )}
                 {onEdit && (
                     <Pressable
                         className="bg-jarvisPrimary rounded-lg p-3 active:opacity-70"

@@ -7,82 +7,109 @@ import { Teacher } from "lib/models/teacher";
 export const mockStudentData: Student[] = [
     {
         studentId: '1',
-        name: 'Naruto Uzumaki'
+        name: 'Emma Johnson'
     },
     {
         studentId: '2',
-        name: 'Sasuke Uchiha'
+        name: 'Liam Williams'
     },
     {
         studentId: '3',
-        name: 'Sakura Haruno'
+        name: 'Olivia Brown'
     },
     {
         studentId: '4',
-        name: 'Neji Hyuga'
+        name: 'Noah Davis'
     },
     {
         studentId: '5',
-        name: 'Rock Lee'
+        name: 'Ava Martinez'
     },
     {
         studentId: '6',
-        name: 'Shikamaru Nara'
+        name: 'Ethan Garcia'
+    },
+    {
+        studentId: '7',
+        name: 'Sophia Rodriguez'
+    },
+    {
+        studentId: '8',
+        name: 'Mason Anderson'
     }
 ]
 
 export const mockTeacherData: Teacher[] = [
     {
         teacherId: '1',
-        name: 'Kakashi Hatake'
+        name: 'Robert Thompson'
     },
     {
         teacherId: '2',
-        name: 'Asuma Sarutobi'
+        name: 'Jennifer Wilson'
     },
     {
         teacherId: '3',
-        name: 'Might Guy'
+        name: 'Michael Chen'
     },
     {
         teacherId: '4',
-        name: 'Jiraiya'
+        name: 'Sarah Mitchell'
+    },
+    {
+        teacherId: '5',
+        name: 'David Patterson'
     }
 ]
 
 export const mockAdminData: Administrator[] = [
     {
         adminId: '1',
-        name: 'Hashirama Senju'
+        name: 'Patricia Henderson'
     },
     {
         adminId: '2',
-        name: 'Tobirama Senju'
+        name: 'James Sullivan'
     },
     {
         adminId: '3',
-        name: 'Hiruzen Sarutobi'
+        name: 'Margaret Foster'
     },
     {
         adminId: '4',
-        name: 'Minato Namikaze'
+        name: 'William Roberts'
     },
     {
         adminId: '5',
-        name: 'Tsunade'
+        name: 'Linda Coleman'
     }
 ]
 
 export const mockCourseData: Course[] = [
     {
         courseId: '1',
-        title: 'Ninjutsu Training',
-        description: 'Ninja training in Ninjutsu.'
+        title: 'Algebra I',
+        description: 'Introduction to algebraic concepts including equations, inequalities, and functions.'
     },
     {
         courseId: '2',
-        title: 'Taijutsu Training',
-        description: 'Ninja training in Taijutsu.'
+        title: 'English Literature',
+        description: 'Analysis of classic and contemporary literature with focus on reading comprehension and writing skills.'
+    },
+    {
+        courseId: '3',
+        title: 'Biology',
+        description: 'Study of living organisms, cells, genetics, and ecosystems.'
+    },
+    {
+        courseId: '4',
+        title: 'U.S. History',
+        description: 'Comprehensive study of American history from colonial times to present day.'
+    },
+    {
+        courseId: '5',
+        title: 'Physical Education',
+        description: 'Development of physical fitness, health awareness, and teamwork through sports and activities.'
     }
 ]
 
@@ -90,21 +117,26 @@ export const mockReportData: Report[] = [
     {
         reportId: '1',
         type: ReportType.Attendance,
-        description: 'Student was not in class'
+        description: 'Emma Johnson was absent without notification'
     },
     {
         reportId: '2',
-        type: ReportType.Attendance,
-        description: 'Student was not in class'
+        type: ReportType.Behavior,
+        description: 'Liam Williams disrupted class discussion and refused to follow instructions'
     },
     {
         reportId: '3',
         type: ReportType.Attendance,
-        description: 'Student was not in class'
+        description: 'Noah Davis arrived 20 minutes late to class'
     },
     {
         reportId: '4',
-        type: ReportType.Attendance,
-        description: 'Student was not in class'
+        type: ReportType.Conflict,
+        description: 'Verbal altercation between Ethan Garcia and another student during lunch'
+    },
+    {
+        reportId: '5',
+        type: ReportType.Behavior,
+        description: 'Sophia Rodriguez was using phone during instruction time'
     }
 ]

@@ -66,14 +66,6 @@ const StudentDetailsPage = () => {
                                 </View>
                             )}
                         </View>
-
-                        {/* Student ID Field (Read-only) */}
-                        <View className="mb-6">
-                            <Text className="text-gray-400 text-sm mb-2">Student ID</Text>
-                            <View className="px-4 py-3">
-                                <Text className="text-gray-500 text-base">{selectedStudent.studentId}</Text>
-                            </View>
-                        </View>
                     </View>
 
                     {/* Action Buttons */}

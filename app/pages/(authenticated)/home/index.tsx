@@ -1,20 +1,22 @@
 import MenuHeaderPage from "components/pages/MenuHeaderPage";
 import { View, Text, ScrollView, Pressable } from "react-native";
 import { router } from "expo-router";
-import { mockReportData } from "lib/mockData";
 import ReportListItem from "components/lists/ReportListItem";
 import { Report } from "lib/models/report";
 import { useStoredReportData } from "components/contexts/ReportContext";
+import AddReportModal from "components/modals/AddReportModal";
+import { useState } from "react";
 
 
 const HomePage = () => {
-    const { setSelectedReport } = useStoredReportData();
+    const { reports, setSelectedReport } = useStoredReportData();
+    const [addReportModalIsVisible, setAddReportModalIsVisible] = useState(false);
 
     // Get only the 5 most recent reports
-    const recentReports = mockReportData.slice(0, 5);
+    const recentReports = reports.slice(0, 5);
 
     const handleNewReportPressed = () => {
-        router.push('/pages/reports/NewReportPage');
+        setAddReportModalIsVisible(true);
     }
 
     const handleViewAllReportsPressed = () => {
@@ -50,15 +52,9 @@ const HomePage = () => {
                     <Text className="text-2xl font-bold text-white mb-4">Quick Actions</Text>
 
                     <Pressable
-                        className="bg-jarvisPrimary rounded-lg p-4 mb-3 items-center active:opacity-80"
+                        className="bg-jarvisPrimary rounded-lg p-4 items-center active:opacity-80"
                         onPress={handleNewReportPressed}>
                         <Text className="text-black text-lg font-semibold">+ Create New Report</Text>
-                    </Pressable>
-
-                    <Pressable
-                        className="bg-gray-700 rounded-lg p-4 items-center active:opacity-80"
-                        onPress={handleViewAllReportsPressed}>
-                        <Text className="text-white text-lg font-semibold">View All Reports</Text>
                     </Pressable>
                 </View>
 
@@ -91,6 +87,10 @@ const HomePage = () => {
                 </View>
                 </View>
             </ScrollView>
+            <AddReportModal
+                isVisible={addReportModalIsVisible}
+                onDismiss={() => setAddReportModalIsVisible(false)}
+            />
         </MenuHeaderPage>
     )
 }
