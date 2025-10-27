@@ -26,14 +26,14 @@ const AddReportModal = ({
     const [selectedReportType,setSelectedReportType] = useState<ReportType|null>(null);
     const [reportDescription,setReportDescription] = useState('');
     const [selectedMoodtype,setSelectedMoodType] = useState<MoodType|null>(null);
-    const [selectedStudent,setSelectedStudent] = useState<Student|null>();
+    const [selectedStudent,setSelectedStudent] = useState<Student|null>(null);
     const showErrorMessage = useErrorSnackbar();
     const { students } = useStoredStudentData();
     const { addReport, reports } = useStoredReportData();
     const windowHeight = Dimensions.get('window').height;
 
     const addButtonPressed = () => {
-        if (selectedStudent === null) {
+        if (!selectedStudent) {
             showErrorMessage('Please select a student to continue.');
             return;
         }
