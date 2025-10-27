@@ -5,8 +5,8 @@ import { useState } from "react";
 import { MoodType, ReportType } from "lib/models/report";
 import { Chip } from "react-native-paper";
 import StudentList from "components/lists/StudentList";
-import { mockStudentData } from "lib/mockData";
 import { useStoredStudentData } from "components/contexts/StudentContext";
+import { useStoredReportData } from "components/contexts/ReportContext";
 import JarvisPaperTextInput from "components/JarvisPaperTextInput";
 import MoodLabelList from "components/lists/MoodLabelList";
 import ReportTypeList from "components/lists/ReportTypeList";
@@ -28,6 +28,8 @@ const AddReportModal = ({
     const [selectedMoodtype,setSelectedMoodType] = useState<MoodType|null>(null);
     const [selectedStudent,setSelectedStudent] = useState<Student|null>();
     const showErrorMessage = useErrorSnackbar();
+    const { students } = useStoredStudentData();
+    const { addReport, reports } = useStoredReportData();
     const windowHeight = Dimensions.get('window').height;
 
     const addButtonPressed = () => {
@@ -47,14 +49,26 @@ const AddReportModal = ({
             selectedReportType === ReportType.Conflict ||
             selectedReportType === ReportType.Expelled ||
             selectedReportType === ReportType.Secluded ||
-            selectedReportType === ReportType.SIP) && 
+            selectedReportType === ReportType.SIP) &&
             reportDescription.length === 0) {
             showErrorMessage('Please enter a description to continue.');
             return;
         }
-        //todo: start activity indicator
-        //todo: add api call to add student
-        //todo: end activity indicator on response
+
+        // Generate new ID and add report
+        const newId = (reports.length + 1).toString();
+        addReport({
+            reportId: newId,
+            type: selectedReportType,
+            description: reportDescription || selectedMoodtype?.toString() || ''
+        });
+
+        // Reset form and close modal
+        setSelectedReportType(null);
+        setReportDescription('');
+        setSelectedMoodType(null);
+        setSelectedStudent(null);
+        onDismiss?.();
     }
 
     const reportTypeClicked = (reportType:ReportType) => {
@@ -89,7 +103,7 @@ const AddReportModal = ({
             <View className="items-center">
                 <StudentList
                     className="w-[100%]"
-                    students={mockStudentData}
+                    students={students}
                     selectedStudent={selectedStudent}
                     studentItemPressed={setSelectedStudent}
                     style={{

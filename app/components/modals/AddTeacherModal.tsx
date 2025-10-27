@@ -1,5 +1,6 @@
 import JarvisButton from "components/buttons/JarvisButton";
 import { useErrorSnackbar } from "components/contexts/SnackbarContext";
+import { useStoredTeacherData } from "components/contexts/TeacherContext";
 import IconContainer, { IconType } from "components/IconContainer";
 import JarvisCheckbox from "components/JarvisCheckbox";
 import JarvisPaperTextInput from "components/JarvisPaperTextInput";
@@ -22,6 +23,7 @@ const AddTeacherModal = ({
     const [teacherName,setTeacherName] = useState('');
     const [teacherAccountEmail,setTeacherAccountEmail] = useState('');
     const showErrorMessage = useErrorSnackbar();
+    const { addTeacher, teachers } = useStoredTeacherData();
 
     const addButtonPressed = () => {
         if (teacherName.length === 0) {
@@ -32,9 +34,19 @@ const AddTeacherModal = ({
             showErrorMessage('Please enter a valid email for the new Teacher.');
             return;
         }
-        //todo: start activity indicator
-        //todo: add api call to add teacher
-        //todo: end activity indicator on response
+
+        // Generate new ID and add teacher
+        const newId = (teachers.length + 1).toString();
+        addTeacher({
+            teacherId: newId,
+            name: teacherName
+        });
+
+        // Reset form and close modal
+        setTeacherName('');
+        setTeacherAccountEmail('');
+        setAddUserAccountIsChecked(false);
+        onDismiss?.();
     }
 
     return (
