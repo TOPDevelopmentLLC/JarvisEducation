@@ -54,7 +54,11 @@ const AddStudentModal = ({
                 }
             }}
             isVisible={isVisible}
-            onDismiss={onDismiss}>
+            onDismiss={onDismiss}
+            confirmButtonProps={{
+                title: "Add",
+                onPress: addButtonPressed
+            }}>
                 <JarvisPaperTextInput
                     placeholder={"Student Name"}
                     onTextChange={(studentName) => setStudentName(studentName)}
@@ -83,14 +87,12 @@ const AddStudentModal = ({
                 </View>
                 {
                     addParentAccountIsChecked && (
-                        <JarvisPaperTextInput 
-                            placeholder={"Parent Email"} 
-                            onTextChange={(parentEmail) => setParentAccountEmail(parentEmail)}                        
+                        <JarvisPaperTextInput
+                            placeholder={"Parent Email"}
+                            onTextChange={(parentEmail) => setParentAccountEmail(parentEmail)}
                         />
                     )
                 }
-                <JarvisButton className="mt-4" title={"Add"} onPress={addButtonPressed} />
-                <JarvisButton className="mt-2" title={"Cancel"} onPress={onDismiss} />
         </JarvisModal>
     )
 }

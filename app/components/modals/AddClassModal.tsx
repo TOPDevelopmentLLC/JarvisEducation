@@ -45,7 +45,11 @@ const AddClassModal = ({
                 }
             }}
             isVisible={isVisible}
-            onDismiss={onDismiss}>
+            onDismiss={onDismiss}
+            confirmButtonProps={{
+                title: "Add",
+                onPress: addButtonPressed
+            }}>
                 <JarvisPaperTextInput
                     placeholder={"Course Title"}
                     onTextChange={(title) => setCourseTitle(title)}
@@ -59,8 +63,6 @@ const AddClassModal = ({
                     multiline
                     numberOfLines={3}
                 />
-                <JarvisButton className="mt-4" title={"Add"} onPress={addButtonPressed} />
-                <JarvisButton className="mt-2" title={"Cancel"} onPress={onDismiss} />
         </JarvisModal>
     )
 }
