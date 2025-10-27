@@ -58,8 +58,16 @@ export const SnackbarProvider: React.FC<{ children: React.ReactNode }> = ({ chil
             visible={visible}
             onDismiss={onDismissSnackBar}
             duration={3000}
+            wrapperStyle={{
+              position: 'absolute',
+              top: 20,
+              right: 20,
+              left: 'auto',
+              bottom: 'auto',
+              width: 400,
+              maxWidth: '90%',
+            }}
             style={{
-              marginBottom: 20,
               backgroundColor: getBackgroundColor(),
             }}
           >
@@ -67,7 +75,7 @@ export const SnackbarProvider: React.FC<{ children: React.ReactNode }> = ({ chil
           </Snackbar>
         )
       }
-      
+
     </SnackbarContext.Provider>
   );
 };
