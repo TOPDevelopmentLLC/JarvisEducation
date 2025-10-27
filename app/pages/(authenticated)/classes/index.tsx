@@ -1,5 +1,4 @@
 import MenuHeaderPage from "components/pages/MenuHeaderPage";
-import { mockCourseData } from "lib/mockData";
 import { router } from 'expo-router';
 import { useState } from "react";
 import { View, Text, Pressable, TextInput, ScrollView } from "react-native";
@@ -16,13 +15,13 @@ import { useStoredCourseData } from "components/contexts/CourseContext";
 import SearchBar from "components/SearchBar";
 
 const CourseListPage = () => {
-    const { setSelectedCourse } = useStoredCourseData();
+    const { courses, setSelectedCourse, deleteCourse } = useStoredCourseData();
     const [searchQuery, setSearchQuery] = useState("");
     const [addClassModalIsVisible, setAddClassModalIsVisible] = useState(false);
     const [confirmDeleteModalIsVisible, setConfirmDeleteModalIsVisible] = useState(false);
     const [courseToDelete, setCourseToDelete] = useState<Course | null>(null);
 
-    const filteredCourses = mockCourseData.filter(course =>
+    const filteredCourses = courses.filter(course =>
         course.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
         course.description.toLowerCase().includes(searchQuery.toLowerCase())
     );
@@ -48,8 +47,7 @@ const CourseListPage = () => {
 
     const confirmDelete = () => {
         if (courseToDelete) {
-            // TODO: Implement delete logic
-            console.log("Delete course:", courseToDelete.courseId);
+            deleteCourse(courseToDelete.courseId);
         }
         setConfirmDeleteModalIsVisible(false);
         setCourseToDelete(null);

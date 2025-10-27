@@ -1,4 +1,3 @@
-import { mockAdminData } from "lib/mockData";
 import MenuHeaderPage from "components/pages/MenuHeaderPage";
 import { router } from 'expo-router';
 import AddAdminModal from "components/modals/AddAdminModal";
@@ -14,13 +13,13 @@ import { useStoredAdminData } from "components/contexts/AdminContext";
 
 
 const AdministratorListPage = () => {
-    const { setSelectedAdmin } = useStoredAdminData();
+    const { admins, setSelectedAdmin, deleteAdmin } = useStoredAdminData();
     const [addAdminModalIsVisible, setAddAdminModalIsVisible] = useState(false);
     const [confirmDeleteModalIsVisible, setConfirmDeleteModalIsVisible] = useState(false);
     const [adminToDelete, setAdminToDelete] = useState<Administrator | null>(null);
     const [searchQuery, setSearchQuery] = useState("");
 
-    const filteredAdmins = mockAdminData.filter(admin =>
+    const filteredAdmins = admins.filter(admin =>
         admin.name.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
@@ -45,8 +44,7 @@ const AdministratorListPage = () => {
 
     const confirmDelete = () => {
         if (adminToDelete) {
-            // TODO: Implement delete logic
-            console.log("Delete admin:", adminToDelete.adminId);
+            deleteAdmin(adminToDelete.adminId);
         }
         setConfirmDeleteModalIsVisible(false);
         setAdminToDelete(null);
