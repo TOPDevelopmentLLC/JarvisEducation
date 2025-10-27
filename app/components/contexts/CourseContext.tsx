@@ -9,6 +9,7 @@ interface CourseContextType {
   setSelectedCourse: (course: Course | null) => void;
   addCourse: (course: Course) => void;
   deleteCourse: (courseId: string) => void;
+  assignTeacherToCourse: (courseId: string, teacherId: string) => void;
 }
 
 const CourseContext = createContext<CourseContextType|undefined>(undefined);
@@ -25,13 +26,34 @@ export const CourseProvider = ({ children }: {children:ReactNode}) => {
     setCourses(prev => prev.filter(c => c.courseId !== courseId));
   };
 
+  const assignTeacherToCourse = (courseId: string, teacherId: string) => {
+    setCourses(prev => prev.map(course => {
+      if (course.courseId === courseId) {
+        return {
+          ...course,
+          assignedTeacherId: teacherId
+        };
+      }
+      return course;
+    }));
+
+    // Update selectedCourse if it's the one being modified
+    if (selectedCourse?.courseId === courseId) {
+      setSelectedCourse({
+        ...selectedCourse,
+        assignedTeacherId: teacherId
+      });
+    }
+  };
+
   return (
     <CourseContext.Provider value={{
       courses,
       selectedCourse,
       setSelectedCourse,
       addCourse,
-      deleteCourse
+      deleteCourse,
+      assignTeacherToCourse
     }}>
       {children}
     </CourseContext.Provider>

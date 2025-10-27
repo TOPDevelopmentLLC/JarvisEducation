@@ -1,17 +1,25 @@
 import { useStoredCourseData } from "components/contexts/CourseContext";
+import { useStoredTeacherData } from "components/contexts/TeacherContext";
 import DetailsHeaderPage from "components/pages/DetailsHeaderPage";
 import { useLocalSearchParams } from "expo-router";
 import { useState } from "react";
 import { View, Text, TextInput, ScrollView, Pressable } from "react-native";
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import AssignTeacherModal from "components/modals/AssignTeacherModal";
+import JarvisButton from "components/buttons/JarvisButton";
 
 
 const CourseDetailsPage = () => {
-    const { selectedCourse, setSelectedCourse } = useStoredCourseData();
+    const { selectedCourse, setSelectedCourse, assignTeacherToCourse } = useStoredCourseData();
+    const { teachers } = useStoredTeacherData();
     const { edit } = useLocalSearchParams();
     const [inEditMode, setEditMode] = useState<boolean>(edit === '1');
     const [currentCourseTitle, setCurrentCourseTitle] = useState(selectedCourse.title);
     const [currentCourseDescription, setCurrentCourseDescription] = useState(selectedCourse.description);
+    const [assignTeacherModalIsVisible, setAssignTeacherModalIsVisible] = useState(false);
+
+    // Get the assigned teacher
+    const assignedTeacher = teachers.find(t => t.teacherId === selectedCourse?.assignedTeacherId);
 
     const saveButtonPressed = () => {
         setEditMode(false);
@@ -89,6 +97,16 @@ const CourseDetailsPage = () => {
                             )}
                         </View>
 
+                        {/* Assigned Teacher Field */}
+                        <View className="mb-6">
+                            <Text className="text-gray-400 text-sm mb-2">Assigned Teacher</Text>
+                            <View className="px-4 py-3">
+                                <Text className="text-white text-base">
+                                    {assignedTeacher ? assignedTeacher.name : 'None'}
+                                </Text>
+                            </View>
+                        </View>
+
                         {/* Course ID Field (Read-only) */}
                         <View className="mb-6">
                             <Text className="text-gray-400 text-sm mb-2">Course ID</Text>
@@ -114,15 +132,26 @@ const CourseDetailsPage = () => {
                                 </Pressable>
                             </>
                         ) : (
-                            <Pressable
-                                className="bg-jarvisPrimary rounded-lg p-4 items-center active:opacity-70"
-                                onPress={editButtonPressed}>
-                                <Text className="text-black text-base font-semibold">Edit Information</Text>
-                            </Pressable>
+                            <>
+                                <Pressable
+                                    className="bg-jarvisPrimary rounded-lg p-4 items-center active:opacity-70"
+                                    onPress={editButtonPressed}>
+                                    <Text className="text-black text-base font-semibold">Edit Information</Text>
+                                </Pressable>
+                                <JarvisButton
+                                    title="Assign Teacher"
+                                    onPress={() => setAssignTeacherModalIsVisible(true)}
+                                />
+                            </>
                         )}
                     </View>
                 </View>
             </ScrollView>
+            <AssignTeacherModal
+                isVisible={assignTeacherModalIsVisible}
+                onDismiss={() => setAssignTeacherModalIsVisible(false)}
+                course={selectedCourse}
+            />
         </DetailsHeaderPage>
     )
 }

@@ -9,6 +9,8 @@ interface TeacherContextType {
   setSelectedTeacher: (teacher: Teacher | null) => void;
   addTeacher: (teacher: Teacher) => void;
   deleteTeacher: (teacherId: string) => void;
+  assignTeacherToCourse: (teacherId: string, courseId: string) => void;
+  unassignTeacherFromCourse: (teacherId: string, courseId: string) => void;
 }
 
 const TeacherContext = createContext<TeacherContextType|undefined>(undefined);
@@ -25,13 +27,43 @@ export const TeacherProvider = ({ children }: {children:ReactNode}) => {
     setTeachers(prev => prev.filter(t => t.teacherId !== teacherId));
   };
 
+  const assignTeacherToCourse = (teacherId: string, courseId: string) => {
+    setTeachers(prev => prev.map(teacher => {
+      if (teacher.teacherId === teacherId) {
+        const currentCourses = teacher.assignedCourseIds || [];
+        if (!currentCourses.includes(courseId)) {
+          return {
+            ...teacher,
+            assignedCourseIds: [...currentCourses, courseId]
+          };
+        }
+      }
+      return teacher;
+    }));
+  };
+
+  const unassignTeacherFromCourse = (teacherId: string, courseId: string) => {
+    setTeachers(prev => prev.map(teacher => {
+      if (teacher.teacherId === teacherId) {
+        const currentCourses = teacher.assignedCourseIds || [];
+        return {
+          ...teacher,
+          assignedCourseIds: currentCourses.filter(id => id !== courseId)
+        };
+      }
+      return teacher;
+    }));
+  };
+
   return (
     <TeacherContext.Provider value={{
       teachers,
       selectedTeacher,
       setSelectedTeacher,
       addTeacher,
-      deleteTeacher
+      deleteTeacher,
+      assignTeacherToCourse,
+      unassignTeacherFromCourse
     }}>
       {children}
     </TeacherContext.Provider>
