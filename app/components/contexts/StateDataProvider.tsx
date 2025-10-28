@@ -4,6 +4,7 @@ import { TeacherProvider } from "./TeacherContext";
 import { StudentProvider } from "./StudentContext";
 import { CourseProvider } from "./CourseContext";
 import { ReportProvider } from "./ReportContext";
+import { CodeProvider } from "./CodeContext";
 
 
 interface StateDataProviderProps {
@@ -17,7 +18,9 @@ export default function StateDataProvider({ children }: StateDataProviderProps) 
                 <StudentProvider>
                     <CourseProvider>
                         <ReportProvider>
-                            { children }
+                            <CodeProvider>
+                                { children }
+                            </CodeProvider>
                         </ReportProvider>
                     </CourseProvider>
                 </StudentProvider>
