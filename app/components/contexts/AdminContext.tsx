@@ -58,6 +58,15 @@ export const AdminProvider = ({ children }: {children:ReactNode}) => {
       }
       return admin;
     }));
+
+    // Update selectedAdmin if it's the one being modified
+    if (selectedAdmin?.adminId === adminId) {
+      const currentCodes = selectedAdmin.assignedCodeIds || [];
+      setSelectedAdmin({
+        ...selectedAdmin,
+        assignedCodeIds: currentCodes.filter(id => id !== codeId)
+      });
+    }
   };
 
   return (
