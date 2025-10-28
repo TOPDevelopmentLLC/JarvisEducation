@@ -66,23 +66,28 @@ export const mockTeacherData: Teacher[] = [
 export const mockAdminData: Administrator[] = [
     {
         adminId: '1',
-        name: 'Patricia Henderson'
+        name: 'Patricia Henderson',
+        assignedCodeIds: []
     },
     {
         adminId: '2',
-        name: 'James Sullivan'
+        name: 'James Sullivan',
+        assignedCodeIds: []
     },
     {
         adminId: '3',
-        name: 'Margaret Foster'
+        name: 'Margaret Foster',
+        assignedCodeIds: []
     },
     {
         adminId: '4',
-        name: 'William Roberts'
+        name: 'William Roberts',
+        assignedCodeIds: []
     },
     {
         adminId: '5',
-        name: 'Linda Coleman'
+        name: 'Linda Coleman',
+        assignedCodeIds: []
     }
 ]
 
