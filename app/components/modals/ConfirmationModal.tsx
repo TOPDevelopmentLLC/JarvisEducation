@@ -1,4 +1,4 @@
-import { View, Text, Pressable } from "react-native";
+import { View, Text, Pressable, useWindowDimensions } from "react-native";
 import { Modal } from "react-native-paper";
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
@@ -22,6 +22,9 @@ const ConfirmationModal = ({
     onConfirm,
     onCancel
 }: ConfirmationModalProps) => {
+    const { width } = useWindowDimensions();
+    const modalWidth = width * 0.5;
+
     return (
         <Modal
             visible={isVisible}
@@ -29,9 +32,10 @@ const ConfirmationModal = ({
             dismissable={true}
             contentContainerStyle={{
                 backgroundColor: '#374151',
-                marginHorizontal: 32,
                 borderRadius: 16,
                 padding: 24,
+                width: modalWidth,
+                alignSelf: 'center',
             }}>
             <View className="items-center mb-4">
                 <View className="bg-red-600 rounded-full p-3 mb-4">

@@ -3,6 +3,7 @@ import { Course } from "lib/models/course";
 import { Report, ReportType } from "lib/models/report";
 import { Student } from "lib/models/student";
 import { Teacher } from "lib/models/teacher";
+import { Code } from "lib/models/code";
 
 export const mockStudentData: Student[] = [
     {
@@ -65,23 +66,28 @@ export const mockTeacherData: Teacher[] = [
 export const mockAdminData: Administrator[] = [
     {
         adminId: '1',
-        name: 'Patricia Henderson'
+        name: 'Patricia Henderson',
+        assignedCodeIds: []
     },
     {
         adminId: '2',
-        name: 'James Sullivan'
+        name: 'James Sullivan',
+        assignedCodeIds: []
     },
     {
         adminId: '3',
-        name: 'Margaret Foster'
+        name: 'Margaret Foster',
+        assignedCodeIds: []
     },
     {
         adminId: '4',
-        name: 'William Roberts'
+        name: 'William Roberts',
+        assignedCodeIds: []
     },
     {
         adminId: '5',
-        name: 'Linda Coleman'
+        name: 'Linda Coleman',
+        assignedCodeIds: []
     }
 ]
 
@@ -143,5 +149,28 @@ export const mockReportData: Report[] = [
         reportId: '5',
         type: ReportType.Behavior,
         description: 'Sophia Rodriguez was using phone during instruction time'
+    }
+]
+
+export const mockCodeData: Code[] = [
+    {
+        codeId: '1',
+        name: 'Code 1',
+        description: 'Fight Breakout'
+    },
+    {
+        codeId: '2',
+        name: 'Code 2',
+        description: 'Medical Emergency'
+    },
+    {
+        codeId: '3',
+        name: 'Code 3',
+        description: '911 Medical Emergency'
+    },
+    {
+        codeId: '4',
+        name: 'Code 4',
+        description: '911 On-Premise Threat'
     }
 ]
