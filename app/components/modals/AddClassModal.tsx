@@ -18,6 +18,7 @@ const AddClassModal = ({
 }: AddClassModalProps) => {
     const [courseTitle, setCourseTitle] = useState('');
     const [courseDescription, setCourseDescription] = useState('');
+    const [classroomNumber, setClassroomNumber] = useState('');
     const showErrorMessage = useErrorSnackbar();
     const { addCourse, courses } = useStoredCourseData();
 
@@ -36,12 +37,14 @@ const AddClassModal = ({
         addCourse({
             courseId: newId,
             title: courseTitle,
-            description: courseDescription
+            description: courseDescription,
+            classroomNumber: classroomNumber.length > 0 ? classroomNumber : undefined
         });
 
         // Reset form and close modal
         setCourseTitle('');
         setCourseDescription('');
+        setClassroomNumber('');
         onDismiss?.();
     }
 
@@ -74,6 +77,13 @@ const AddClassModal = ({
                     }}
                     multiline
                     numberOfLines={3}
+                />
+                <JarvisPaperTextInput
+                    placeholder={"Classroom Number (Optional)"}
+                    onTextChange={(number) => setClassroomNumber(number)}
+                    style={{
+                        marginTop: 8
+                    }}
                 />
         </JarvisModal>
     )

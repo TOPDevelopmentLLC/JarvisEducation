@@ -16,6 +16,7 @@ const CourseDetailsPage = () => {
     const [inEditMode, setEditMode] = useState<boolean>(edit === '1');
     const [currentCourseTitle, setCurrentCourseTitle] = useState(selectedCourse.title);
     const [currentCourseDescription, setCurrentCourseDescription] = useState(selectedCourse.description);
+    const [currentClassroomNumber, setCurrentClassroomNumber] = useState(selectedCourse.classroomNumber ?? '');
     const [assignTeacherModalIsVisible, setAssignTeacherModalIsVisible] = useState(false);
 
     // Get the assigned teacher
@@ -34,6 +35,7 @@ const CourseDetailsPage = () => {
         setEditMode(false);
         setCurrentCourseTitle(selectedCourse.title);
         setCurrentCourseDescription(selectedCourse.description);
+        setCurrentClassroomNumber(selectedCourse.classroomNumber ?? '');
     }
 
     return (
@@ -93,6 +95,26 @@ const CourseDetailsPage = () => {
                             ) : (
                                 <View className="px-4 py-3">
                                     <Text className="text-white text-base">{currentCourseDescription}</Text>
+                                </View>
+                            )}
+                        </View>
+
+                        {/* Classroom Number Field */}
+                        <View className="mb-6">
+                            <Text className="text-gray-400 text-sm mb-2">Classroom Number</Text>
+                            {inEditMode ? (
+                                <TextInput
+                                    className="bg-gray-700 text-white rounded-lg px-4 py-3 text-base"
+                                    value={currentClassroomNumber}
+                                    onChangeText={setCurrentClassroomNumber}
+                                    placeholderTextColor="#9CA3AF"
+                                    placeholder="Enter classroom number..."
+                                />
+                            ) : (
+                                <View className="px-4 py-3">
+                                    <Text className="text-white text-base">
+                                        {currentClassroomNumber || 'Not assigned'}
+                                    </Text>
                                 </View>
                             )}
                         </View>
