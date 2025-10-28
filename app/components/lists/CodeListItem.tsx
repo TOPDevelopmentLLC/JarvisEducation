@@ -7,6 +7,7 @@ import clsx from "clsx";
 export interface CodeListItemProps {
     className?: string;
     code: Code;
+    isSelected?: boolean;
     onEdit?: (code: Code) => void;
     onDelete?: (code: Code) => void;
     onPress?: (code: Code) => void;
@@ -15,6 +16,7 @@ export interface CodeListItemProps {
 const CodeListItem = ({
     className,
     code,
+    isSelected = false,
     onEdit,
     onDelete,
     onPress
@@ -22,20 +24,26 @@ const CodeListItem = ({
     return (
         <Pressable
             className={clsx(
-                "flex-row items-center rounded-xl p-4 mb-3 justify-between active:opacity-80 bg-gray-800",
+                "flex-row items-center rounded-xl p-4 mb-3 justify-between active:opacity-80",
+                isSelected ? "bg-jarvisPrimary" : "bg-gray-800",
                 className
             )}
             onPress={() => onPress?.(code)}>
             <View className="flex-1">
-                <Text className="text-lg font-semibold text-white">
+                <Text className={clsx("text-lg font-semibold", isSelected ? "text-black" : "text-white")}>
                     {code.name}
                 </Text>
-                <Text className="text-sm text-gray-400 mt-1">
+                <Text className={clsx("text-sm mt-1", isSelected ? "text-gray-700" : "text-gray-400")}>
                     {code.description}
                 </Text>
             </View>
 
             <View className="flex-row gap-2">
+                {!onEdit && !onDelete && (
+                    <View className="bg-black rounded-lg p-2 justify-center items-center" style={{ width: 40, height: 40 }}>
+                        {isSelected && <MaterialCommunityIcons name="check" size={24} color="#9cb43c" />}
+                    </View>
+                )}
                 {onEdit && (
                     <Pressable
                         className="bg-jarvisPrimary rounded-lg p-3 active:opacity-70"

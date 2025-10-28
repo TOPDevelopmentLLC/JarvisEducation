@@ -6,6 +6,7 @@ import CodeListItem from "./CodeListItem";
 export interface CodeListProps {
     className?: string;
     codes: Code[];
+    selectedCodeIds?: string[];
     editButtonPressed?: (code: Code) => void;
     deleteButtonPressed?: (code: Code) => void;
     codeItemPressed?: (code: Code) => void;
@@ -15,6 +16,7 @@ export interface CodeListProps {
 const CodeList = ({
     className,
     codes,
+    selectedCodeIds,
     editButtonPressed,
     deleteButtonPressed,
     codeItemPressed,
@@ -30,6 +32,7 @@ const CodeList = ({
                 <CodeListItem
                     key={item.codeId}
                     code={item}
+                    isSelected={selectedCodeIds?.includes(item.codeId)}
                     onEdit={editButtonPressed}
                     onDelete={deleteButtonPressed}
                     onPress={codeItemPressed}
