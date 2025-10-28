@@ -1,4 +1,4 @@
-import { useNavigation } from "expo-router";
+import { router, useNavigation } from "expo-router";
 import { IconType } from "components/IconContainer";
 import { IconButtonProps } from "components/buttons/IconButton";
 import BaseHeader from "components/headers/BaseHeader";
@@ -20,6 +20,10 @@ const MenuHeaderPage: React.FC<React.PropsWithChildren<MenuHeaderPageProps>> = (
         nav.dispatch(DrawerActions.toggleDrawer());
     }
 
+    const handleNotificationsButtonClicked = () => {
+        router.push('/pages/notifications');
+    }
+
     return (
         <BasePage>
             <BaseHeader 
@@ -33,7 +37,15 @@ const MenuHeaderPage: React.FC<React.PropsWithChildren<MenuHeaderPageProps>> = (
                     },
                     onIconClicked: handleMenuButtonClicked
                 }}
-                rightActionIcon={rightActionIcon}
+                rightActionIcon={{
+                    iconProps: {
+                        name: 'notifications-outline',
+                        size: 24,
+                        color: '#FFFFFF',
+                        type: IconType.Ionicons
+                    },
+                    onIconClicked: handleNotificationsButtonClicked
+                }}
             />
             {children}
         </BasePage>
