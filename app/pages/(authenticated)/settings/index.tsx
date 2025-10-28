@@ -11,8 +11,8 @@ const SettingsPage = () => {
 
     return (
         <MenuHeaderPage title="Settings">
-            <ScrollView className="flex-1 px-6 pt-6">
-                <View className="gap-3">
+            <ScrollView className="flex-1 px-6 pt-6" contentContainerStyle={{ alignItems: 'center' }}>
+                <View className="w-[60%] gap-3">
                     <JarvisButton
                         title="Codes"
                         onPress={handleCodesPressed}

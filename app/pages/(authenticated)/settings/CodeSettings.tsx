@@ -48,31 +48,34 @@ const CodeSettings = () => {
 
     return (
         <MenuHeaderPage title="Codes">
-            <View className="flex-1 px-6 pt-6">
-                <View className="flex-row justify-between items-center mb-4">
-                    <Text className="text-white text-2xl font-bold">Emergency Codes</Text>
-                    <IconButton
-                        iconProps={{
-                            name: 'plus',
-                            size: 14,
-                            color: '#000',
-                            type: IconType.FontAwesome5
-                        }}
-                        onIconClicked={handleAddButtonPressed}
-                    />
-                </View>
-
-                {codes.length > 0 ? (
-                    <CodeList
-                        codes={codes}
-                        editButtonPressed={handleEditCode}
-                        deleteButtonPressed={handleDeleteCode}
-                    />
-                ) : (
-                    <View className="flex-1 justify-center items-center">
-                        <Text className="text-gray-400 text-base">No codes available</Text>
+            <View className="flex-1 px-6 pt-6 items-center">
+                <View className="w-[60%] flex-1">
+                    <View className="flex-row justify-between items-center mb-4">
+                        <Text className="text-white text-2xl font-bold">Emergency Codes</Text>
+                        <IconButton 
+                            className="bg-jarvisPrimary"
+                            iconProps={{
+                                name: 'plus',
+                                color: '#000000',
+                                size: 24,
+                                type: IconType.MaterialCommunityIcons
+                            }} 
+                            onIconClicked={handleAddButtonPressed} 
+                        />
                     </View>
-                )}
+
+                    {codes.length > 0 ? (
+                        <CodeList
+                            codes={codes}
+                            editButtonPressed={handleEditCode}
+                            deleteButtonPressed={handleDeleteCode}
+                        />
+                    ) : (
+                        <View className="flex-1 justify-center items-center">
+                            <Text className="text-gray-400 text-base">No codes available</Text>
+                        </View>
+                    )}
+                </View>
             </View>
 
             <AddCodeModal
