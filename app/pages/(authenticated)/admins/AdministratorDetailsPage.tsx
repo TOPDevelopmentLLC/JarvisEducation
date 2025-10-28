@@ -1,16 +1,26 @@
 import { useStoredAdminData } from "components/contexts/AdminContext";
+import { useStoredCodeData } from "components/contexts/CodeContext";
 import DetailsHeaderPage from "components/pages/DetailsHeaderPage";
 import { useLocalSearchParams } from "expo-router";
 import { useState } from "react";
 import { View, Text, TextInput, ScrollView, Pressable } from "react-native";
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import AssignCodeModal from "components/modals/AssignCodeModal";
+import JarvisButton from "components/buttons/JarvisButton";
 
 
 const AdministratorDetailsPage = () => {
     const { selectedAdmin, setSelectedAdmin } = useStoredAdminData();
+    const { codes } = useStoredCodeData();
     const { edit } = useLocalSearchParams();
     const [inEditMode, setEditMode] = useState<boolean>(edit === '1');
     const [currentAdminName, setCurrentAdminName] = useState(selectedAdmin.name);
+    const [assignCodeModalIsVisible, setAssignCodeModalIsVisible] = useState(false);
+
+    // Get assigned codes for this admin
+    const assignedCodes = codes.filter(code =>
+        selectedAdmin.assignedCodeIds?.includes(code.codeId)
+    );
 
     const saveButtonPressed = () => {
         setEditMode(false);
@@ -66,6 +76,25 @@ const AdministratorDetailsPage = () => {
                                 </View>
                             )}
                         </View>
+
+                        {/* Assigned Codes Field */}
+                        <View className="mb-6">
+                            <Text className="text-gray-400 text-sm mb-2">Assigned Codes</Text>
+                            <View className="px-4 py-3">
+                                {assignedCodes.length > 0 ? (
+                                    <View>
+                                        {assignedCodes.map((code, index) => (
+                                            <Text key={code.codeId} className="text-white text-base">
+                                                {index > 0 && '\n'}
+                                                • {code.name} - {code.description}
+                                            </Text>
+                                        ))}
+                                    </View>
+                                ) : (
+                                    <Text className="text-white text-base">None</Text>
+                                )}
+                            </View>
+                        </View>
                     </View>
 
                     {/* Action Buttons */}
@@ -84,15 +113,26 @@ const AdministratorDetailsPage = () => {
                                 </Pressable>
                             </>
                         ) : (
-                            <Pressable
-                                className="bg-jarvisPrimary rounded-lg p-4 items-center active:opacity-70"
-                                onPress={editButtonPressed}>
-                                <Text className="text-black text-base font-semibold">Edit Information</Text>
-                            </Pressable>
+                            <>
+                                <Pressable
+                                    className="bg-jarvisPrimary rounded-lg p-4 items-center active:opacity-70"
+                                    onPress={editButtonPressed}>
+                                    <Text className="text-black text-base font-semibold">Edit Information</Text>
+                                </Pressable>
+                                <JarvisButton
+                                    title="Assign Codes"
+                                    onPress={() => setAssignCodeModalIsVisible(true)}
+                                />
+                            </>
                         )}
                     </View>
                 </View>
             </ScrollView>
+            <AssignCodeModal
+                isVisible={assignCodeModalIsVisible}
+                onDismiss={() => setAssignCodeModalIsVisible(false)}
+                admin={selectedAdmin}
+            />
         </DetailsHeaderPage>
     )
 }

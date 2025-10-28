@@ -9,6 +9,8 @@ interface AdminContextType {
   setSelectedAdmin: (admin: Administrator | null) => void;
   addAdmin: (admin: Administrator) => void;
   deleteAdmin: (adminId: string) => void;
+  assignCodesToAdmin: (adminId: string, codeIds: string[]) => void;
+  unassignCodeFromAdmin: (adminId: string, codeId: string) => void;
 }
 
 const AdminContext = createContext<AdminContextType|undefined>(undefined);
@@ -25,13 +27,48 @@ export const AdminProvider = ({ children }: {children:ReactNode}) => {
     setAdmins(prev => prev.filter(a => a.adminId !== adminId));
   };
 
+  const assignCodesToAdmin = (adminId: string, codeIds: string[]) => {
+    setAdmins(prev => prev.map(admin => {
+      if (admin.adminId === adminId) {
+        return {
+          ...admin,
+          assignedCodeIds: codeIds
+        };
+      }
+      return admin;
+    }));
+
+    // Update selectedAdmin if it's the one being modified
+    if (selectedAdmin?.adminId === adminId) {
+      setSelectedAdmin({
+        ...selectedAdmin,
+        assignedCodeIds: codeIds
+      });
+    }
+  };
+
+  const unassignCodeFromAdmin = (adminId: string, codeId: string) => {
+    setAdmins(prev => prev.map(admin => {
+      if (admin.adminId === adminId) {
+        const currentCodes = admin.assignedCodeIds || [];
+        return {
+          ...admin,
+          assignedCodeIds: currentCodes.filter(id => id !== codeId)
+        };
+      }
+      return admin;
+    }));
+  };
+
   return (
     <AdminContext.Provider value={{
       admins,
       selectedAdmin,
       setSelectedAdmin,
       addAdmin,
-      deleteAdmin
+      deleteAdmin,
+      assignCodesToAdmin,
+      unassignCodeFromAdmin
     }}>
       {children}
     </AdminContext.Provider>
