@@ -3,6 +3,7 @@ import { Course } from "lib/models/course";
 import { Report, ReportType } from "lib/models/report";
 import { Student } from "lib/models/student";
 import { Teacher } from "lib/models/teacher";
+import { Code } from "lib/models/code";
 
 export const mockStudentData: Student[] = [
     {
@@ -143,5 +144,28 @@ export const mockReportData: Report[] = [
         reportId: '5',
         type: ReportType.Behavior,
         description: 'Sophia Rodriguez was using phone during instruction time'
+    }
+]
+
+export const mockCodeData: Code[] = [
+    {
+        codeId: '1',
+        name: 'Code 1',
+        description: 'Fight Breakout'
+    },
+    {
+        codeId: '2',
+        name: 'Code 2',
+        description: 'Medical Emergency'
+    },
+    {
+        codeId: '3',
+        name: 'Code 3',
+        description: '911 Medical Emergency'
+    },
+    {
+        codeId: '4',
+        name: 'Code 4',
+        description: '911 On-Premise Threat'
     }
 ]
