@@ -7,12 +7,15 @@ export interface Profile {
 
 interface ProfileContextType {
   profile: Profile | null;
+  notificationsEnabled: boolean;
+  setNotificationsEnabled: (enabled: boolean) => void;
 }
 
 const ProfileContext = createContext<ProfileContextType | undefined>(undefined);
 
 export const ProfileProvider = ({ children }: { children: ReactNode }) => {
   const [profile, setProfileState] = useState<Profile | null>(null);
+  const [notificationsEnabled, setNotificationsEnabled] = useState<boolean>(true);
 
   //TODO: Call API to get Profile data
 
@@ -22,7 +25,11 @@ export const ProfileProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   return (
-    <ProfileContext.Provider value={{ profile }}>
+    <ProfileContext.Provider value={{
+      profile,
+      notificationsEnabled,
+      setNotificationsEnabled
+    }}>
       {children}
     </ProfileContext.Provider>
   );
