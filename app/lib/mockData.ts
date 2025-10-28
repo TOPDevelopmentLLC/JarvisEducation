@@ -89,27 +89,32 @@ export const mockCourseData: Course[] = [
     {
         courseId: '1',
         title: 'Algebra I',
-        description: 'Introduction to algebraic concepts including equations, inequalities, and functions.'
+        description: 'Introduction to algebraic concepts including equations, inequalities, and functions.',
+        classroomNumber: '201'
     },
     {
         courseId: '2',
         title: 'English Literature',
-        description: 'Analysis of classic and contemporary literature with focus on reading comprehension and writing skills.'
+        description: 'Analysis of classic and contemporary literature with focus on reading comprehension and writing skills.',
+        classroomNumber: '305'
     },
     {
         courseId: '3',
         title: 'Biology',
-        description: 'Study of living organisms, cells, genetics, and ecosystems.'
+        description: 'Study of living organisms, cells, genetics, and ecosystems.',
+        classroomNumber: '412'
     },
     {
         courseId: '4',
         title: 'U.S. History',
-        description: 'Comprehensive study of American history from colonial times to present day.'
+        description: 'Comprehensive study of American history from colonial times to present day.',
+        classroomNumber: '218'
     },
     {
         courseId: '5',
         title: 'Physical Education',
-        description: 'Development of physical fitness, health awareness, and teamwork through sports and activities.'
+        description: 'Development of physical fitness, health awareness, and teamwork through sports and activities.',
+        classroomNumber: 'GYM-A'
     }
 ]
 
