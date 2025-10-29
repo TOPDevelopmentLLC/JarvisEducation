@@ -1,17 +1,30 @@
 import { useStoredStudentData } from "components/contexts/StudentContext";
+import { useStoredReportData } from "components/contexts/ReportContext";
 import DetailsHeaderPage from "components/pages/DetailsHeaderPage";
-import { useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, router } from "expo-router";
 import { useState } from "react";
-import { View, Text, TextInput, ScrollView } from "react-native";
+import { View, Text, TextInput, ScrollView, useWindowDimensions } from "react-native";
 import BaseButton from "components/buttons/BaseButton";
 import IconContainer, { IconType } from "components/IconContainer";
+import { Report } from "lib/models/report";
+import ReportListItem from "components/lists/ReportListItem";
 
 
 const StudentDetailsPage = () => {
     const { selectedStudent, setSelectedStudent } = useStoredStudentData();
+    const { reports, setSelectedReport } = useStoredReportData();
     const { edit } = useLocalSearchParams();
     const [inEditMode, setEditMode] = useState<boolean>(edit === '1');
     const [currentStudentName, setCurrentStudentName] = useState(selectedStudent.name);
+    const { height } = useWindowDimensions();
+
+    // Get all reports assigned to this student
+    const assignedReports = reports.filter(report =>
+        selectedStudent.reportIds?.includes(report.reportId)
+    );
+
+    // Calculate max height for reports section (20% of screen height)
+    const maxReportsHeight = height * 0.2;
 
     const saveButtonPressed = () => {
         setEditMode(false);
@@ -25,6 +38,16 @@ const StudentDetailsPage = () => {
     const cancelButtonPressed = () => {
         setEditMode(false);
         setCurrentStudentName(selectedStudent.name);
+    }
+
+    const handleReportPressed = (report: Report) => {
+        setSelectedReport(report);
+        router.push({
+            pathname: '/pages/reports/ReportDetailsPage',
+            params: {
+                edit: 0
+            }
+        });
     }
 
     return (
@@ -56,10 +79,21 @@ const StudentDetailsPage = () => {
 
                     {/* Details Card */}
                     <View className="bg-gray-800 rounded-xl p-6 mb-6">
-                        <Text className="text-white text-xl font-bold mb-6">Information</Text>
+                        {/* Header with Edit Button */}
+                        <View className="flex-row items-center justify-between mb-6">
+                            <Text className="text-white text-xl font-bold">Information</Text>
+                            {!inEditMode && (
+                                <BaseButton
+                                    title="Edit"
+                                    className="bg-jarvisPrimary rounded-lg items-center active:opacity-70 px-6 py-2"
+                                    textClassName="text-black text-sm font-semibold"
+                                    onPress={editButtonPressed}
+                                />
+                            )}
+                        </View>
 
                         {/* Full Name Field */}
-                        <View className="mb-6">
+                        <View className="mb-0">
                             <Text className="text-gray-400 text-sm mb-2">Full Name</Text>
                             {inEditMode ? (
                                 <TextInput
@@ -74,12 +108,10 @@ const StudentDetailsPage = () => {
                                 </View>
                             )}
                         </View>
-                    </View>
 
-                    {/* Action Buttons */}
-                    <View className="gap-3 mb-6">
-                        {inEditMode ? (
-                            <>
+                        {/* Action Buttons - Only show when in edit mode */}
+                        {inEditMode && (
+                            <View className="gap-3 mt-6">
                                 <BaseButton
                                     title="Save Changes"
                                     className="bg-jarvisPrimary rounded-lg items-center active:opacity-70"
@@ -92,14 +124,30 @@ const StudentDetailsPage = () => {
                                     textClassName="text-white text-base font-semibold"
                                     onPress={cancelButtonPressed}
                                 />
-                            </>
+                            </View>
+                        )}
+                    </View>
+
+                    {/* Reports Section */}
+                    <View className="bg-gray-800 rounded-xl p-6 mb-6">
+                        <Text className="text-white text-xl font-bold mb-6">Reports</Text>
+                        {assignedReports.length > 0 ? (
+                            <ScrollView
+                                style={{ maxHeight: maxReportsHeight }}
+                                showsVerticalScrollIndicator={true}
+                            >
+                                {assignedReports.map((report) => (
+                                    <ReportListItem
+                                        key={report.reportId}
+                                        report={report}
+                                        onPress={handleReportPressed}
+                                    />
+                                ))}
+                            </ScrollView>
                         ) : (
-                            <BaseButton
-                                title="Edit Information"
-                                className="bg-jarvisPrimary rounded-lg items-center active:opacity-70"
-                                textClassName="text-black text-base font-semibold"
-                                onPress={editButtonPressed}
-                            />
+                            <View className="px-4 py-3">
+                                <Text className="text-white text-base">None</Text>
+                            </View>
                         )}
                     </View>
                 </View>

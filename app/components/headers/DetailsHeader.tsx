@@ -18,8 +18,10 @@ const DetailsHeader = ({
     rightActionIcon,
 }: DetailsHeaderProps) => {
     const backButtonPressed = () => {
+        // Call the optional cleanup action first (e.g., clearing selected items)
         backButtonAction?.();
-        router.back()
+        // Then navigate back to the previous screen
+        router.back();
     }
 
     return (

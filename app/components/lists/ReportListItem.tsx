@@ -22,7 +22,7 @@ const ReportListItem = ({
 }: ReportListItemProps) => {
     return (
         <Pressable
-            className={clsx("flex-row items-center bg-gray-800 rounded-xl p-4 mb-3 justify-between active:opacity-80", className)}
+            className={clsx("flex-row items-center bg-gray-700 rounded-xl p-4 mb-3 justify-between active:opacity-80", className)}
             onPress={() => onPress?.(report)}>
             <View className="flex-1">
                 <Text className="text-white text-lg font-semibold">{report.type.toString()}</Text>
