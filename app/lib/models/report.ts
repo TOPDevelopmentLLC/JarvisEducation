@@ -4,6 +4,7 @@ export interface Report {
     reportId: string;
     type: ReportType;
     description?: string;
+    studentId?: string;
 }
 
 export enum ReportType {
