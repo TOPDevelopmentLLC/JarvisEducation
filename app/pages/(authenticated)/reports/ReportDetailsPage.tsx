@@ -1,4 +1,5 @@
 import { useStoredReportData } from "components/contexts/ReportContext";
+import { useStoredStudentData } from "components/contexts/StudentContext";
 import DetailsHeaderPage from "components/pages/DetailsHeaderPage";
 import { useLocalSearchParams } from "expo-router";
 import { useState } from "react";
@@ -9,9 +10,13 @@ import IconContainer, { IconType } from "components/IconContainer";
 
 const ReportDetailsPage = () => {
     const { selectedReport, setSelectedReport } = useStoredReportData();
+    const { students } = useStoredStudentData();
     const { edit } = useLocalSearchParams();
     const [inEditMode, setEditMode] = useState<boolean>(edit === '1');
     const [currentReportDescription, setCurrentReportDescription] = useState(selectedReport.description ?? '');
+
+    // Get the assigned student
+    const assignedStudent = students.find(student => student.studentId === selectedReport.studentId);
 
     const saveButtonPressed = () => {
         setEditMode(false);
@@ -87,6 +92,16 @@ const ReportDetailsPage = () => {
                                     </Text>
                                 </View>
                             )}
+                        </View>
+
+                        {/* Assigned Student Field */}
+                        <View className="mb-6">
+                            <Text className="text-gray-400 text-sm mb-2">Assigned Student</Text>
+                            <View className="px-4 py-3">
+                                <Text className="text-white text-base">
+                                    {assignedStudent ? assignedStudent.name : 'None'}
+                                </Text>
+                            </View>
                         </View>
                     </View>
 
