@@ -9,6 +9,8 @@ interface StudentContextType {
   setSelectedStudent: (student: Student | null) => void;
   addStudent: (student: Student) => void;
   deleteStudent: (studentId: string) => void;
+  addReportToStudent: (studentId: string, reportId: string) => void;
+  removeReportFromStudent: (studentId: string, reportId: string) => void;
 }
 
 const StudentContext = createContext<StudentContextType|undefined>(undefined);
@@ -25,13 +27,63 @@ export const StudentProvider = ({ children }: {children:ReactNode}) => {
     setStudents(prev => prev.filter(s => s.studentId !== studentId));
   };
 
+  const addReportToStudent = (studentId: string, reportId: string) => {
+    setStudents(prev => prev.map(student => {
+      if (student.studentId === studentId) {
+        const currentReports = student.reportIds || [];
+        if (!currentReports.includes(reportId)) {
+          return {
+            ...student,
+            reportIds: [...currentReports, reportId]
+          };
+        }
+      }
+      return student;
+    }));
+
+    // Update selectedStudent if it's the one being modified
+    if (selectedStudent?.studentId === studentId) {
+      const currentReports = selectedStudent.reportIds || [];
+      if (!currentReports.includes(reportId)) {
+        setSelectedStudent({
+          ...selectedStudent,
+          reportIds: [...currentReports, reportId]
+        });
+      }
+    }
+  };
+
+  const removeReportFromStudent = (studentId: string, reportId: string) => {
+    setStudents(prev => prev.map(student => {
+      if (student.studentId === studentId) {
+        const currentReports = student.reportIds || [];
+        return {
+          ...student,
+          reportIds: currentReports.filter(id => id !== reportId)
+        };
+      }
+      return student;
+    }));
+
+    // Update selectedStudent if it's the one being modified
+    if (selectedStudent?.studentId === studentId) {
+      const currentReports = selectedStudent.reportIds || [];
+      setSelectedStudent({
+        ...selectedStudent,
+        reportIds: currentReports.filter(id => id !== reportId)
+      });
+    }
+  };
+
   return (
     <StudentContext.Provider value={{
       students,
       selectedStudent,
       setSelectedStudent,
       addStudent,
-      deleteStudent
+      deleteStudent,
+      addReportToStudent,
+      removeReportFromStudent
     }}>
       {children}
     </StudentContext.Provider>

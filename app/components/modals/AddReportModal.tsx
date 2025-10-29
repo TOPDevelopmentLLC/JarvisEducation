@@ -1,9 +1,8 @@
-import { View, Text, Dimensions } from "react-native";
+import { View, Dimensions } from "react-native";
 import JarvisModal from "./JarvisModal";
-import IconContainer, { IconType } from "components/IconContainer";
+import { IconType } from "components/IconContainer";
 import { useState } from "react";
 import { MoodType, ReportType } from "lib/models/report";
-import { Chip } from "react-native-paper";
 import StudentList from "components/lists/StudentList";
 import { useStoredStudentData } from "components/contexts/StudentContext";
 import { useStoredReportData } from "components/contexts/ReportContext";
@@ -28,7 +27,7 @@ const AddReportModal = ({
     const [selectedMoodtype,setSelectedMoodType] = useState<MoodType|null>(null);
     const [selectedStudent,setSelectedStudent] = useState<Student|null>(null);
     const showErrorMessage = useErrorSnackbar();
-    const { students } = useStoredStudentData();
+    const { students, addReportToStudent } = useStoredStudentData();
     const { addReport, reports } = useStoredReportData();
     const windowHeight = Dimensions.get('window').height;
 
@@ -60,8 +59,12 @@ const AddReportModal = ({
         addReport({
             reportId: newId,
             type: selectedReportType,
-            description: reportDescription || selectedMoodtype?.toString() || ''
+            description: reportDescription || selectedMoodtype?.toString() || '',
+            studentId: selectedStudent.studentId
         });
+
+        // Add report to student's reportIds
+        addReportToStudent(selectedStudent.studentId, newId);
 
         // Reset form and close modal
         setSelectedReportType(null);
