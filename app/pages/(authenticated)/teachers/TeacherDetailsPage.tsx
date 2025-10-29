@@ -3,8 +3,9 @@ import { useStoredCourseData } from "components/contexts/CourseContext";
 import DetailsHeaderPage from "components/pages/DetailsHeaderPage";
 import { useLocalSearchParams } from "expo-router";
 import { useState } from "react";
-import { View, Text, TextInput, ScrollView, Pressable } from "react-native";
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { View, Text, TextInput, ScrollView } from "react-native";
+import BaseButton from "components/buttons/BaseButton";
+import IconContainer, { IconType } from "components/IconContainer";
 
 
 const TeacherDetailsPage = () => {
@@ -44,7 +45,14 @@ const TeacherDetailsPage = () => {
                     <View className="bg-gray-800 rounded-xl p-6 mb-6">
                         <View className="flex-row items-center mb-4">
                             <View className="bg-jarvisPrimary rounded-full p-3 mr-4">
-                                <MaterialCommunityIcons name="school" size={32} color="#000" />
+                                <IconContainer 
+                                    iconProps={{
+                                        name: 'school',
+                                        size: 32,
+                                        color: '#000',
+                                        type: IconType.MaterialCommunityIcons
+                                    }} 
+                                />
                             </View>
                             <View className="flex-1">
                                 <Text className="text-gray-400 text-sm">Teacher</Text>
@@ -98,23 +106,26 @@ const TeacherDetailsPage = () => {
                     <View className="gap-3 mb-6">
                         {inEditMode ? (
                             <>
-                                <Pressable
-                                    className="bg-jarvisPrimary rounded-lg p-4 items-center active:opacity-70"
-                                    onPress={saveButtonPressed}>
-                                    <Text className="text-black text-base font-semibold">Save Changes</Text>
-                                </Pressable>
-                                <Pressable
-                                    className="bg-gray-700 rounded-lg p-4 items-center active:opacity-70"
-                                    onPress={cancelButtonPressed}>
-                                    <Text className="text-white text-base font-semibold">Cancel</Text>
-                                </Pressable>
+                                <BaseButton
+                                    title="Save Changes"
+                                    className="bg-jarvisPrimary rounded-lg items-center active:opacity-70"
+                                    textClassName="text-black text-base font-semibold"
+                                    onPress={saveButtonPressed}
+                                />
+                                <BaseButton
+                                    title="Cancel"
+                                    className="bg-gray-700 rounded-lg items-center active:opacity-70"
+                                    textClassName="text-white text-base font-semibold"
+                                    onPress={cancelButtonPressed}
+                                />
                             </>
                         ) : (
-                            <Pressable
-                                className="bg-jarvisPrimary rounded-lg p-4 items-center active:opacity-70"
-                                onPress={editButtonPressed}>
-                                <Text className="text-black text-base font-semibold">Edit Information</Text>
-                            </Pressable>
+                            <BaseButton
+                                title="Edit Information"
+                                className="bg-jarvisPrimary rounded-lg items-center active:opacity-70"
+                                textClassName="text-black text-base font-semibold"
+                                onPress={editButtonPressed}
+                            />
                         )}
                     </View>
                 </View>

@@ -1,7 +1,8 @@
 import { Pressable, Text, View } from "react-native";
 import { Report } from "lib/models/report";
-import { MaterialCommunityIcons } from '@expo/vector-icons';
 import clsx from "clsx";
+import DeleteButton from "components/buttons/DeleteButton";
+import EditButton from "components/buttons/EditButton";
 
 
 export interface ReportListItemProps {
@@ -32,24 +33,20 @@ const ReportListItem = ({
 
             <View className="flex-row gap-2 ml-3">
                 {onEdit && (
-                    <Pressable
-                        className="bg-jarvisPrimary rounded-lg p-3 active:opacity-70"
-                        onPress={(e) => {
+                    <EditButton 
+                        onIconClicked={(e) => {
                             e.stopPropagation();
                             onEdit(report);
-                        }}>
-                        <MaterialCommunityIcons name="pencil" size={20} color="#000" />
-                    </Pressable>
+                        }}
+                    />
                 )}
                 {onDelete && (
-                    <Pressable
-                        className="bg-red-600 rounded-lg p-3 active:opacity-70"
-                        onPress={(e) => {
+                    <DeleteButton 
+                        onIconClicked={(e) => {
                             e.stopPropagation();
                             onDelete(report);
-                        }}>
-                        <MaterialCommunityIcons name="delete" size={20} color="#fff" />
-                    </Pressable>
+                        }} 
+                    />
                 )}
             </View>
         </Pressable>
