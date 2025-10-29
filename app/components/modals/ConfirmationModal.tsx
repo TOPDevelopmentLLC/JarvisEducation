@@ -1,6 +1,7 @@
 import { View, Text, Pressable, useWindowDimensions } from "react-native";
 import { Modal } from "react-native-paper";
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import IconContainer, { IconType } from "components/IconContainer";
+import BaseButton from "components/buttons/BaseButton";
 
 
 export interface ConfirmationModalProps {
@@ -39,24 +40,32 @@ const ConfirmationModal = ({
             }}>
             <View className="items-center mb-4">
                 <View className="bg-red-600 rounded-full p-3 mb-4">
-                    <MaterialCommunityIcons name="alert" size={32} color="#fff" />
+                    <IconContainer 
+                        iconProps={{
+                            name: 'alert',
+                            size: 32,
+                            color: '#fff',
+                            type: IconType.MaterialCommunityIcons
+                        }} 
+                    />
                 </View>
                 <Text className="text-white text-xl font-bold text-center mb-2">{title}</Text>
                 <Text className="text-gray-400 text-base text-center">{message}</Text>
             </View>
 
             <View className="gap-3 mt-4">
-                <Pressable
-                    className="bg-red-600 rounded-lg p-4 items-center active:opacity-70"
-                    onPress={onConfirm}>
-                    <Text className="text-white text-base font-semibold">{confirmText}</Text>
-                </Pressable>
-
-                <Pressable
-                    className="bg-gray-700 rounded-lg p-4 items-center active:opacity-70"
-                    onPress={onCancel}>
-                    <Text className="text-white text-base font-semibold">{cancelText}</Text>
-                </Pressable>
+                <BaseButton 
+                    className="bg-red-600 rounded-lg active:opacity-70"
+                    textClassName="text-white text-base font-semibold"
+                    title={confirmText} 
+                    onPress={onConfirm} 
+                />
+                <BaseButton 
+                    className="bg-gray-700 rounded-lg active:opacity-70"
+                    textClassName="text-white text-base font-semibold"
+                    title={cancelText} 
+                    onPress={onCancel} 
+                />
             </View>
         </Modal>
     )

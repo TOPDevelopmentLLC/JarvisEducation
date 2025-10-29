@@ -1,11 +1,13 @@
 import MenuHeaderPage from "components/pages/MenuHeaderPage";
-import { View, Text, ScrollView, Pressable } from "react-native";
+import { View, Text, ScrollView } from "react-native";
 import { router } from "expo-router";
 import ReportListItem from "components/lists/ReportListItem";
 import { Report } from "lib/models/report";
 import { useStoredReportData } from "components/contexts/ReportContext";
 import AddReportModal from "components/modals/AddReportModal";
 import { useState } from "react";
+import BaseButton from "components/buttons/BaseButton";
+import TransparentTextButton from "components/buttons/TransparentTextButton";
 
 
 const HomePage = () => {
@@ -51,20 +53,22 @@ const HomePage = () => {
                 <View className="mt-6">
                     <Text className="text-2xl font-bold text-white mb-4">Quick Actions</Text>
 
-                    <Pressable
-                        className="bg-jarvisPrimary rounded-lg p-4 items-center active:opacity-80"
-                        onPress={handleNewReportPressed}>
-                        <Text className="text-black text-lg font-semibold">+ Create New Report</Text>
-                    </Pressable>
+                    <BaseButton
+                        title="+ Create New Report"
+                        className="bg-jarvisPrimary rounded-lg items-center active:opacity-70"
+                        textClassName="text-black text-lg font-semibold"
+                        onPress={handleNewReportPressed}
+                    />
                 </View>
 
                 {/* Recent Reports Section */}
                 <View className="mt-8 mb-6">
                     <View className="flex-row justify-between items-center mb-4">
                         <Text className="text-2xl font-bold text-white">Recent Reports</Text>
-                        <Pressable onPress={handleViewAllReportsPressed}>
-                            <Text className="text-jarvisPrimary text-base">View All</Text>
-                        </Pressable>
+                        <TransparentTextButton
+                            title="View All"
+                            onPress={handleViewAllReportsPressed}
+                        />
                     </View>
 
                     {recentReports.length > 0 ? (

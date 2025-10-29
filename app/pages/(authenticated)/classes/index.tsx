@@ -1,10 +1,8 @@
 import MenuHeaderPage from "components/pages/MenuHeaderPage";
 import { router } from 'expo-router';
 import { useState } from "react";
-import { View, Text, Pressable, TextInput, ScrollView } from "react-native";
-import CourseListItem from "components/lists/CourseListItem";
+import { View, Text } from "react-native";
 import { Course } from "lib/models/course";
-import { MaterialCommunityIcons } from '@expo/vector-icons';
 import AddClassModal from "components/modals/AddClassModal";
 import ConfirmationModal from "components/modals/ConfirmationModal";
 import NoDataView, { DataType } from "components/NoDataView";

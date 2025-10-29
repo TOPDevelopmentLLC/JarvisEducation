@@ -3,12 +3,13 @@ import { useStoredCodeData } from "components/contexts/CodeContext";
 import DetailsHeaderPage from "components/pages/DetailsHeaderPage";
 import { useLocalSearchParams } from "expo-router";
 import { useState } from "react";
-import { View, Text, TextInput, ScrollView, Pressable } from "react-native";
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { View, Text, TextInput, ScrollView, } from "react-native";
 import AssignCodeModal from "components/modals/AssignCodeModal";
 import ConfirmationModal from "components/modals/ConfirmationModal";
-import JarvisButton from "components/buttons/JarvisButton";
+import BaseButton from "components/buttons/BaseButton";
 import { Code } from "lib/models/code";
+import DeleteButton from "components/buttons/DeleteButton";
+import IconContainer, { IconType } from "components/IconContainer";
 
 
 const AdministratorDetailsPage = () => {
@@ -69,7 +70,14 @@ const AdministratorDetailsPage = () => {
                     <View className="bg-gray-800 rounded-xl p-6 mb-6">
                         <View className="flex-row items-center mb-4">
                             <View className="bg-jarvisPrimary rounded-full p-3 mr-4">
-                                <MaterialCommunityIcons name="shield-account" size={32} color="#000" />
+                                <IconContainer 
+                                    iconProps={{
+                                        name: 'shield-account',
+                                        size: 32,
+                                        color: '#000',
+                                        type: IconType.MaterialCommunityIcons
+                                    }} 
+                                />
                             </View>
                             <View className="flex-1">
                                 <Text className="text-gray-400 text-sm">Administrator</Text>
@@ -111,11 +119,9 @@ const AdministratorDetailsPage = () => {
                                                     • {code.name} - {code.description}
                                                 </Text>
                                                 {inEditMode && (
-                                                    <Pressable
-                                                        className="bg-red-600 rounded-lg p-2 active:opacity-70 ml-2"
-                                                        onPress={() => handleRemoveCode(code)}>
-                                                        <MaterialCommunityIcons name="delete" size={16} color="#fff" />
-                                                    </Pressable>
+                                                    <DeleteButton 
+                                                        onIconClicked={() => handleRemoveCode(code)} 
+                                                    />
                                                 )}
                                             </View>
                                         ))}
@@ -131,25 +137,30 @@ const AdministratorDetailsPage = () => {
                     <View className="gap-3 mb-6">
                         {inEditMode ? (
                             <>
-                                <Pressable
-                                    className="bg-jarvisPrimary rounded-lg p-4 items-center active:opacity-70"
-                                    onPress={saveButtonPressed}>
-                                    <Text className="text-black text-base font-semibold">Save Changes</Text>
-                                </Pressable>
-                                <Pressable
-                                    className="bg-gray-700 rounded-lg p-4 items-center active:opacity-70"
-                                    onPress={cancelButtonPressed}>
-                                    <Text className="text-white text-base font-semibold">Cancel</Text>
-                                </Pressable>
+                                <BaseButton
+                                    className="bg-jarvisPrimary rounded-lg items-center active:opacity-70"
+                                    textClassName="text-black text-base font-semibold"
+                                    title={"Save Changes"}
+                                    onPress={saveButtonPressed}
+                                />
+                                <BaseButton
+                                    className="bg-gray-700 rounded-lg items-center active:opacity-70"
+                                    textClassName="text-white text-base font-semibold"
+                                    title={"Cancel"}
+                                    onPress={cancelButtonPressed}
+                                />
                             </>
                         ) : (
                             <>
-                                <Pressable
-                                    className="bg-jarvisPrimary rounded-lg p-4 items-center active:opacity-70"
-                                    onPress={editButtonPressed}>
-                                    <Text className="text-black text-base font-semibold">Edit Information</Text>
-                                </Pressable>
-                                <JarvisButton
+                                <BaseButton
+                                    className="bg-jarvisPrimary rounded-lg items-center active:opacity-70"
+                                    textClassName="text-black text-base font-semibold"
+                                    title={"Edit Information"}
+                                    onPress={editButtonPressed}
+                                />
+                                <BaseButton
+                                    className="bg-jarvisPrimary rounded-lg items-center active:opacity-70"
+                                    textClassName="text-black text-base font-semibold"
                                     title="Assign Codes"
                                     onPress={() => setAssignCodeModalIsVisible(true)}
                                 />

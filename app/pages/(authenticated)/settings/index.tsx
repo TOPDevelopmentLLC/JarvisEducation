@@ -1,5 +1,5 @@
 import MenuHeaderPage from "components/pages/MenuHeaderPage";
-import JarvisButton from "components/buttons/JarvisButton";
+import BaseButton from "components/buttons/BaseButton";
 import JarvisToggle from "components/JarvisToggle";
 import { router } from 'expo-router';
 import { View, ScrollView, Text } from "react-native";
@@ -31,8 +31,10 @@ const SettingsPage = () => {
                     {/* Other Settings Section */}
                     <View className="mt-4">
                         <Text className="text-white text-xl font-bold mb-3">Other Settings</Text>
-                        <JarvisButton
+                        <BaseButton
                             title="Codes"
+                            className="bg-jarvisPrimary rounded-lg items-center active:opacity-70"
+                            textClassName="text-black text-base font-semibold"
                             onPress={handleCodesPressed}
                         />
                     </View>

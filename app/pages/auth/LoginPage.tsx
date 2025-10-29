@@ -1,5 +1,6 @@
 import { useRef } from "react";
-import JarvisButton, { JarvisButtonType } from "components/buttons/JarvisButton";
+import BaseButton from "components/buttons/BaseButton";
+import TransparentTextButton from "components/buttons/TransparentTextButton";
 import JarvisTextInput from "components/JarvisTextInput";
 import { View, Image, Text } from "react-native";
 import { useRouter } from "expo-router";
@@ -39,8 +40,9 @@ const LoginPage = () => {
                             onTextChange={(value) => {password.current = value}}
                         />
 
-                        <JarvisButton
-                            className="mt-4"
+                        <BaseButton
+                            className="mt-4 bg-jarvisPrimary rounded-lg items-center active:opacity-70"
+                            textClassName="text-black text-base font-semibold"
                             title="Login"
                             onPress={loginButtonClicked}
                         />
@@ -48,11 +50,10 @@ const LoginPage = () => {
                         { true && (
                             <View className="flex-row items-center justify-center mt-8">
                                 <Text className="text-base text-gray-400">Don't have an account yet?</Text>
-                                <JarvisButton
+                                <TransparentTextButton
                                     className="ml-2"
                                     title="Sign Up"
                                     onPress={signUpButtonClicked}
-                                    type={JarvisButtonType.transparent}
                                 />
                             </View>
                         )}

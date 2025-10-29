@@ -1,7 +1,9 @@
 import { Pressable, Text, View } from "react-native";
 import { Code } from "lib/models/code"
-import { MaterialCommunityIcons } from '@expo/vector-icons';
 import clsx from "clsx";
+import IconContainer, { IconType } from "components/IconContainer";
+import EditButton from "components/buttons/EditButton";
+import DeleteButton from "components/buttons/DeleteButton";
 
 
 export interface CodeListItemProps {
@@ -41,28 +43,33 @@ const CodeListItem = ({
             <View className="flex-row gap-2">
                 {!onEdit && !onDelete && (
                     <View className="bg-black rounded-lg p-2 justify-center items-center" style={{ width: 40, height: 40 }}>
-                        {isSelected && <MaterialCommunityIcons name="check" size={24} color="#9cb43c" />}
+                        {isSelected && (
+                            <IconContainer 
+                                iconProps={{
+                                    name: 'check',
+                                    size: 24,
+                                    color: "#9cb43c",
+                                    type: IconType.MaterialCommunityIcons
+                                }} 
+                            />
+                        )}
                     </View>
                 )}
                 {onEdit && (
-                    <Pressable
-                        className="bg-jarvisPrimary rounded-lg p-3 active:opacity-70"
-                        onPress={(e) => {
+                    <EditButton 
+                        onIconClicked={(e) => {
                             e.stopPropagation();
                             onEdit(code);
-                        }}>
-                        <MaterialCommunityIcons name="pencil" size={20} color="#000" />
-                    </Pressable>
+                        }}
+                    />
                 )}
                 {onDelete && (
-                    <Pressable
-                        className="bg-red-600 rounded-lg p-3 active:opacity-70"
-                        onPress={(e) => {
+                    <DeleteButton 
+                        onIconClicked={(e) => {
                             e.stopPropagation();
                             onDelete(code);
-                        }}>
-                        <MaterialCommunityIcons name="delete" size={20} color="#fff" />
-                    </Pressable>
+                        }} 
+                    />
                 )}
             </View>
         </Pressable>

@@ -1,15 +1,16 @@
 import ModalHeader, { ModalHeaderProps } from "components/headers/ModalHeader";
-import { Dimensions, ScrollView, Pressable } from "react-native";
+import { Dimensions, ScrollView, } from "react-native";
 import { Modal } from "react-native-paper";
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-import JarvisButton, { JarvisButtonProps } from "components/buttons/JarvisButton";
+import BaseButton, { BaseButtonProps } from "components/buttons/BaseButton";
+import IconButton from "components/buttons/IconButton";
+import { IconType } from "components/IconContainer";
 
 
 export interface JarvisModalProps {
     headerProps: ModalHeaderProps;
     isVisible: boolean;
     onDismiss?: () => void;
-    confirmButtonProps?: JarvisButtonProps;
+    confirmButtonProps?: BaseButtonProps;
 }
 
 const JarvisModal: React.FC<React.PropsWithChildren<JarvisModalProps>> = ({
@@ -36,13 +37,16 @@ const JarvisModal: React.FC<React.PropsWithChildren<JarvisModalProps>> = ({
                 borderRadius: 16,
             }}>
                 {/* Close button in top left */}
-                <Pressable
-                    onPress={onDismiss}
-                    className="absolute top-4 left-4 z-10 p-2 active:opacity-70"
-                    hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-                >
-                    <MaterialCommunityIcons name="close" size={24} color="#9CA3AF" />
-                </Pressable>
+                <IconButton 
+                    className="absolute top-4 left-4 z-10"
+                    iconProps={{
+                        name: 'close',
+                        size: 24,
+                        color: "#9CA3AF",
+                        type: IconType.MaterialCommunityIcons
+                    }} 
+                    onIconClicked={onDismiss} 
+                />
 
                 <ScrollView
                     showsVerticalScrollIndicator={true}
@@ -53,7 +57,11 @@ const JarvisModal: React.FC<React.PropsWithChildren<JarvisModalProps>> = ({
                 </ScrollView>
 
                 {confirmButtonProps && (
-                    <JarvisButton {...confirmButtonProps} className="mt-4" />
+                    <BaseButton
+                        {...confirmButtonProps}
+                        className={`bg-jarvisPrimary rounded-lg items-center active:opacity-70 mt-4 ${confirmButtonProps.className || ''}`}
+                        textClassName={confirmButtonProps.textClassName || "text-black text-base font-semibold"}
+                    />
                 )}
         </Modal>
     )
