@@ -14,7 +14,7 @@ import { mockCurrentUserId } from "lib/mockData";
 
 
 const ReportDetailsPage = () => {
-    const { selectedReport, setSelectedReport } = useStoredReportData();
+    const { selectedReport, setSelectedReport, addCommentToReport, updateCommentInReport } = useStoredReportData();
     const { students } = useStoredStudentData();
     const { edit } = useLocalSearchParams();
     const [inEditMode, setEditMode] = useState<boolean>(edit === '1');
@@ -24,9 +24,10 @@ const ReportDetailsPage = () => {
     const [editCommentModalVisible, setEditCommentModalVisible] = useState(false);
     const [selectedComment, setSelectedComment] = useState<Comment | null>(null);
 
-    // TODO: Get current user ID from auth context
+    // TODO: Get current user ID and name from auth context
     // Using mock data for testing - currently set to admin:1 (Patricia Henderson)
     const currentUserId = mockCurrentUserId;
+    const currentUserName = 'Patricia Henderson'; // TODO: Get from auth context
 
     // Get the assigned student
     const assignedStudent = students.find(student => student.studentId === selectedReport.studentId);
@@ -57,15 +58,19 @@ const ReportDetailsPage = () => {
         const newComment: Comment = {
             commentId: Date.now().toString(),
             userId: currentUserId,
-            fullName: 'Current User', // TODO: Replace with actual user name from auth context
+            fullName: currentUserName,
             bodyText: newCommentText.trim(),
             timestamp: new Date(),
             reportId: selectedReport.reportId
         };
 
-        // TODO: Add comment to report context and send API call
-        // For now, we'll just clear the input
+        // Add comment to report context
+        addCommentToReport(selectedReport.reportId, newComment);
+
+        // Clear the input
         setNewCommentText('');
+
+        // TODO: Send API call to persist the comment
     }
 
     const closeEmptyCommentAlert = () => {
@@ -78,8 +83,10 @@ const ReportDetailsPage = () => {
     }
 
     const handleSaveEditedComment = (commentId: string, newBodyText: string) => {
-        // TODO: Update comment in report context and send API call
-        console.log(`Updating comment ${commentId} with new text: ${newBodyText}`);
+        // Update comment in report context
+        updateCommentInReport(selectedReport.reportId, commentId, newBodyText);
+
+        // TODO: Send API call to persist the comment update
     }
 
     const closeEditCommentModal = () => {
