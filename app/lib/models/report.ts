@@ -6,6 +6,8 @@ export interface Report {
     description?: string;
     studentId?: string;
     comments?: Comment[];
+    reportedById: string;
+    reportedByName: string;
 }
 
 export enum ReportType {
