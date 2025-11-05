@@ -9,6 +9,7 @@ import IconContainer, { IconType } from "components/IconContainer";
 import CommentList from "components/lists/CommentList";
 import { Comment } from "lib/models/comment";
 import AlertModal from "components/modals/AlertModal";
+import EditCommentModal from "components/modals/EditCommentModal";
 
 
 const ReportDetailsPage = () => {
@@ -19,6 +20,11 @@ const ReportDetailsPage = () => {
     const [currentReportDescription, setCurrentReportDescription] = useState(selectedReport.description ?? '');
     const [newCommentText, setNewCommentText] = useState('');
     const [showEmptyCommentAlert, setShowEmptyCommentAlert] = useState(false);
+    const [editCommentModalVisible, setEditCommentModalVisible] = useState(false);
+    const [selectedComment, setSelectedComment] = useState<Comment | null>(null);
+
+    // TODO: Get current user ID from auth context
+    const currentUserId = 'teacher:1'; // Mock current user as Robert Thompson for demo
 
     // Get the assigned student
     const assignedStudent = students.find(student => student.studentId === selectedReport.studentId);
@@ -48,6 +54,7 @@ const ReportDetailsPage = () => {
 
         const newComment: Comment = {
             commentId: Date.now().toString(),
+            userId: currentUserId,
             fullName: 'Current User', // TODO: Replace with actual user name from auth context
             bodyText: newCommentText.trim(),
             timestamp: new Date(),
@@ -61,6 +68,21 @@ const ReportDetailsPage = () => {
 
     const closeEmptyCommentAlert = () => {
         setShowEmptyCommentAlert(false);
+    }
+
+    const handleEditComment = (comment: Comment) => {
+        setSelectedComment(comment);
+        setEditCommentModalVisible(true);
+    }
+
+    const handleSaveEditedComment = (commentId: string, newBodyText: string) => {
+        // TODO: Update comment in report context and send API call
+        console.log(`Updating comment ${commentId} with new text: ${newBodyText}`);
+    }
+
+    const closeEditCommentModal = () => {
+        setEditCommentModalVisible(false);
+        setSelectedComment(null);
     }
 
     return (
@@ -142,7 +164,11 @@ const ReportDetailsPage = () => {
 
                         {/* Comments List */}
                         <View className="mb-4">
-                            <CommentList comments={reportComments} />
+                            <CommentList
+                                comments={reportComments}
+                                currentUserId={currentUserId}
+                                onEditComment={handleEditComment}
+                            />
                         </View>
 
                         {/* Add Comment Input */}
@@ -202,6 +228,14 @@ const ReportDetailsPage = () => {
                 title="Empty Comment"
                 message="Please enter text into the comment field before adding a comment."
                 onConfirm={closeEmptyCommentAlert}
+            />
+
+            {/* Edit Comment Modal */}
+            <EditCommentModal
+                isVisible={editCommentModalVisible}
+                comment={selectedComment}
+                onDismiss={closeEditCommentModal}
+                onSave={handleSaveEditedComment}
             />
         </DetailsHeaderPage>
     )
