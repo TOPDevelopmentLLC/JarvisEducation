@@ -1,16 +1,19 @@
 import { useStoredTeacherData } from "components/contexts/TeacherContext";
 import { useStoredCourseData } from "components/contexts/CourseContext";
+import { useStoredTeamData } from "components/contexts/TeamContext";
 import DetailsHeaderPage from "components/pages/DetailsHeaderPage";
 import { useLocalSearchParams } from "expo-router";
 import { useState } from "react";
 import { View, Text, TextInput, ScrollView } from "react-native";
 import BaseButton from "components/buttons/BaseButton";
 import IconContainer, { IconType } from "components/IconContainer";
+import AssignedTeamList from "components/lists/AssignedTeamList";
 
 
 const TeacherDetailsPage = () => {
     const { selectedTeacher, setSelectedTeacher } = useStoredTeacherData();
     const { courses } = useStoredCourseData();
+    const { teams } = useStoredTeamData();
     const { edit } = useLocalSearchParams();
     const [inEditMode, setEditMode] = useState<boolean>(edit === '1');
     const [currentTeacherName, setCurrentTeacherName] = useState(selectedTeacher.name);
@@ -18,6 +21,11 @@ const TeacherDetailsPage = () => {
     // Get all courses assigned to this teacher
     const assignedCourses = courses.filter(course =>
         selectedTeacher.assignedCourseIds?.includes(course.courseId)
+    );
+
+    // Get all teams this teacher is part of
+    const assignedTeams = teams.filter(team =>
+        team.memberIds.includes(`teacher:${selectedTeacher.teacherId}`)
     );
 
     const saveButtonPressed = () => {
@@ -98,6 +106,14 @@ const TeacherDetailsPage = () => {
                                 ) : (
                                     <Text className="text-white text-base">None</Text>
                                 )}
+                            </View>
+                        </View>
+
+                        {/* Assigned Teams Field */}
+                        <View className="mb-6">
+                            <Text className="text-gray-400 text-sm mb-2">Assigned Teams</Text>
+                            <View className="px-4 py-3">
+                                <AssignedTeamList teams={assignedTeams} />
                             </View>
                         </View>
                     </View>
