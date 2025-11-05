@@ -6,17 +6,34 @@ import { useState } from "react";
 import { View, Text, TextInput, ScrollView } from "react-native";
 import BaseButton from "components/buttons/BaseButton";
 import IconContainer, { IconType } from "components/IconContainer";
+import CommentList from "components/lists/CommentList";
+import { Comment } from "lib/models/comment";
+import AlertModal from "components/modals/AlertModal";
+import EditCommentModal from "components/modals/EditCommentModal";
+import { mockCurrentUserId } from "lib/mockData";
 
 
 const ReportDetailsPage = () => {
-    const { selectedReport, setSelectedReport } = useStoredReportData();
+    const { selectedReport, setSelectedReport, addCommentToReport, updateCommentInReport } = useStoredReportData();
     const { students } = useStoredStudentData();
     const { edit } = useLocalSearchParams();
     const [inEditMode, setEditMode] = useState<boolean>(edit === '1');
     const [currentReportDescription, setCurrentReportDescription] = useState(selectedReport.description ?? '');
+    const [newCommentText, setNewCommentText] = useState('');
+    const [showEmptyCommentAlert, setShowEmptyCommentAlert] = useState(false);
+    const [editCommentModalVisible, setEditCommentModalVisible] = useState(false);
+    const [selectedComment, setSelectedComment] = useState<Comment | null>(null);
+
+    // TODO: Get current user ID and name from auth context
+    // Using mock data for testing - currently set to admin:1 (Patricia Henderson)
+    const currentUserId = mockCurrentUserId;
+    const currentUserName = 'Patricia Henderson'; // TODO: Get from auth context
 
     // Get the assigned student
     const assignedStudent = students.find(student => student.studentId === selectedReport.studentId);
+
+    // Get comments for this report
+    const reportComments = selectedReport.comments || [];
 
     const saveButtonPressed = () => {
         setEditMode(false);
@@ -30,6 +47,51 @@ const ReportDetailsPage = () => {
     const cancelButtonPressed = () => {
         setEditMode(false);
         setCurrentReportDescription(selectedReport.description ?? '');
+    }
+
+    const addCommentPressed = () => {
+        if (newCommentText.trim() === '') {
+            setShowEmptyCommentAlert(true);
+            return;
+        }
+
+        const newComment: Comment = {
+            commentId: Date.now().toString(),
+            userId: currentUserId,
+            fullName: currentUserName,
+            bodyText: newCommentText.trim(),
+            timestamp: new Date(),
+            reportId: selectedReport.reportId
+        };
+
+        // Add comment to report context
+        addCommentToReport(selectedReport.reportId, newComment);
+
+        // Clear the input
+        setNewCommentText('');
+
+        // TODO: Send API call to persist the comment
+    }
+
+    const closeEmptyCommentAlert = () => {
+        setShowEmptyCommentAlert(false);
+    }
+
+    const handleEditComment = (comment: Comment) => {
+        setSelectedComment(comment);
+        setEditCommentModalVisible(true);
+    }
+
+    const handleSaveEditedComment = (commentId: string, newBodyText: string) => {
+        // Update comment in report context
+        updateCommentInReport(selectedReport.reportId, commentId, newBodyText);
+
+        // TODO: Send API call to persist the comment update
+    }
+
+    const closeEditCommentModal = () => {
+        setEditCommentModalVisible(false);
+        setSelectedComment(null);
     }
 
     return (
@@ -105,6 +167,41 @@ const ReportDetailsPage = () => {
                         </View>
                     </View>
 
+                    {/* Comments Section */}
+                    <View className="bg-gray-800 rounded-xl p-6 mb-6">
+                        <Text className="text-white text-xl font-bold mb-4">Comments</Text>
+
+                        {/* Comments List */}
+                        <View className="mb-4">
+                            <CommentList
+                                comments={reportComments}
+                                currentUserId={currentUserId}
+                                onEditComment={handleEditComment}
+                            />
+                        </View>
+
+                        {/* Add Comment Input */}
+                        <View>
+                            <Text className="text-gray-400 text-sm mb-2">Add a comment</Text>
+                            <TextInput
+                                className="bg-gray-700 text-white rounded-lg px-4 py-3 text-base mb-3"
+                                value={newCommentText}
+                                onChangeText={setNewCommentText}
+                                placeholder="Enter your comment..."
+                                placeholderTextColor="#9CA3AF"
+                                multiline
+                                numberOfLines={3}
+                                textAlignVertical="top"
+                            />
+                            <BaseButton
+                                title="Add Comment"
+                                className="bg-jarvisPrimary rounded-lg items-center active:opacity-70"
+                                textClassName="text-black text-base font-semibold"
+                                onPress={addCommentPressed}
+                            />
+                        </View>
+                    </View>
+
                     {/* Action Buttons */}
                     <View className="gap-3 mb-6">
                         {inEditMode ? (
@@ -133,6 +230,22 @@ const ReportDetailsPage = () => {
                     </View>
                 </View>
             </ScrollView>
+
+            {/* Empty Comment Alert Modal */}
+            <AlertModal
+                isVisible={showEmptyCommentAlert}
+                title="Empty Comment"
+                message="Please enter text into the comment field before adding a comment."
+                onConfirm={closeEmptyCommentAlert}
+            />
+
+            {/* Edit Comment Modal */}
+            <EditCommentModal
+                isVisible={editCommentModalVisible}
+                comment={selectedComment}
+                onDismiss={closeEditCommentModal}
+                onSave={handleSaveEditedComment}
+            />
         </DetailsHeaderPage>
     )
 }

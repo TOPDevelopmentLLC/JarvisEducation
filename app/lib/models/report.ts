@@ -1,10 +1,11 @@
-
+import { Comment } from "./comment";
 
 export interface Report {
     reportId: string;
     type: ReportType;
     description?: string;
     studentId?: string;
+    comments?: Comment[];
 }
 
 export enum ReportType {
