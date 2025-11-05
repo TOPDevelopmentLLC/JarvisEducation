@@ -6,6 +6,8 @@ import { useState } from "react";
 import { View, Text, TextInput, ScrollView } from "react-native";
 import BaseButton from "components/buttons/BaseButton";
 import IconContainer, { IconType } from "components/IconContainer";
+import CommentList from "components/lists/CommentList";
+import { Comment } from "lib/models/comment";
 
 
 const ReportDetailsPage = () => {
@@ -14,9 +16,13 @@ const ReportDetailsPage = () => {
     const { edit } = useLocalSearchParams();
     const [inEditMode, setEditMode] = useState<boolean>(edit === '1');
     const [currentReportDescription, setCurrentReportDescription] = useState(selectedReport.description ?? '');
+    const [newCommentText, setNewCommentText] = useState('');
 
     // Get the assigned student
     const assignedStudent = students.find(student => student.studentId === selectedReport.studentId);
+
+    // Get comments for this report
+    const reportComments = selectedReport.comments || [];
 
     const saveButtonPressed = () => {
         setEditMode(false);
@@ -30,6 +36,22 @@ const ReportDetailsPage = () => {
     const cancelButtonPressed = () => {
         setEditMode(false);
         setCurrentReportDescription(selectedReport.description ?? '');
+    }
+
+    const addCommentPressed = () => {
+        if (newCommentText.trim() === '') return;
+
+        const newComment: Comment = {
+            commentId: Date.now().toString(),
+            fullName: 'Current User', // TODO: Replace with actual user name from auth context
+            bodyText: newCommentText.trim(),
+            timestamp: new Date(),
+            reportId: selectedReport.reportId
+        };
+
+        // TODO: Add comment to report context and send API call
+        // For now, we'll just clear the input
+        setNewCommentText('');
     }
 
     return (
@@ -102,6 +124,37 @@ const ReportDetailsPage = () => {
                                     {assignedStudent ? assignedStudent.name : 'None'}
                                 </Text>
                             </View>
+                        </View>
+                    </View>
+
+                    {/* Comments Section */}
+                    <View className="bg-gray-800 rounded-xl p-6 mb-6">
+                        <Text className="text-white text-xl font-bold mb-4">Comments</Text>
+
+                        {/* Comments List */}
+                        <View className="mb-4">
+                            <CommentList comments={reportComments} />
+                        </View>
+
+                        {/* Add Comment Input */}
+                        <View>
+                            <Text className="text-gray-400 text-sm mb-2">Add a comment</Text>
+                            <TextInput
+                                className="bg-gray-700 text-white rounded-lg px-4 py-3 text-base mb-3"
+                                value={newCommentText}
+                                onChangeText={setNewCommentText}
+                                placeholder="Enter your comment..."
+                                placeholderTextColor="#9CA3AF"
+                                multiline
+                                numberOfLines={3}
+                                textAlignVertical="top"
+                            />
+                            <BaseButton
+                                title="Add Comment"
+                                className="bg-jarvisPrimary rounded-lg items-center active:opacity-70"
+                                textClassName="text-black text-base font-semibold"
+                                onPress={addCommentPressed}
+                            />
                         </View>
                     </View>
 
