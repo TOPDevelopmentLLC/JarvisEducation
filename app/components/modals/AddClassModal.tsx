@@ -19,6 +19,8 @@ const AddClassModal = ({
     const [courseTitle, setCourseTitle] = useState('');
     const [courseDescription, setCourseDescription] = useState('');
     const [classroomNumber, setClassroomNumber] = useState('');
+    const [startTime, setStartTime] = useState('');
+    const [endTime, setEndTime] = useState('');
     const showErrorMessage = useErrorSnackbar();
     const { addCourse, courses } = useStoredCourseData();
 
@@ -38,13 +40,17 @@ const AddClassModal = ({
             courseId: newId,
             title: courseTitle,
             description: courseDescription,
-            classroomNumber: classroomNumber.length > 0 ? classroomNumber : undefined
+            classroomNumber: classroomNumber.length > 0 ? classroomNumber : undefined,
+            startTime: startTime.length > 0 ? startTime : undefined,
+            endTime: endTime.length > 0 ? endTime : undefined
         });
 
         // Reset form and close modal
         setCourseTitle('');
         setCourseDescription('');
         setClassroomNumber('');
+        setStartTime('');
+        setEndTime('');
         onDismiss?.();
     }
 
@@ -81,6 +87,20 @@ const AddClassModal = ({
                 <JarvisPaperTextInput
                     placeholder={"Classroom Number (Optional)"}
                     onTextChange={(number) => setClassroomNumber(number)}
+                    style={{
+                        marginTop: 8
+                    }}
+                />
+                <JarvisPaperTextInput
+                    placeholder={"Start Time (Optional)"}
+                    onTextChange={(time) => setStartTime(time)}
+                    style={{
+                        marginTop: 8
+                    }}
+                />
+                <JarvisPaperTextInput
+                    placeholder={"End Time (Optional)"}
+                    onTextChange={(time) => setEndTime(time)}
                     style={{
                         marginTop: 8
                     }}
