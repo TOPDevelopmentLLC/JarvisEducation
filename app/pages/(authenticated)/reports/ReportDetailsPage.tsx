@@ -35,6 +35,9 @@ const ReportDetailsPage = () => {
     // Get comments for this report
     const reportComments = selectedReport.comments || [];
 
+    // Check if current user is the report owner
+    const isReportOwner = currentUserId === selectedReport.reportedById;
+
     const saveButtonPressed = () => {
         setEditMode(false);
         //todo: send api call
@@ -167,6 +170,35 @@ const ReportDetailsPage = () => {
                         </View>
                     </View>
 
+                    {/* Edit Information Button - Only visible to report owner */}
+                    {isReportOwner && (
+                        <View className="mb-6">
+                            {inEditMode ? (
+                                <View className="gap-3">
+                                    <BaseButton
+                                        title="Save Changes"
+                                        className="bg-jarvisPrimary rounded-lg items-center active:opacity-70"
+                                        textClassName="text-black text-base font-semibold"
+                                        onPress={saveButtonPressed}
+                                    />
+                                    <BaseButton
+                                        title="Cancel"
+                                        className="bg-gray-700 rounded-lg items-center active:opacity-70"
+                                        textClassName="text-white text-base font-semibold"
+                                        onPress={cancelButtonPressed}
+                                    />
+                                </View>
+                            ) : (
+                                <BaseButton
+                                    title="Edit Information"
+                                    className="bg-jarvisPrimary rounded-lg items-center active:opacity-70"
+                                    textClassName="text-black text-base font-semibold"
+                                    onPress={editButtonPressed}
+                                />
+                            )}
+                        </View>
+                    )}
+
                     {/* Comments Section */}
                     <View className="bg-gray-800 rounded-xl p-6 mb-6">
                         <Text className="text-white text-xl font-bold mb-4">Comments</Text>
@@ -200,33 +232,6 @@ const ReportDetailsPage = () => {
                                 onPress={addCommentPressed}
                             />
                         </View>
-                    </View>
-
-                    {/* Action Buttons */}
-                    <View className="gap-3 mb-6">
-                        {inEditMode ? (
-                            <>
-                                <BaseButton
-                                    title="Save Changes"
-                                    className="bg-jarvisPrimary rounded-lg items-center active:opacity-70"
-                                    textClassName="text-black text-base font-semibold"
-                                    onPress={saveButtonPressed}
-                                />
-                                <BaseButton
-                                    title="Cancel"
-                                    className="bg-gray-700 rounded-lg items-center active:opacity-70"
-                                    textClassName="text-white text-base font-semibold"
-                                    onPress={cancelButtonPressed}
-                                />
-                            </>
-                        ) : (
-                            <BaseButton
-                                title="Edit Information"
-                                className="bg-jarvisPrimary rounded-lg items-center active:opacity-70"
-                                textClassName="text-black text-base font-semibold"
-                                onPress={editButtonPressed}
-                            />
-                        )}
                     </View>
                 </View>
             </ScrollView>
