@@ -11,12 +11,13 @@ export interface NoDataViewProps {
 }
 
 export enum DataType {
-    STUDENT = 'Student', 
-    PARENT = 'Parent', 
-    TEACHER = 'Teacher', 
+    STUDENT = 'Student',
+    PARENT = 'Parent',
+    TEACHER = 'Teacher',
     ADMIN = 'Admin',
     REPORT = 'Report',
     COURSE = 'Course',
+    TEAM = 'Team',
 }
 
 const NoDataView = ({

@@ -4,6 +4,7 @@ import { Report, ReportType } from "lib/models/report";
 import { Student } from "lib/models/student";
 import { Teacher } from "lib/models/teacher";
 import { Code } from "lib/models/code";
+import { Team } from "lib/models/team";
 
 export const mockStudentData: Student[] = [
     {
@@ -182,5 +183,29 @@ export const mockCodeData: Code[] = [
         codeId: '4',
         name: 'Code 4',
         description: '911 On-Premise Threat'
+    }
+]
+
+export const mockTeamData: Team[] = [
+    {
+        teamId: '1',
+        name: 'Emergency Response Team',
+        description: 'First responders for all emergency situations',
+        memberIds: ['1', '2', '3'], // Mix of teacher and admin IDs
+        assignedCodeIds: ['1', '2', '3', '4']
+    },
+    {
+        teamId: '2',
+        name: 'Student Support Team',
+        description: 'Dedicated to student welfare and support services',
+        memberIds: ['1', '4'],
+        assignedCodeIds: ['2']
+    },
+    {
+        teamId: '3',
+        name: 'Safety & Security Team',
+        description: 'Campus safety and security management',
+        memberIds: ['2', '5'],
+        assignedCodeIds: ['1', '4']
     }
 ]
