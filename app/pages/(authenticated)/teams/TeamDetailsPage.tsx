@@ -12,6 +12,7 @@ import BaseButton from "components/buttons/BaseButton";
 import IconContainer, { IconType } from "components/IconContainer";
 import TeamMemberList from "components/lists/TeamMemberList";
 import { TeamMember } from "components/lists/TeamMemberListItem";
+import CodeList from "components/lists/CodeList";
 
 
 const TeamDetailsPage = () => {
@@ -212,22 +213,14 @@ const TeamDetailsPage = () => {
                                 onPress={() => setAssignCodesModalIsVisible(true)}
                             />
                         </View>
-                        <ScrollView style={{ maxHeight: maxListHeight }} showsVerticalScrollIndicator={true}>
-                            {assignedCodes.length > 0 ? (
-                                assignedCodes.map((code) => (
-                                    <View key={code.codeId} className="bg-gray-700 rounded-xl p-4 mb-3">
-                                        <View className="flex-row items-center mb-2">
-                                            <View className="bg-jarvisPrimary rounded-full px-3 py-1 mr-2">
-                                                <Text className="text-black font-bold">{code.name}</Text>
-                                            </View>
-                                        </View>
-                                        <Text className="text-gray-400 text-sm">{code.description}</Text>
-                                    </View>
-                                ))
-                            ) : (
-                                <Text className="text-gray-400 text-center py-8">No codes assigned</Text>
-                            )}
-                        </ScrollView>
+                        {assignedCodes.length > 0 ? (
+                            <CodeList
+                                codes={assignedCodes}
+                                style={{ maxHeight: maxListHeight }}
+                            />
+                        ) : (
+                            <Text className="text-gray-400 text-center py-8">No codes assigned</Text>
+                        )}
                     </View>
                 </View>
             </ScrollView>
