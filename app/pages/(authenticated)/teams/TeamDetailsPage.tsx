@@ -5,12 +5,13 @@ import { useStoredCodeData } from "components/contexts/CodeContext";
 import DetailsHeaderPage from "components/pages/DetailsHeaderPage";
 import { useLocalSearchParams } from "expo-router";
 import { useState, useEffect } from "react";
-import { View, Text, TextInput, ScrollView, Pressable, useWindowDimensions } from "react-native";
+import { View, Text, TextInput, ScrollView, useWindowDimensions } from "react-native";
 import AssignMembersModal from "components/modals/AssignMembersModal";
 import AssignCodeToTeamModal from "components/modals/AssignCodeToTeamModal";
 import BaseButton from "components/buttons/BaseButton";
 import IconContainer, { IconType } from "components/IconContainer";
-import DeleteButton from "components/buttons/DeleteButton";
+import TeamMemberList from "components/lists/TeamMemberList";
+import { TeamMember } from "components/lists/TeamMemberListItem";
 
 
 const TeamDetailsPage = () => {
@@ -29,9 +30,17 @@ const TeamDetailsPage = () => {
     const maxListHeight = height * 0.25;
 
     // Get members (teachers and admins) by parsing the uniqueId format
-    const teamMembers = [
-        ...teachers.filter(t => selectedTeam?.memberIds.includes(`teacher:${t.teacherId}`)).map(t => ({ ...t, type: 'teacher' as const })),
-        ...admins.filter(a => selectedTeam?.memberIds.includes(`admin:${a.adminId}`)).map(a => ({ ...a, type: 'admin' as const }))
+    const teamMembers: TeamMember[] = [
+        ...teachers.filter(t => selectedTeam?.memberIds.includes(`teacher:${t.teacherId}`)).map(t => ({
+            id: t.teacherId,
+            name: t.name,
+            type: 'teacher' as const
+        })),
+        ...admins.filter(a => selectedTeam?.memberIds.includes(`admin:${a.adminId}`)).map(a => ({
+            id: a.adminId,
+            name: a.name,
+            type: 'admin' as const
+        }))
     ];
 
     // Get assigned codes
@@ -185,28 +194,11 @@ const TeamDetailsPage = () => {
                                 onPress={() => setAssignMembersModalIsVisible(true)}
                             />
                         </View>
-                        <ScrollView style={{ maxHeight: maxListHeight }} showsVerticalScrollIndicator={true}>
-                            {teamMembers.length > 0 ? (
-                                teamMembers.map((member) => (
-                                    <View key={member.type === 'teacher' ? member.teacherId : member.adminId} className="flex-row items-center bg-gray-700 rounded-xl p-4 mb-3 justify-between">
-                                        <View className="flex-1">
-                                            <Text className="text-white text-lg font-semibold">{member.name}</Text>
-                                            <Text className="text-gray-400 text-sm mt-1">
-                                                {member.type === 'teacher' ? 'Teacher' : 'Administrator'}
-                                            </Text>
-                                        </View>
-                                        <DeleteButton
-                                            onIconClicked={() => handleRemoveMember(
-                                                member.type === 'teacher' ? member.teacherId : member.adminId,
-                                                member.type
-                                            )}
-                                        />
-                                    </View>
-                                ))
-                            ) : (
-                                <Text className="text-gray-400 text-center py-8">No members assigned</Text>
-                            )}
-                        </ScrollView>
+                        <TeamMemberList
+                            members={teamMembers}
+                            onDeleteMember={handleRemoveMember}
+                            style={{ maxHeight: maxListHeight }}
+                        />
                     </View>
 
                     {/* Assigned Codes Section */}
