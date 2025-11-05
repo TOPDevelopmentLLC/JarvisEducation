@@ -1,6 +1,7 @@
 import { View, Text, ScrollView, ViewStyle } from "react-native";
 import { Comment } from "lib/models/comment";
 import CommentListItem from "./CommentListItem";
+import clsx from "clsx";
 
 export interface CommentListProps {
     comments: Comment[];
@@ -28,7 +29,11 @@ const CommentList = ({
     }
 
     return (
-        <ScrollView className={className} style={style} showsVerticalScrollIndicator={true}>
+        <ScrollView
+            className={clsx('max-h-96', className)}
+            style={style}
+            showsVerticalScrollIndicator={true}
+        >
             {comments.map((comment) => (
                 <CommentListItem
                     key={comment.commentId}
