@@ -12,7 +12,7 @@ import BaseButton from "components/buttons/BaseButton";
 import IconContainer, { IconType } from "components/IconContainer";
 import TeamMemberList from "components/lists/TeamMemberList";
 import { TeamMember } from "components/lists/TeamMemberListItem";
-import CodeList from "components/lists/CodeList";
+import AssignedCodeList from "components/lists/AssignedCodeList";
 
 
 const TeamDetailsPage = () => {
@@ -213,14 +213,12 @@ const TeamDetailsPage = () => {
                                 onPress={() => setAssignCodesModalIsVisible(true)}
                             />
                         </View>
-                        {assignedCodes.length > 0 ? (
-                            <CodeList
+                        <View className="px-4 py-3">
+                            <AssignedCodeList
                                 codes={assignedCodes}
-                                style={{ maxHeight: maxListHeight }}
+                                emptyText="No codes assigned"
                             />
-                        ) : (
-                            <Text className="text-gray-400 text-center py-8">No codes assigned</Text>
-                        )}
+                        </View>
                     </View>
                 </View>
             </ScrollView>

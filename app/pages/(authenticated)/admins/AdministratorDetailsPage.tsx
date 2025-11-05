@@ -8,8 +8,8 @@ import AssignCodeModal from "components/modals/AssignCodeModal";
 import ConfirmationModal from "components/modals/ConfirmationModal";
 import BaseButton from "components/buttons/BaseButton";
 import { Code } from "lib/models/code";
-import DeleteButton from "components/buttons/DeleteButton";
 import IconContainer, { IconType } from "components/IconContainer";
+import AssignedCodeList from "components/lists/AssignedCodeList";
 
 
 const AdministratorDetailsPage = () => {
@@ -111,24 +111,11 @@ const AdministratorDetailsPage = () => {
                         <View className="mb-6">
                             <Text className="text-gray-400 text-sm mb-2">Assigned Codes</Text>
                             <View className="px-4 py-3">
-                                {assignedCodes.length > 0 ? (
-                                    <View>
-                                        {assignedCodes.map((code, index) => (
-                                            <View key={code.codeId} className="flex-row items-center justify-between mb-2">
-                                                <Text className="text-white text-base flex-1">
-                                                    • {code.name} - {code.description}
-                                                </Text>
-                                                {inEditMode && (
-                                                    <DeleteButton 
-                                                        onIconClicked={() => handleRemoveCode(code)} 
-                                                    />
-                                                )}
-                                            </View>
-                                        ))}
-                                    </View>
-                                ) : (
-                                    <Text className="text-white text-base">None</Text>
-                                )}
+                                <AssignedCodeList
+                                    codes={assignedCodes}
+                                    showDeleteButtons={inEditMode}
+                                    onDeleteCode={handleRemoveCode}
+                                />
                             </View>
                         </View>
                     </View>
