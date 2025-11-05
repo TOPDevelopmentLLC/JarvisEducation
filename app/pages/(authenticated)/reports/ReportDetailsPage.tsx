@@ -8,6 +8,7 @@ import BaseButton from "components/buttons/BaseButton";
 import IconContainer, { IconType } from "components/IconContainer";
 import CommentList from "components/lists/CommentList";
 import { Comment } from "lib/models/comment";
+import AlertModal from "components/modals/AlertModal";
 
 
 const ReportDetailsPage = () => {
@@ -17,6 +18,7 @@ const ReportDetailsPage = () => {
     const [inEditMode, setEditMode] = useState<boolean>(edit === '1');
     const [currentReportDescription, setCurrentReportDescription] = useState(selectedReport.description ?? '');
     const [newCommentText, setNewCommentText] = useState('');
+    const [showEmptyCommentAlert, setShowEmptyCommentAlert] = useState(false);
 
     // Get the assigned student
     const assignedStudent = students.find(student => student.studentId === selectedReport.studentId);
@@ -39,7 +41,10 @@ const ReportDetailsPage = () => {
     }
 
     const addCommentPressed = () => {
-        if (newCommentText.trim() === '') return;
+        if (newCommentText.trim() === '') {
+            setShowEmptyCommentAlert(true);
+            return;
+        }
 
         const newComment: Comment = {
             commentId: Date.now().toString(),
@@ -52,6 +57,10 @@ const ReportDetailsPage = () => {
         // TODO: Add comment to report context and send API call
         // For now, we'll just clear the input
         setNewCommentText('');
+    }
+
+    const closeEmptyCommentAlert = () => {
+        setShowEmptyCommentAlert(false);
     }
 
     return (
@@ -186,6 +195,14 @@ const ReportDetailsPage = () => {
                     </View>
                 </View>
             </ScrollView>
+
+            {/* Empty Comment Alert Modal */}
+            <AlertModal
+                isVisible={showEmptyCommentAlert}
+                title="Empty Comment"
+                message="Please enter text into the comment field before adding a comment."
+                onConfirm={closeEmptyCommentAlert}
+            />
         </DetailsHeaderPage>
     )
 }
