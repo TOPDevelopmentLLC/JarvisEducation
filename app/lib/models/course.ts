@@ -5,5 +5,7 @@ export interface Course {
     title: string;
     description: string;
     classroomNumber?: string;
+    startTime?: string;
+    endTime?: string;
     assignedTeacherId?: string;
 }
