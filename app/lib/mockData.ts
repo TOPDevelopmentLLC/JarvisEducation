@@ -44,15 +44,18 @@ export const mockStudentData: Student[] = [
 export const mockTeacherData: Teacher[] = [
     {
         teacherId: '1',
-        name: 'Robert Thompson'
+        name: 'Robert Thompson',
+        teamIds: ['1', '2']
     },
     {
         teacherId: '2',
-        name: 'Jennifer Wilson'
+        name: 'Jennifer Wilson',
+        teamIds: ['1']
     },
     {
         teacherId: '3',
-        name: 'Michael Chen'
+        name: 'Michael Chen',
+        teamIds: ['3']
     },
     {
         teacherId: '4',
@@ -68,27 +71,25 @@ export const mockAdminData: Administrator[] = [
     {
         adminId: '1',
         name: 'Patricia Henderson',
-        assignedCodeIds: []
+        teamIds: ['1']
     },
     {
         adminId: '2',
         name: 'James Sullivan',
-        assignedCodeIds: []
+        teamIds: ['2']
     },
     {
         adminId: '3',
         name: 'Margaret Foster',
-        assignedCodeIds: []
+        teamIds: ['3']
     },
     {
         adminId: '4',
-        name: 'William Roberts',
-        assignedCodeIds: []
+        name: 'William Roberts'
     },
     {
         adminId: '5',
-        name: 'Linda Coleman',
-        assignedCodeIds: []
+        name: 'Linda Coleman'
     }
 ]
 
