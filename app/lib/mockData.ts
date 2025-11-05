@@ -7,6 +7,10 @@ import { Code } from "lib/models/code";
 import { Team } from "lib/models/team";
 import { Comment } from "lib/models/comment";
 
+// Mock current user ID for testing purposes
+// Set to admin:1 (Patricia Henderson) to test comment editing
+export const mockCurrentUserId = 'admin:1';
+
 export const mockStudentData: Student[] = [
     {
         studentId: '1',

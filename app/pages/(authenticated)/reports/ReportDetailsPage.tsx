@@ -10,6 +10,7 @@ import CommentList from "components/lists/CommentList";
 import { Comment } from "lib/models/comment";
 import AlertModal from "components/modals/AlertModal";
 import EditCommentModal from "components/modals/EditCommentModal";
+import { mockCurrentUserId } from "lib/mockData";
 
 
 const ReportDetailsPage = () => {
@@ -24,7 +25,8 @@ const ReportDetailsPage = () => {
     const [selectedComment, setSelectedComment] = useState<Comment | null>(null);
 
     // TODO: Get current user ID from auth context
-    const currentUserId = 'teacher:1'; // Mock current user as Robert Thompson for demo
+    // Using mock data for testing - currently set to admin:1 (Patricia Henderson)
+    const currentUserId = mockCurrentUserId;
 
     // Get the assigned student
     const assignedStudent = students.find(student => student.studentId === selectedReport.studentId);
