@@ -17,6 +17,8 @@ const CourseDetailsPage = () => {
     const [currentCourseTitle, setCurrentCourseTitle] = useState(selectedCourse.title);
     const [currentCourseDescription, setCurrentCourseDescription] = useState(selectedCourse.description);
     const [currentClassroomNumber, setCurrentClassroomNumber] = useState(selectedCourse.classroomNumber ?? '');
+    const [currentStartTime, setCurrentStartTime] = useState(selectedCourse.startTime ?? '');
+    const [currentEndTime, setCurrentEndTime] = useState(selectedCourse.endTime ?? '');
     const [assignTeacherModalIsVisible, setAssignTeacherModalIsVisible] = useState(false);
 
     // Get the assigned teacher
@@ -36,6 +38,8 @@ const CourseDetailsPage = () => {
         setCurrentCourseTitle(selectedCourse.title);
         setCurrentCourseDescription(selectedCourse.description);
         setCurrentClassroomNumber(selectedCourse.classroomNumber ?? '');
+        setCurrentStartTime(selectedCourse.startTime ?? '');
+        setCurrentEndTime(selectedCourse.endTime ?? '');
     }
 
     return (
@@ -121,6 +125,46 @@ const CourseDetailsPage = () => {
                                 <View className="px-4 py-3">
                                     <Text className="text-white text-base">
                                         {currentClassroomNumber || 'Not assigned'}
+                                    </Text>
+                                </View>
+                            )}
+                        </View>
+
+                        {/* Start Time Field */}
+                        <View className="mb-6">
+                            <Text className="text-gray-400 text-sm mb-2">Start Time</Text>
+                            {inEditMode ? (
+                                <TextInput
+                                    className="bg-gray-700 text-white rounded-lg px-4 py-3 text-base"
+                                    value={currentStartTime}
+                                    onChangeText={setCurrentStartTime}
+                                    placeholderTextColor="#9CA3AF"
+                                    placeholder="Enter start time..."
+                                />
+                            ) : (
+                                <View className="px-4 py-3">
+                                    <Text className="text-white text-base">
+                                        {currentStartTime || 'Not assigned'}
+                                    </Text>
+                                </View>
+                            )}
+                        </View>
+
+                        {/* End Time Field */}
+                        <View className="mb-6">
+                            <Text className="text-gray-400 text-sm mb-2">End Time</Text>
+                            {inEditMode ? (
+                                <TextInput
+                                    className="bg-gray-700 text-white rounded-lg px-4 py-3 text-base"
+                                    value={currentEndTime}
+                                    onChangeText={setCurrentEndTime}
+                                    placeholderTextColor="#9CA3AF"
+                                    placeholder="Enter end time..."
+                                />
+                            ) : (
+                                <View className="px-4 py-3">
+                                    <Text className="text-white text-base">
+                                        {currentEndTime || 'Not assigned'}
                                     </Text>
                                 </View>
                             )}
