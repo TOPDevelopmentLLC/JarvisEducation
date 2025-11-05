@@ -140,6 +140,7 @@ export const mockCourseData: Course[] = [
 export const mockCommentData: Comment[] = [
     {
         commentId: '1',
+        userId: 'teacher:1', // Robert Thompson
         fullName: 'Robert Thompson',
         bodyText: 'Parent was contacted and confirmed Emma was sick at home.',
         timestamp: new Date('2024-01-15T09:30:00'),
@@ -147,6 +148,7 @@ export const mockCommentData: Comment[] = [
     },
     {
         commentId: '2',
+        userId: 'admin:1', // Patricia Henderson
         fullName: 'Patricia Henderson',
         bodyText: 'Follow-up meeting scheduled with student and parents for next week.',
         timestamp: new Date('2024-01-15T10:15:00'),
@@ -154,6 +156,7 @@ export const mockCommentData: Comment[] = [
     },
     {
         commentId: '3',
+        userId: 'teacher:2', // Jennifer Wilson
         fullName: 'Jennifer Wilson',
         bodyText: 'Student showed improvement in behavior after our discussion.',
         timestamp: new Date('2024-01-16T14:20:00'),
@@ -161,6 +164,7 @@ export const mockCommentData: Comment[] = [
     },
     {
         commentId: '4',
+        userId: 'teacher:3', // Michael Chen
         fullName: 'Michael Chen',
         bodyText: 'Bus delay was confirmed as the cause of tardiness.',
         timestamp: new Date('2024-01-15T11:00:00'),
@@ -168,6 +172,7 @@ export const mockCommentData: Comment[] = [
     },
     {
         commentId: '5',
+        userId: 'admin:2', // James Sullivan
         fullName: 'James Sullivan',
         bodyText: 'Both students have been separated and counseling sessions arranged.',
         timestamp: new Date('2024-01-15T13:45:00'),
@@ -175,6 +180,7 @@ export const mockCommentData: Comment[] = [
     },
     {
         commentId: '6',
+        userId: 'teacher:5', // David Patterson
         fullName: 'David Patterson',
         bodyText: 'Will continue to monitor the situation closely.',
         timestamp: new Date('2024-01-15T14:00:00'),
