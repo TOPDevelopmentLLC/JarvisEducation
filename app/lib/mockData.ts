@@ -197,31 +197,46 @@ export const mockReportData: Report[] = [
         reportId: '1',
         type: ReportType.Attendance,
         description: 'Emma Johnson was absent without notification',
-        comments: [mockCommentData[0]]
+        studentId: '1', // Emma Johnson
+        comments: [mockCommentData[0]],
+        reportedById: 'teacher:1',
+        reportedByName: 'Robert Thompson'
     },
     {
         reportId: '2',
         type: ReportType.Behavior,
         description: 'Liam Williams disrupted class discussion and refused to follow instructions',
-        comments: [mockCommentData[1], mockCommentData[2]]
+        studentId: '2', // Liam Williams
+        comments: [mockCommentData[1], mockCommentData[2]],
+        reportedById: 'admin:1',
+        reportedByName: 'Patricia Henderson'
     },
     {
         reportId: '3',
         type: ReportType.Attendance,
         description: 'Noah Davis arrived 20 minutes late to class',
-        comments: [mockCommentData[3]]
+        studentId: '4', // Noah Davis
+        comments: [mockCommentData[3]],
+        reportedById: 'teacher:3',
+        reportedByName: 'Michael Chen'
     },
     {
         reportId: '4',
         type: ReportType.Conflict,
         description: 'Verbal altercation between Ethan Garcia and another student during lunch',
-        comments: [mockCommentData[4], mockCommentData[5]]
+        studentId: '6', // Ethan Garcia
+        comments: [mockCommentData[4], mockCommentData[5]],
+        reportedById: 'admin:2',
+        reportedByName: 'James Sullivan'
     },
     {
         reportId: '5',
         type: ReportType.Behavior,
         description: 'Sophia Rodriguez was using phone during instruction time',
-        comments: []
+        studentId: '7', // Sophia Rodriguez
+        comments: [],
+        reportedById: 'teacher:2',
+        reportedByName: 'Jennifer Wilson'
     }
 ]
 
