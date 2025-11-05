@@ -7,13 +7,17 @@ export interface CommentListProps {
     className?: string;
     style?: ViewStyle;
     emptyText?: string;
+    currentUserId?: string;
+    onEditComment?: (comment: Comment) => void;
 }
 
 const CommentList = ({
     comments,
     className,
     style,
-    emptyText = "No comments yet"
+    emptyText = "No comments yet",
+    currentUserId,
+    onEditComment
 }: CommentListProps) => {
     if (comments.length === 0) {
         return (
@@ -26,7 +30,12 @@ const CommentList = ({
     return (
         <ScrollView className={className} style={style} showsVerticalScrollIndicator={true}>
             {comments.map((comment) => (
-                <CommentListItem key={comment.commentId} comment={comment} />
+                <CommentListItem
+                    key={comment.commentId}
+                    comment={comment}
+                    currentUserId={currentUserId}
+                    onEdit={onEditComment}
+                />
             ))}
         </ScrollView>
     );
