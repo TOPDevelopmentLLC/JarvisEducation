@@ -1,30 +1,24 @@
 import { useStoredAdminData } from "components/contexts/AdminContext";
-import { useStoredCodeData } from "components/contexts/CodeContext";
+import { useStoredTeamData } from "components/contexts/TeamContext";
 import DetailsHeaderPage from "components/pages/DetailsHeaderPage";
 import { useLocalSearchParams } from "expo-router";
 import { useState } from "react";
-import { View, Text, TextInput, ScrollView, } from "react-native";
-import AssignCodeModal from "components/modals/AssignCodeModal";
-import ConfirmationModal from "components/modals/ConfirmationModal";
+import { View, Text, TextInput, ScrollView } from "react-native";
 import BaseButton from "components/buttons/BaseButton";
-import { Code } from "lib/models/code";
-import DeleteButton from "components/buttons/DeleteButton";
 import IconContainer, { IconType } from "components/IconContainer";
+import AssignedTeamList from "components/lists/AssignedTeamList";
 
 
 const AdministratorDetailsPage = () => {
-    const { selectedAdmin, setSelectedAdmin, unassignCodeFromAdmin } = useStoredAdminData();
-    const { codes } = useStoredCodeData();
+    const { selectedAdmin, setSelectedAdmin } = useStoredAdminData();
+    const { teams } = useStoredTeamData();
     const { edit } = useLocalSearchParams();
     const [inEditMode, setEditMode] = useState<boolean>(edit === '1');
     const [currentAdminName, setCurrentAdminName] = useState(selectedAdmin.name);
-    const [assignCodeModalIsVisible, setAssignCodeModalIsVisible] = useState(false);
-    const [confirmDeleteCodeModalIsVisible, setConfirmDeleteCodeModalIsVisible] = useState(false);
-    const [codeToRemove, setCodeToRemove] = useState<Code | null>(null);
 
-    // Get assigned codes for this admin
-    const assignedCodes = codes.filter(code =>
-        selectedAdmin.assignedCodeIds?.includes(code.codeId)
+    // Get all teams this administrator is part of
+    const assignedTeams = teams.filter(team =>
+        team.memberIds.includes(`admin:${selectedAdmin.adminId}`)
     );
 
     const saveButtonPressed = () => {
@@ -39,24 +33,6 @@ const AdministratorDetailsPage = () => {
     const cancelButtonPressed = () => {
         setEditMode(false);
         setCurrentAdminName(selectedAdmin.name);
-    }
-
-    const handleRemoveCode = (code: Code) => {
-        setCodeToRemove(code);
-        setConfirmDeleteCodeModalIsVisible(true);
-    }
-
-    const confirmRemoveCode = () => {
-        if (codeToRemove && selectedAdmin) {
-            unassignCodeFromAdmin(selectedAdmin.adminId, codeToRemove.codeId);
-        }
-        setConfirmDeleteCodeModalIsVisible(false);
-        setCodeToRemove(null);
-    }
-
-    const cancelRemoveCode = () => {
-        setConfirmDeleteCodeModalIsVisible(false);
-        setCodeToRemove(null);
     }
 
     return (
@@ -107,28 +83,11 @@ const AdministratorDetailsPage = () => {
                             )}
                         </View>
 
-                        {/* Assigned Codes Field */}
+                        {/* Assigned Teams Field */}
                         <View className="mb-6">
-                            <Text className="text-gray-400 text-sm mb-2">Assigned Codes</Text>
+                            <Text className="text-gray-400 text-sm mb-2">Assigned Teams</Text>
                             <View className="px-4 py-3">
-                                {assignedCodes.length > 0 ? (
-                                    <View>
-                                        {assignedCodes.map((code, index) => (
-                                            <View key={code.codeId} className="flex-row items-center justify-between mb-2">
-                                                <Text className="text-white text-base flex-1">
-                                                    • {code.name} - {code.description}
-                                                </Text>
-                                                {inEditMode && (
-                                                    <DeleteButton 
-                                                        onIconClicked={() => handleRemoveCode(code)} 
-                                                    />
-                                                )}
-                                            </View>
-                                        ))}
-                                    </View>
-                                ) : (
-                                    <Text className="text-white text-base">None</Text>
-                                )}
+                                <AssignedTeamList teams={assignedTeams} />
                             </View>
                         </View>
                     </View>
@@ -151,38 +110,16 @@ const AdministratorDetailsPage = () => {
                                 />
                             </>
                         ) : (
-                            <>
-                                <BaseButton
-                                    className="bg-jarvisPrimary rounded-lg items-center active:opacity-70"
-                                    textClassName="text-black text-base font-semibold"
-                                    title={"Edit Information"}
-                                    onPress={editButtonPressed}
-                                />
-                                <BaseButton
-                                    className="bg-jarvisPrimary rounded-lg items-center active:opacity-70"
-                                    textClassName="text-black text-base font-semibold"
-                                    title="Assign Codes"
-                                    onPress={() => setAssignCodeModalIsVisible(true)}
-                                />
-                            </>
+                            <BaseButton
+                                className="bg-jarvisPrimary rounded-lg items-center active:opacity-70"
+                                textClassName="text-black text-base font-semibold"
+                                title={"Edit Information"}
+                                onPress={editButtonPressed}
+                            />
                         )}
                     </View>
                 </View>
             </ScrollView>
-            <AssignCodeModal
-                isVisible={assignCodeModalIsVisible}
-                onDismiss={() => setAssignCodeModalIsVisible(false)}
-                admin={selectedAdmin}
-            />
-            <ConfirmationModal
-                isVisible={confirmDeleteCodeModalIsVisible}
-                title="Remove Code"
-                message={`Are you sure you want to remove ${codeToRemove?.name} from ${selectedAdmin.name}?`}
-                confirmText="Remove"
-                cancelText="Cancel"
-                onConfirm={confirmRemoveCode}
-                onCancel={cancelRemoveCode}
-            />
         </DetailsHeaderPage>
     )
 }

@@ -4,6 +4,7 @@ import { Report, ReportType } from "lib/models/report";
 import { Student } from "lib/models/student";
 import { Teacher } from "lib/models/teacher";
 import { Code } from "lib/models/code";
+import { Team } from "lib/models/team";
 
 export const mockStudentData: Student[] = [
     {
@@ -43,15 +44,18 @@ export const mockStudentData: Student[] = [
 export const mockTeacherData: Teacher[] = [
     {
         teacherId: '1',
-        name: 'Robert Thompson'
+        name: 'Robert Thompson',
+        teamIds: ['1', '2']
     },
     {
         teacherId: '2',
-        name: 'Jennifer Wilson'
+        name: 'Jennifer Wilson',
+        teamIds: ['1']
     },
     {
         teacherId: '3',
-        name: 'Michael Chen'
+        name: 'Michael Chen',
+        teamIds: ['3']
     },
     {
         teacherId: '4',
@@ -67,27 +71,25 @@ export const mockAdminData: Administrator[] = [
     {
         adminId: '1',
         name: 'Patricia Henderson',
-        assignedCodeIds: []
+        teamIds: ['1']
     },
     {
         adminId: '2',
         name: 'James Sullivan',
-        assignedCodeIds: []
+        teamIds: ['2']
     },
     {
         adminId: '3',
         name: 'Margaret Foster',
-        assignedCodeIds: []
+        teamIds: ['3']
     },
     {
         adminId: '4',
-        name: 'William Roberts',
-        assignedCodeIds: []
+        name: 'William Roberts'
     },
     {
         adminId: '5',
-        name: 'Linda Coleman',
-        assignedCodeIds: []
+        name: 'Linda Coleman'
     }
 ]
 
@@ -182,5 +184,29 @@ export const mockCodeData: Code[] = [
         codeId: '4',
         name: 'Code 4',
         description: '911 On-Premise Threat'
+    }
+]
+
+export const mockTeamData: Team[] = [
+    {
+        teamId: '1',
+        name: 'Emergency Response Team',
+        description: 'First responders for all emergency situations',
+        memberIds: ['teacher:1', 'teacher:2', 'admin:1'], // Format: "teacher:{id}" or "admin:{id}"
+        assignedCodeIds: ['1', '2', '3', '4']
+    },
+    {
+        teamId: '2',
+        name: 'Student Support Team',
+        description: 'Dedicated to student welfare and support services',
+        memberIds: ['teacher:1', 'admin:2'],
+        assignedCodeIds: ['2']
+    },
+    {
+        teamId: '3',
+        name: 'Safety & Security Team',
+        description: 'Campus safety and security management',
+        memberIds: ['teacher:3', 'admin:3'],
+        assignedCodeIds: ['1', '4']
     }
 ]

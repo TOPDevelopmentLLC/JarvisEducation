@@ -13,6 +13,10 @@ const SettingsPage = () => {
         router.push('/pages/settings/CodeSettings');
     };
 
+    const handleTeamsPressed = () => {
+        router.push('/pages/teams');
+    };
+
     return (
         <MenuHeaderPage title="Settings">
             <ScrollView className="flex-1 px-6 pt-6" contentContainerStyle={{ alignItems: 'center' }}>
@@ -33,9 +37,15 @@ const SettingsPage = () => {
                         <Text className="text-white text-xl font-bold mb-3">Other Settings</Text>
                         <BaseButton
                             title="Codes"
-                            className="bg-jarvisPrimary rounded-lg items-center active:opacity-70"
+                            className="bg-jarvisPrimary rounded-lg items-center active:opacity-70 mb-3"
                             textClassName="text-black text-base font-semibold"
                             onPress={handleCodesPressed}
+                        />
+                        <BaseButton
+                            title="Teams"
+                            className="bg-jarvisPrimary rounded-lg items-center active:opacity-70"
+                            textClassName="text-black text-base font-semibold"
+                            onPress={handleTeamsPressed}
                         />
                     </View>
                 </View>
