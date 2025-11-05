@@ -28,10 +28,10 @@ const TeamDetailsPage = () => {
 
     const maxListHeight = height * 0.25;
 
-    // Get members (teachers and admins)
+    // Get members (teachers and admins) by parsing the uniqueId format
     const teamMembers = [
-        ...teachers.filter(t => selectedTeam?.memberIds.includes(t.teacherId)).map(t => ({ ...t, type: 'teacher' as const })),
-        ...admins.filter(a => selectedTeam?.memberIds.includes(a.adminId)).map(a => ({ ...a, type: 'admin' as const }))
+        ...teachers.filter(t => selectedTeam?.memberIds.includes(`teacher:${t.teacherId}`)).map(t => ({ ...t, type: 'teacher' as const })),
+        ...admins.filter(a => selectedTeam?.memberIds.includes(`admin:${a.adminId}`)).map(a => ({ ...a, type: 'admin' as const }))
     ];
 
     // Get assigned codes
@@ -67,9 +67,10 @@ const TeamDetailsPage = () => {
         setCurrentTeamDescription(selectedTeam.description);
     };
 
-    const handleRemoveMember = (memberId: string) => {
+    const handleRemoveMember = (memberId: string, memberType: 'teacher' | 'admin') => {
         if (!selectedTeam) return;
-        removeMemberFromTeam(selectedTeam.teamId, memberId);
+        const uniqueId = `${memberType}:${memberId}`;
+        removeMemberFromTeam(selectedTeam.teamId, uniqueId);
     };
 
     if (!selectedTeam) {
@@ -195,7 +196,10 @@ const TeamDetailsPage = () => {
                                             </Text>
                                         </View>
                                         <DeleteButton
-                                            onIconClicked={() => handleRemoveMember(member.type === 'teacher' ? member.teacherId : member.adminId)}
+                                            onIconClicked={() => handleRemoveMember(
+                                                member.type === 'teacher' ? member.teacherId : member.adminId,
+                                                member.type
+                                            )}
                                         />
                                     </View>
                                 ))

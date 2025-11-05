@@ -19,6 +19,7 @@ export interface AssignMembersModalProps {
 
 interface Member {
     id: string;
+    uniqueId: string; // Format: "teacher:{id}" or "admin:{id}"
     name: string;
     type: 'teacher' | 'admin';
 }
@@ -35,10 +36,20 @@ const AssignMembersModal = ({
     const showSuccessMessage = useSuccessSnackbar();
     const windowHeight = Dimensions.get('window').height;
 
-    // Combine teachers and admins into a single list
+    // Combine teachers and admins into a single list with unique IDs
     const allMembers: Member[] = [
-        ...teachers.map(t => ({ id: t.teacherId, name: t.name, type: 'teacher' as const })),
-        ...admins.map(a => ({ id: a.adminId, name: a.name, type: 'admin' as const }))
+        ...teachers.map(t => ({
+            id: t.teacherId,
+            uniqueId: `teacher:${t.teacherId}`,
+            name: t.name,
+            type: 'teacher' as const
+        })),
+        ...admins.map(a => ({
+            id: a.adminId,
+            uniqueId: `admin:${a.adminId}`,
+            name: a.name,
+            type: 'admin' as const
+        }))
     ];
 
     // Initialize with team's current members when modal opens
@@ -50,12 +61,12 @@ const AssignMembersModal = ({
 
     const handleMemberPressed = (member: Member) => {
         setSelectedMemberIds(prev => {
-            if (prev.includes(member.id)) {
+            if (prev.includes(member.uniqueId)) {
                 // Deselect
-                return prev.filter(id => id !== member.id);
+                return prev.filter(id => id !== member.uniqueId);
             } else {
                 // Select
-                return [...prev, member.id];
+                return [...prev, member.uniqueId];
             }
         });
     };
@@ -75,7 +86,7 @@ const AssignMembersModal = ({
     };
 
     const renderMemberItem = ({ item }: { item: Member }) => {
-        const isSelected = selectedMemberIds.includes(item.id);
+        const isSelected = selectedMemberIds.includes(item.uniqueId);
 
         return (
             <Pressable
@@ -132,7 +143,7 @@ const AssignMembersModal = ({
                     className="w-[100%]"
                     style={{ maxHeight: windowHeight * 0.5 }}
                     data={allMembers}
-                    keyExtractor={(item) => item.id}
+                    keyExtractor={(item) => item.uniqueId}
                     renderItem={renderMemberItem}
                     showsVerticalScrollIndicator={true}
                 />

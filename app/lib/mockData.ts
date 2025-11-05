@@ -191,21 +191,21 @@ export const mockTeamData: Team[] = [
         teamId: '1',
         name: 'Emergency Response Team',
         description: 'First responders for all emergency situations',
-        memberIds: ['1', '2', '3'], // Mix of teacher and admin IDs
+        memberIds: ['teacher:1', 'teacher:2', 'admin:1'], // Format: "teacher:{id}" or "admin:{id}"
         assignedCodeIds: ['1', '2', '3', '4']
     },
     {
         teamId: '2',
         name: 'Student Support Team',
         description: 'Dedicated to student welfare and support services',
-        memberIds: ['1', '4'],
+        memberIds: ['teacher:1', 'admin:2'],
         assignedCodeIds: ['2']
     },
     {
         teamId: '3',
         name: 'Safety & Security Team',
         description: 'Campus safety and security management',
-        memberIds: ['2', '5'],
+        memberIds: ['teacher:3', 'admin:3'],
         assignedCodeIds: ['1', '4']
     }
 ]
