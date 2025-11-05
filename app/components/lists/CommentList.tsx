@@ -1,0 +1,35 @@
+import { View, Text, ScrollView, ViewStyle } from "react-native";
+import { Comment } from "lib/models/comment";
+import CommentListItem from "./CommentListItem";
+
+export interface CommentListProps {
+    comments: Comment[];
+    className?: string;
+    style?: ViewStyle;
+    emptyText?: string;
+}
+
+const CommentList = ({
+    comments,
+    className,
+    style,
+    emptyText = "No comments yet"
+}: CommentListProps) => {
+    if (comments.length === 0) {
+        return (
+            <View className="py-8">
+                <Text className="text-gray-400 text-center text-base">{emptyText}</Text>
+            </View>
+        );
+    }
+
+    return (
+        <ScrollView className={className} style={style} showsVerticalScrollIndicator={true}>
+            {comments.map((comment) => (
+                <CommentListItem key={comment.commentId} comment={comment} />
+            ))}
+        </ScrollView>
+    );
+};
+
+export default CommentList;
