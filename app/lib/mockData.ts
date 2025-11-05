@@ -5,6 +5,7 @@ import { Student } from "lib/models/student";
 import { Teacher } from "lib/models/teacher";
 import { Code } from "lib/models/code";
 import { Team } from "lib/models/team";
+import { Comment } from "lib/models/comment";
 
 export const mockStudentData: Student[] = [
     {
@@ -136,31 +137,81 @@ export const mockCourseData: Course[] = [
     }
 ]
 
+export const mockCommentData: Comment[] = [
+    {
+        commentId: '1',
+        fullName: 'Robert Thompson',
+        bodyText: 'Parent was contacted and confirmed Emma was sick at home.',
+        timestamp: new Date('2024-01-15T09:30:00'),
+        reportId: '1'
+    },
+    {
+        commentId: '2',
+        fullName: 'Patricia Henderson',
+        bodyText: 'Follow-up meeting scheduled with student and parents for next week.',
+        timestamp: new Date('2024-01-15T10:15:00'),
+        reportId: '2'
+    },
+    {
+        commentId: '3',
+        fullName: 'Jennifer Wilson',
+        bodyText: 'Student showed improvement in behavior after our discussion.',
+        timestamp: new Date('2024-01-16T14:20:00'),
+        reportId: '2'
+    },
+    {
+        commentId: '4',
+        fullName: 'Michael Chen',
+        bodyText: 'Bus delay was confirmed as the cause of tardiness.',
+        timestamp: new Date('2024-01-15T11:00:00'),
+        reportId: '3'
+    },
+    {
+        commentId: '5',
+        fullName: 'James Sullivan',
+        bodyText: 'Both students have been separated and counseling sessions arranged.',
+        timestamp: new Date('2024-01-15T13:45:00'),
+        reportId: '4'
+    },
+    {
+        commentId: '6',
+        fullName: 'David Patterson',
+        bodyText: 'Will continue to monitor the situation closely.',
+        timestamp: new Date('2024-01-15T14:00:00'),
+        reportId: '4'
+    }
+];
+
 export const mockReportData: Report[] = [
     {
         reportId: '1',
         type: ReportType.Attendance,
-        description: 'Emma Johnson was absent without notification'
+        description: 'Emma Johnson was absent without notification',
+        comments: [mockCommentData[0]]
     },
     {
         reportId: '2',
         type: ReportType.Behavior,
-        description: 'Liam Williams disrupted class discussion and refused to follow instructions'
+        description: 'Liam Williams disrupted class discussion and refused to follow instructions',
+        comments: [mockCommentData[1], mockCommentData[2]]
     },
     {
         reportId: '3',
         type: ReportType.Attendance,
-        description: 'Noah Davis arrived 20 minutes late to class'
+        description: 'Noah Davis arrived 20 minutes late to class',
+        comments: [mockCommentData[3]]
     },
     {
         reportId: '4',
         type: ReportType.Conflict,
-        description: 'Verbal altercation between Ethan Garcia and another student during lunch'
+        description: 'Verbal altercation between Ethan Garcia and another student during lunch',
+        comments: [mockCommentData[4], mockCommentData[5]]
     },
     {
         reportId: '5',
         type: ReportType.Behavior,
-        description: 'Sophia Rodriguez was using phone during instruction time'
+        description: 'Sophia Rodriguez was using phone during instruction time',
+        comments: []
     }
 ]
 
