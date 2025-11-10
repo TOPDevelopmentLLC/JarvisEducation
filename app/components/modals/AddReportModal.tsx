@@ -26,6 +26,8 @@ const AddReportModal = ({
     const [reportDescription,setReportDescription] = useState('');
     const [selectedMoodtype,setSelectedMoodType] = useState<MoodType|null>(null);
     const [selectedStudent,setSelectedStudent] = useState<Student|null>(null);
+    const [attitude, setAttitude] = useState('');
+    const [socialization, setSocialization] = useState('');
     const showErrorMessage = useErrorSnackbar();
     const { students, addReportToStudent } = useStoredStudentData();
     const { addReport, reports } = useStoredReportData();
@@ -44,6 +46,10 @@ const AddReportModal = ({
             showErrorMessage('Please select a mood type to continue.');
             return;
         }
+        if (selectedReportType === ReportType.CheckIn && (attitude.trim().length === 0 || socialization.trim().length === 0)) {
+            showErrorMessage('Please enter both attitude and socialization values to continue.');
+            return;
+        }
         if ((selectedReportType === ReportType.Behavior ||
             selectedReportType === ReportType.Conflict ||
             selectedReportType === ReportType.Expelled ||
@@ -60,7 +66,11 @@ const AddReportModal = ({
             reportId: newId,
             type: selectedReportType,
             description: reportDescription || selectedMoodtype?.toString() || '',
-            studentId: selectedStudent.studentId
+            studentId: selectedStudent.studentId,
+            reportedById: 'admin:1', // TODO: Get from auth context
+            reportedByName: 'Patricia Henderson', // TODO: Get from auth context
+            attitude: selectedReportType === ReportType.CheckIn ? attitude : undefined,
+            socialization: selectedReportType === ReportType.CheckIn ? socialization : undefined,
         });
 
         // Add report to student's reportIds
@@ -71,6 +81,8 @@ const AddReportModal = ({
         setReportDescription('');
         setSelectedMoodType(null);
         setSelectedStudent(null);
+        setAttitude('');
+        setSocialization('');
         onDismiss?.();
     }
 
@@ -120,11 +132,33 @@ const AddReportModal = ({
                 />
                 {
                     selectedReportType === ReportType.Mood && (
-                        <MoodLabelList 
+                        <MoodLabelList
                             className="mt-2"
                             selectedMoodType={selectedMoodtype}
-                            moodTypeSelected={(moodtype) => setSelectedMoodType(moodtype)} 
+                            moodTypeSelected={(moodtype) => setSelectedMoodType(moodtype)}
                         />
+                    )
+                }
+                {
+                    selectedReportType === ReportType.CheckIn && (
+                        <View style={{ width: 500 }}>
+                            <JarvisPaperTextInput
+                                placeholder={"Attitude"}
+                                onTextChange={(text) => setAttitude(text)}
+                                defaultValue={attitude}
+                                style={{
+                                    marginTop: 12
+                                }}
+                            />
+                            <JarvisPaperTextInput
+                                placeholder={"Socialization"}
+                                onTextChange={(text) => setSocialization(text)}
+                                defaultValue={socialization}
+                                style={{
+                                    marginTop: 8
+                                }}
+                            />
+                        </View>
                     )
                 }
                 {
@@ -136,9 +170,9 @@ const AddReportModal = ({
                         selectedReportType === ReportType.Secluded ||
                         selectedReportType === ReportType.SIP
                     ) && (
-                        <JarvisPaperTextInput 
-                            placeholder={"Description"} 
-                            onTextChange={(description) => setReportDescription(description)} 
+                        <JarvisPaperTextInput
+                            placeholder={"Description"}
+                            onTextChange={(description) => setReportDescription(description)}
                             disabled={selectedReportType === ReportType.Mood}
                             defaultValue={selectedReportType === ReportType.Mood ? selectedMoodtype?.toString() : reportDescription}
                             multiline={true}

@@ -8,11 +8,14 @@ export interface Report {
     comments?: Comment[];
     reportedById: string;
     reportedByName: string;
+    attitude?: string;
+    socialization?: string;
 }
 
 export enum ReportType {
     Attendance = "Attendance",
     Behavior = "Behavior",
+    CheckIn = "Check-in",
     Conflict = "Conflict",
     Expelled = "Expelled",
     Mood = "Mood",
