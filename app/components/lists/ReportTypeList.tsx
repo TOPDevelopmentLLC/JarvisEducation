@@ -35,6 +35,14 @@ const ReportTypeList = ({
                 textStyle={{ color: selectedReportType === ReportType.Behavior ? '#000000' : '#FFFFFF' }}
             >Behavior</Chip>
             <Chip
+                onPress={() => reportTypeSelected(ReportType.CheckIn)}
+                selected={selectedReportType === ReportType.CheckIn}
+                style={[
+                    { alignSelf: 'flex-start', backgroundColor: selectedReportType === ReportType.CheckIn ? '#9cb43c' : '#374151' }
+                ]}
+                textStyle={{ color: selectedReportType === ReportType.CheckIn ? '#000000' : '#FFFFFF' }}
+            >Check-in</Chip>
+            <Chip
                 onPress={() => reportTypeSelected(ReportType.Conflict)}
                 selected={selectedReportType === ReportType.Conflict}
                 style={[
