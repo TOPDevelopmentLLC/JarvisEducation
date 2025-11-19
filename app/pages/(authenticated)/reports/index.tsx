@@ -1,24 +1,70 @@
 import MenuHeaderPage from "components/pages/MenuHeaderPage";
 import { router } from 'expo-router';
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import AddReportModal from "components/modals/AddReportModal";
 import { View, Text } from "react-native";
-import { Report } from "lib/models/report";
+import { Report, ReportType } from "lib/models/report";
 import ReportsList from "components/lists/ReportsList";
 import SearchBar from "components/SearchBar";
 import IconButton from "components/buttons/IconButton";
 import { IconType } from "components/IconContainer";
 import { useStoredReportData } from "components/contexts/ReportContext";
+import { apiService } from "lib/services/apiService";
+import { useProfile } from "components/contexts/ProfileContext";
+import LoadingModal from "components/modals/LoadingModal";
+import AlertModal from "components/modals/AlertModal";
 
 const ReportsListPage = () => {
-    const { reports, setSelectedReport } = useStoredReportData();
+    const { reports, setSelectedReport, setReports } = useStoredReportData();
+    const { profile } = useProfile();
     const [addReportModalIsVisible, setAddReportModalIsVisible] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
+    const [loading, setLoading] = useState(false);
+    const [alertVisible, setAlertVisible] = useState(false);
+    const [alertTitle, setAlertTitle] = useState("");
+    const [alertMessage, setAlertMessage] = useState("");
 
     const filteredReports = reports.filter(report =>
         report.type.toString().toLowerCase().includes(searchQuery.toLowerCase()) ||
         (report.description && report.description.toLowerCase().includes(searchQuery.toLowerCase()))
     );
+
+    const showAlert = (title: string, message: string) => {
+        setAlertTitle(title);
+        setAlertMessage(message);
+        setAlertVisible(true);
+    };
+
+    // Fetch reports on page load
+    useEffect(() => {
+        const fetchReports = async () => {
+            if (!profile?.token) return;
+
+            try {
+                setLoading(true);
+                const response = await apiService.getReports(profile.token);
+
+                // Convert API reports to local Report format
+                const convertedReports: Report[] = response.reports.map(apiReport => ({
+                    reportId: apiReport.id.toString(),
+                    type: apiReport.reportType as ReportType,
+                    description: apiReport.description,
+                    reportedById: apiReport.reportedById.toString(),
+                    reportedByName: apiReport.reportedByName,
+                    // moodType is included in description for mood reports
+                }));
+
+                setReports(convertedReports);
+            } catch (error) {
+                console.error("Failed to fetch reports:", error);
+                showAlert("Error", error instanceof Error ? error.message : "Failed to load reports");
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchReports();
+    }, [profile?.token]);
 
     const handleAddButtonPressed = () => {
         setAddReportModalIsVisible(true);
@@ -83,6 +129,16 @@ const ReportsListPage = () => {
                 <AddReportModal
                     isVisible={addReportModalIsVisible}
                     onDismiss={() => setAddReportModalIsVisible(false)}
+                />
+                <LoadingModal
+                    isVisible={loading}
+                    message="Processing..."
+                />
+                <AlertModal
+                    isVisible={alertVisible}
+                    title={alertTitle}
+                    message={alertMessage}
+                    onConfirm={() => setAlertVisible(false)}
                 />
                 </View>
             </View>

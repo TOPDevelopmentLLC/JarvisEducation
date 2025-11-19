@@ -11,6 +11,8 @@ import MoodLabelList from "components/lists/MoodLabelList";
 import ReportTypeList from "components/lists/ReportTypeList";
 import { useErrorSnackbar } from "components/contexts/SnackbarContext";
 import { Student } from "lib/models/student";
+import { apiService } from "lib/services/apiService";
+import { useProfile } from "components/contexts/ProfileContext";
 
 
 export interface AddReportModalProps {
@@ -28,12 +30,14 @@ const AddReportModal = ({
     const [selectedStudent,setSelectedStudent] = useState<Student|null>(null);
     const [attitude, setAttitude] = useState('');
     const [socialization, setSocialization] = useState('');
+    const [loading, setLoading] = useState(false);
     const showErrorMessage = useErrorSnackbar();
     const { students, addReportToStudent } = useStoredStudentData();
-    const { addReport, reports } = useStoredReportData();
+    const { addReport } = useStoredReportData();
+    const { profile } = useProfile();
     const windowHeight = Dimensions.get('window').height;
 
-    const addButtonPressed = () => {
+    const addButtonPressed = async () => {
         if (!selectedStudent) {
             showErrorMessage('Please select a student to continue.');
             return;
@@ -60,30 +64,60 @@ const AddReportModal = ({
             return;
         }
 
-        // Generate new ID and add report
-        const newId = (reports.length + 1).toString();
-        addReport({
-            reportId: newId,
-            type: selectedReportType,
-            description: reportDescription || selectedMoodtype?.toString() || '',
-            studentId: selectedStudent.studentId,
-            reportedById: 'admin:1', // TODO: Get from auth context
-            reportedByName: 'Patricia Henderson', // TODO: Get from auth context
-            attitude: selectedReportType === ReportType.CheckIn ? attitude : undefined,
-            socialization: selectedReportType === ReportType.CheckIn ? socialization : undefined,
-        });
+        if (!profile?.token || !profile?.id) {
+            showErrorMessage('Authentication required. Please log in again.');
+            return;
+        }
 
-        // Add report to student's reportIds
-        addReportToStudent(selectedStudent.studentId, newId);
+        try {
+            setLoading(true);
 
-        // Reset form and close modal
-        setSelectedReportType(null);
-        setReportDescription('');
-        setSelectedMoodType(null);
-        setSelectedStudent(null);
-        setAttitude('');
-        setSocialization('');
-        onDismiss?.();
+            // Prepare description based on report type
+            const description = selectedReportType === ReportType.Mood
+                ? selectedMoodtype?.toString() || ''
+                : reportDescription;
+
+            // Call API to create report
+            const response = await apiService.createReport(
+                {
+                    reportType: selectedReportType,
+                    description: description,
+                    moodType: selectedReportType === ReportType.Mood ? selectedMoodtype?.toString() : undefined,
+                    reportedByName: profile.fullName || profile.email,
+                    reportedById: profile.id
+                },
+                profile.token
+            );
+
+            // Add to local state with converted format
+            addReport({
+                reportId: response.report.id.toString(),
+                type: response.report.reportType as ReportType,
+                description: response.report.description,
+                studentId: selectedStudent.studentId,
+                reportedById: response.report.reportedById.toString(),
+                reportedByName: response.report.reportedByName,
+                attitude: selectedReportType === ReportType.CheckIn ? attitude : undefined,
+                socialization: selectedReportType === ReportType.CheckIn ? socialization : undefined,
+            });
+
+            // Add report to student's reportIds
+            addReportToStudent(selectedStudent.studentId, response.report.id.toString());
+
+            // Reset form and close modal
+            setSelectedReportType(null);
+            setReportDescription('');
+            setSelectedMoodType(null);
+            setSelectedStudent(null);
+            setAttitude('');
+            setSocialization('');
+            onDismiss?.();
+        } catch (error) {
+            console.error("Failed to create report:", error);
+            showErrorMessage(error instanceof Error ? error.message : 'Failed to create report');
+        } finally {
+            setLoading(false);
+        }
     }
 
     const reportTypeClicked = (reportType:ReportType) => {

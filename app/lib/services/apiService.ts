@@ -8,6 +8,7 @@ import { GetTeachersResponse, CreateTeacherRequest, CreateTeacherResponse } from
 import { GetParentsResponse, CreateParentRequest, CreateParentResponse } from 'lib/models/parent';
 import { GetAdministratorsResponse, CreateAdministratorRequest, CreateAdministratorResponse, DeleteAdministratorResponse } from 'lib/models/administrator';
 import { GetClassCatalogueResponse, CreateCourseRequest, CreateCourseResponse, DeleteCourseResponse } from 'lib/models/course';
+import { GetReportsResponse, CreateReportRequest, CreateReportResponse } from 'lib/models/report';
 
 class ApiService {
     private api: AxiosInstance;
@@ -709,10 +710,50 @@ class ApiService {
         }
     }
 
+    /**
+     * Get all reports
+     * @param token - JWT token for authorization
+     * @returns Promise with reports data
+     */
+    async getReports(token: string): Promise<GetReportsResponse> {
+        try {
+            const response = await this.api.get<GetReportsResponse>('/api/reports', {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            return response.data;
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                throw new Error(error.response?.data?.message || 'Failed to fetch reports');
+            }
+            throw error;
+        }
+    }
+
+    /**
+     * Create a new report
+     * @param data - Report creation request data
+     * @param token - JWT token for authorization
+     * @returns Promise with the created report data
+     */
+    async createReport(data: CreateReportRequest, token: string): Promise<CreateReportResponse> {
+        try {
+            const response = await this.api.post<CreateReportResponse>('/api/reports', data, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            return response.data;
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                throw new Error(error.response?.data?.message || 'Failed to create report');
+            }
+            throw error;
+        }
+    }
+
     // TODO: Add more API methods here as needed
-    // Examples:
-    // async getReports(): Promise<Report[]> { }
-    // async createReport(report: Report): Promise<Report> { }
 }
 
 // Export a singleton instance
