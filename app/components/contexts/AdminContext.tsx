@@ -1,5 +1,4 @@
 import { Administrator } from "lib/models/administrator";
-import { mockAdminData } from "lib/mockData";
 import { createContext, ReactNode, useContext, useState } from "react";
 
 
@@ -7,6 +6,7 @@ interface AdminContextType {
   admins: Administrator[];
   selectedAdmin: Administrator | null;
   setSelectedAdmin: (admin: Administrator | null) => void;
+  setAdmins: (admins: Administrator[]) => void;
   addAdmin: (admin: Administrator) => void;
   deleteAdmin: (adminId: string) => void;
   assignCodesToAdmin: (adminId: string, codeIds: string[]) => void;
@@ -16,7 +16,7 @@ interface AdminContextType {
 const AdminContext = createContext<AdminContextType|undefined>(undefined);
 
 export const AdminProvider = ({ children }: {children:ReactNode}) => {
-  const [admins, setAdmins] = useState<Administrator[]>(mockAdminData);
+  const [admins, setAdmins] = useState<Administrator[]>([]);
   const [selectedAdmin,setSelectedAdmin] = useState<Administrator|null>(null);
 
   const addAdmin = (admin: Administrator) => {
@@ -74,6 +74,7 @@ export const AdminProvider = ({ children }: {children:ReactNode}) => {
       admins,
       selectedAdmin,
       setSelectedAdmin,
+      setAdmins,
       addAdmin,
       deleteAdmin,
       assignCodesToAdmin,

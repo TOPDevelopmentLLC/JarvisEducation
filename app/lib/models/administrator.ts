@@ -21,3 +21,7 @@ export interface CreateAdministratorResponse {
     id: number;
     name: string;
 }
+
+export interface DeleteAdministratorResponse {
+    message: string;
+}

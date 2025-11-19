@@ -6,7 +6,7 @@ import { GetCommentsResponse, CreateCommentRequest, CreateCommentResponse, Updat
 import { GetStudentsResponse, CreateStudentRequest, CreateStudentResponse } from 'lib/models/student';
 import { GetTeachersResponse, CreateTeacherRequest, CreateTeacherResponse } from 'lib/models/teacher';
 import { GetParentsResponse, CreateParentRequest, CreateParentResponse } from 'lib/models/parent';
-import { GetAdministratorsResponse, CreateAdministratorRequest, CreateAdministratorResponse } from 'lib/models/administrator';
+import { GetAdministratorsResponse, CreateAdministratorRequest, CreateAdministratorResponse, DeleteAdministratorResponse } from 'lib/models/administrator';
 import { GetClassCatalogueResponse, CreateCourseRequest, CreateCourseResponse } from 'lib/models/course';
 
 class ApiService {
@@ -617,6 +617,28 @@ class ApiService {
         } catch (error) {
             if (axios.isAxiosError(error)) {
                 throw new Error(error.response?.data?.message || 'Failed to create administrator');
+            }
+            throw error;
+        }
+    }
+
+    /**
+     * Delete an administrator
+     * @param administratorId - The ID of the administrator to delete
+     * @param token - JWT token for authorization
+     * @returns Promise with the deletion confirmation message
+     */
+    async deleteAdministrator(administratorId: string, token: string): Promise<DeleteAdministratorResponse> {
+        try {
+            const response = await this.api.delete<DeleteAdministratorResponse>(`/administrator/${administratorId}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            return response.data;
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                throw new Error(error.response?.data?.message || 'Failed to delete administrator');
             }
             throw error;
         }
