@@ -8,3 +8,24 @@ export interface Comment {
     timestamp: Date;
     reportId: string;
 }
+
+export interface GetCommentsResponse {
+    comments: Comment[];
+}
+
+export interface CreateCommentRequest {
+    content: string;
+    authorId: number;
+}
+
+export interface CreateCommentResponse {
+    comment: Comment;
+}
+
+export interface UpdateCommentRequest {
+    content: string;
+}
+
+export interface UpdateCommentResponse {
+    comment: Comment;
+}
