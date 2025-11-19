@@ -28,3 +28,7 @@ export interface CreateCourseResponse {
     courseName: string;
     courseDescription: string;
 }
+
+export interface DeleteCourseResponse {
+    message: string;
+}

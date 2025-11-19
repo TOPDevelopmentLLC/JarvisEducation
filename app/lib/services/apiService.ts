@@ -7,7 +7,7 @@ import { GetStudentsResponse, CreateStudentRequest, CreateStudentResponse } from
 import { GetTeachersResponse, CreateTeacherRequest, CreateTeacherResponse } from 'lib/models/teacher';
 import { GetParentsResponse, CreateParentRequest, CreateParentResponse } from 'lib/models/parent';
 import { GetAdministratorsResponse, CreateAdministratorRequest, CreateAdministratorResponse, DeleteAdministratorResponse } from 'lib/models/administrator';
-import { GetClassCatalogueResponse, CreateCourseRequest, CreateCourseResponse } from 'lib/models/course';
+import { GetClassCatalogueResponse, CreateCourseRequest, CreateCourseResponse, DeleteCourseResponse } from 'lib/models/course';
 
 class ApiService {
     private api: AxiosInstance;
@@ -682,6 +682,28 @@ class ApiService {
         } catch (error) {
             if (axios.isAxiosError(error)) {
                 throw new Error(error.response?.data?.message || 'Failed to create course');
+            }
+            throw error;
+        }
+    }
+
+    /**
+     * Delete a course from the class catalogue
+     * @param courseId - ID of the course to delete
+     * @param token - JWT token for authorization
+     * @returns Promise with deletion confirmation message
+     */
+    async deleteCourse(courseId: string, token: string): Promise<DeleteCourseResponse> {
+        try {
+            const response = await this.api.delete<DeleteCourseResponse>(`/classcatalogue/${courseId}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            return response.data;
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                throw new Error(error.response?.data?.message || 'Failed to delete course');
             }
             throw error;
         }
