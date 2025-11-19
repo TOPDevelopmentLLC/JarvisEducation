@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import BaseButton from "components/buttons/BaseButton";
 import TransparentTextButton from "components/buttons/TransparentTextButton";
 import JarvisTextInput from "components/JarvisTextInput";
@@ -6,15 +6,79 @@ import { View, Image, Text } from "react-native";
 import { useRouter } from "expo-router";
 import BasePage from "components/pages/BasePage";
 import { Images } from "assets/images";
+import { apiService } from "lib/services/apiService";
+import LoadingModal from "components/modals/LoadingModal";
+import AlertModal from "components/modals/AlertModal";
+import { useProfile } from "components/contexts/ProfileContext";
 
 
 const LoginPage = () => {
     const router = useRouter();
-    const username = useRef("");
+    const { setProfile } = useProfile();
+    const email = useRef("");
     const password = useRef("");
-    const loginButtonClicked = () => {
-        router.push('/pages/home');
+
+    const [loading, setLoading] = useState(false);
+    const [alertVisible, setAlertVisible] = useState(false);
+    const [alertTitle, setAlertTitle] = useState("");
+    const [alertMessage, setAlertMessage] = useState("");
+
+    const showAlert = (title: string, message: string) => {
+        setAlertTitle(title);
+        setAlertMessage(message);
+        setAlertVisible(true);
+    };
+
+    const loginButtonClicked = async () => {
+        // Validate inputs
+        if (!email.current.trim()) {
+            showAlert("Validation Error", "Please enter your email address");
+            return;
+        }
+
+        if (!password.current.trim()) {
+            showAlert("Validation Error", "Please enter your password");
+            return;
+        }
+
+        try {
+            setLoading(true);
+            const response = await apiService.login({
+                email: email.current.trim(),
+                password: password.current
+            });
+
+            // Set profile with user data from response
+            setProfile({
+                id: response.user.id,
+                email: response.user.email,
+                accountType: response.user.accountType,
+                token: response.user.token,
+                schoolId: response.user.schoolId,
+                requiresPasswordReset: response.user.requiresPasswordReset,
+                fullName: response.user.fullName
+            });
+
+            console.log("Login successful:", response);
+
+            // Check if password reset is required
+            if (response.requiresPasswordReset) {
+                // Navigate to change password page
+                showAlert("Password Reset Required", "You need to change your password before continuing.");
+                // TODO: Navigate to password change page instead
+                return;
+            }
+
+            // Navigate to home page
+            router.push('/pages/home');
+        } catch (error) {
+            console.error("Login error:", error);
+            showAlert("Login Failed", error instanceof Error ? error.message : "An unexpected error occurred");
+        } finally {
+            setLoading(false);
+        }
     }
+
     const signUpButtonClicked = () => {
         router.push('/pages/auth/SignUpPage');
     }
@@ -32,8 +96,8 @@ const LoginPage = () => {
 
                     <View className="w-full gap-4">
                         <JarvisTextInput
-                            placeholder="Username"
-                            onTextChange={(value) => {username.current = value}}
+                            placeholder="Email"
+                            onTextChange={(value) => {email.current = value}}
                         />
                         <JarvisTextInput
                             placeholder="Password"
@@ -59,6 +123,18 @@ const LoginPage = () => {
                         )}
                     </View>
                 </View>
+
+                <LoadingModal
+                    isVisible={loading}
+                    message="Logging in..."
+                />
+
+                <AlertModal
+                    isVisible={alertVisible}
+                    title={alertTitle}
+                    message={alertMessage}
+                    onConfirm={() => setAlertVisible(false)}
+                />
         </BasePage>
     );
 
