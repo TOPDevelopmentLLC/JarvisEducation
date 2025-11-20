@@ -12,7 +12,7 @@ export default function AuthenticatedDrawerLayout() {
     if (profile === null) {
       router.replace('/pages/auth/LoginPage');
     }
-  }, []);
+  }, [profile]);
   
   return (
   <Drawer
