@@ -60,7 +60,6 @@ const LoginPage = () => {
             });
 
             console.log("Login successful:", response);
-            console.log("Token being set:", response.user.token);
 
             // Check if password reset is required
             if (response.requiresPasswordReset) {
