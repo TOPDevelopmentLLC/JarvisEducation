@@ -1,5 +1,4 @@
 import { Teacher } from "lib/models/teacher";
-import { mockTeacherData } from "lib/mockData";
 import { createContext, ReactNode, useContext, useState } from "react";
 
 
@@ -7,6 +6,7 @@ interface TeacherContextType {
   teachers: Teacher[];
   selectedTeacher: Teacher | null;
   setSelectedTeacher: (teacher: Teacher | null) => void;
+  setTeachers: (teachers: Teacher[]) => void;
   addTeacher: (teacher: Teacher) => void;
   deleteTeacher: (teacherId: string) => void;
   assignTeacherToCourse: (teacherId: string, courseId: string) => void;
@@ -16,7 +16,7 @@ interface TeacherContextType {
 const TeacherContext = createContext<TeacherContextType|undefined>(undefined);
 
 export const TeacherProvider = ({ children }: {children:ReactNode}) => {
-  const [teachers, setTeachers] = useState<Teacher[]>(mockTeacherData);
+  const [teachers, setTeachers] = useState<Teacher[]>([]);
   const [selectedTeacher,setSelectedTeacher] = useState<Teacher|null>(null);
 
   const addTeacher = (teacher: Teacher) => {
@@ -60,6 +60,7 @@ export const TeacherProvider = ({ children }: {children:ReactNode}) => {
       teachers,
       selectedTeacher,
       setSelectedTeacher,
+      setTeachers,
       addTeacher,
       deleteTeacher,
       assignTeacherToCourse,
