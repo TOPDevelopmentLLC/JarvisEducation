@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useState } from "react";
 import BaseButton from "components/buttons/BaseButton";
 import TransparentTextButton from "components/buttons/TransparentTextButton";
 import JarvisTextInput from "components/JarvisTextInput";
@@ -15,8 +15,8 @@ import { useProfile } from "components/contexts/ProfileContext";
 const LoginPage = () => {
     const router = useRouter();
     const { setProfile } = useProfile();
-    const email = useRef("");
-    const password = useRef("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
 
     const [loading, setLoading] = useState(false);
     const [alertVisible, setAlertVisible] = useState(false);
@@ -31,12 +31,12 @@ const LoginPage = () => {
 
     const loginButtonClicked = async () => {
         // Validate inputs
-        if (!email.current.trim()) {
+        if (!email.trim()) {
             showAlert("Validation Error", "Please enter your email address");
             return;
         }
 
-        if (!password.current.trim()) {
+        if (!password.trim()) {
             showAlert("Validation Error", "Please enter your password");
             return;
         }
@@ -44,8 +44,8 @@ const LoginPage = () => {
         try {
             setLoading(true);
             const response = await apiService.login({
-                email: email.current.trim(),
-                password: password.current
+                email: email.trim(),
+                password: password
             });
 
             // Set profile with user data from response
@@ -97,12 +97,12 @@ const LoginPage = () => {
                     <View className="w-full gap-4">
                         <JarvisTextInput
                             placeholder="Email"
-                            onTextChange={(value) => {email.current = value}}
+                            onTextChange={setEmail}
                         />
                         <JarvisTextInput
                             placeholder="Password"
                             secureTextEntry={true}
-                            onTextChange={(value) => {password.current = value}}
+                            onTextChange={setPassword}
                         />
 
                         <BaseButton
