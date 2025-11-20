@@ -7,18 +7,22 @@ import { useProfile } from 'components/contexts/ProfileContext';
 export default function AuthenticatedDrawerLayout() {
   const router = useRouter();
   const { profile } = useProfile();
-  const hasCheckedAuth = useRef(false);
+  const isMounted = useRef(true);
 
   useEffect(() => {
-    // Only check authentication once on mount, and only redirect if profile is null
-    // This prevents redirecting when profile transitions from null to valid
-    if (!hasCheckedAuth.current) {
-      hasCheckedAuth.current = true;
+    // Set mounted flag to false after a brief delay to allow profile to propagate
+    const timeout = setTimeout(() => {
+      isMounted.current = false;
+      // After the delay, if profile is still null, redirect to login
       if (profile === null) {
         router.replace('/pages/auth/LoginPage');
       }
-    }
-  }, [profile]);
+    }, 100);
+
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, []);
   
   return (
   <Drawer
