@@ -41,7 +41,12 @@ const AdministratorListPage = () => {
     // Fetch administrators on page load
     useEffect(() => {
         const fetchAdministrators = async () => {
-            if (!profile?.token) return;
+            if (!profile?.token) {
+                console.log("No token available in profile");
+                return;
+            }
+
+            console.log("Fetching administrators with token:", profile.token);
 
             try {
                 setLoading(true);
