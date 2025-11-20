@@ -21,3 +21,7 @@ export interface CreateStudentResponse {
     id: number;
     name: string;
 }
+
+export interface DeleteStudentResponse {
+    message: string;
+}

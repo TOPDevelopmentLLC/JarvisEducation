@@ -7,6 +7,8 @@ import JarvisPaperTextInput from "components/JarvisPaperTextInput";
 import JarvisModal from "components/modals/JarvisModal";
 import { useState } from "react";
 import { Text, View } from "react-native";
+import { apiService } from "lib/services/apiService";
+import { useProfile } from "components/contexts/ProfileContext";
 
 
 export interface AddStudentModalProps {
@@ -23,10 +25,12 @@ const AddStudentModal = ({
     const [studentName,setStudentName] = useState('');
     const [studentAccountEmail,setStudentAccountEmail] = useState('');
     const [parentAccountEmail,setParentAccountEmail] = useState('');
+    const [loading, setLoading] = useState(false);
     const showErrorMessage = useErrorSnackbar();
-    const { addStudent, students } = useStoredStudentData();
+    const { addStudent } = useStoredStudentData();
+    const { profile } = useProfile();
 
-    const addButtonPressed = () => {
+    const addButtonPressed = async () => {
         if (studentName.length === 0) {
             showErrorMessage("Please enter the Student's name");
             return;
@@ -40,22 +44,39 @@ const AddStudentModal = ({
             return;
         }
 
-        // Generate a new ID
-        const newId = (students.length + 1).toString();
+        if (!profile?.token) {
+            showErrorMessage('Authentication required. Please log in again.');
+            return;
+        }
 
-        // Add the student to context
-        addStudent({
-            studentId: newId,
-            name: studentName
-        });
+        try {
+            setLoading(true);
 
-        // Reset form and close modal
-        setStudentName('');
-        setStudentAccountEmail('');
-        setParentAccountEmail('');
-        setAddUserAccountIsChecked(false);
-        setAddParentAccountIsChecked(false);
-        onDismiss?.();
+            // Call API to create student
+            const response = await apiService.createStudent(
+                { name: studentName },
+                profile.token
+            );
+
+            // Add to local state with converted format
+            addStudent({
+                studentId: response.id.toString(),
+                name: response.name
+            });
+
+            // Reset form and close modal
+            setStudentName('');
+            setStudentAccountEmail('');
+            setParentAccountEmail('');
+            setAddUserAccountIsChecked(false);
+            setAddParentAccountIsChecked(false);
+            onDismiss?.();
+        } catch (error) {
+            console.error("Failed to create student:", error);
+            showErrorMessage(error instanceof Error ? error.message : 'Failed to create student');
+        } finally {
+            setLoading(false);
+        }
     }
 
     return (

@@ -1,6 +1,6 @@
 import MenuHeaderPage from "components/pages/MenuHeaderPage";
 import { router } from 'expo-router';
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import AddStudentModal from "components/modals/AddStudentModal";
 import ConfirmationModal from "components/modals/ConfirmationModal";
 import { View, Text, } from "react-native";
@@ -10,18 +10,60 @@ import SearchBar from "components/SearchBar";
 import IconButton from "components/buttons/IconButton";
 import { IconType } from "components/IconContainer";
 import { useStoredStudentData } from "components/contexts/StudentContext";
+import { apiService } from "lib/services/apiService";
+import { useProfile } from "components/contexts/ProfileContext";
+import LoadingModal from "components/modals/LoadingModal";
+import AlertModal from "components/modals/AlertModal";
 
 
 const StudentListPage = () => {
-    const { students, setSelectedStudent, deleteStudent } = useStoredStudentData();
+    const { students, setSelectedStudent, deleteStudent, setStudents } = useStoredStudentData();
+    const { profile } = useProfile();
     const [addStudentModalIsVisible, setAddStudentModalIsVisible] = useState(false);
     const [confirmDeleteModalIsVisible, setConfirmDeleteModalIsVisible] = useState(false);
     const [studentToDelete, setStudentToDelete] = useState<Student | null>(null);
     const [searchQuery, setSearchQuery] = useState("");
+    const [loading, setLoading] = useState(false);
+    const [alertVisible, setAlertVisible] = useState(false);
+    const [alertTitle, setAlertTitle] = useState("");
+    const [alertMessage, setAlertMessage] = useState("");
 
     const filteredStudents = students.filter(student =>
         student.name.toLowerCase().includes(searchQuery.toLowerCase())
     );
+
+    const showAlert = (title: string, message: string) => {
+        setAlertTitle(title);
+        setAlertMessage(message);
+        setAlertVisible(true);
+    };
+
+    // Fetch students on page load
+    useEffect(() => {
+        const fetchStudents = async () => {
+            if (!profile?.token) return;
+
+            try {
+                setLoading(true);
+                const response = await apiService.getStudents(profile.token);
+
+                // Convert API students to local Student format
+                const convertedStudents: Student[] = response.map(apiStudent => ({
+                    studentId: apiStudent.id.toString(),
+                    name: apiStudent.name
+                }));
+
+                setStudents(convertedStudents);
+            } catch (error) {
+                console.error("Failed to fetch students:", error);
+                showAlert("Error", error instanceof Error ? error.message : "Failed to load students");
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchStudents();
+    }, [profile?.token]);
 
     const handleAddButtonPressed = () => {
         setAddStudentModalIsVisible(true);
@@ -42,12 +84,30 @@ const StudentListPage = () => {
         setConfirmDeleteModalIsVisible(true);
     }
 
-    const confirmDelete = () => {
-        if (studentToDelete) {
-            deleteStudent(studentToDelete.studentId);
+    const confirmDelete = async () => {
+        if (!studentToDelete || !profile?.token) {
+            setConfirmDeleteModalIsVisible(false);
+            setStudentToDelete(null);
+            return;
         }
-        setConfirmDeleteModalIsVisible(false);
-        setStudentToDelete(null);
+
+        try {
+            setLoading(true);
+            await apiService.deleteStudent(studentToDelete.studentId, profile.token);
+
+            // Remove from local state
+            deleteStudent(studentToDelete.studentId);
+
+            setConfirmDeleteModalIsVisible(false);
+            setStudentToDelete(null);
+        } catch (error) {
+            console.error("Failed to delete student:", error);
+            showAlert("Delete Failed", error instanceof Error ? error.message : "Failed to delete student");
+            setConfirmDeleteModalIsVisible(false);
+            setStudentToDelete(null);
+        } finally {
+            setLoading(false);
+        }
     }
 
     const cancelDelete = () => {
@@ -113,6 +173,16 @@ const StudentListPage = () => {
                     message={`Are you sure you want to delete ${studentToDelete?.name}? This action cannot be undone.`}
                     onConfirm={confirmDelete}
                     onCancel={cancelDelete}
+                />
+                <LoadingModal
+                    isVisible={loading}
+                    message="Processing..."
+                />
+                <AlertModal
+                    isVisible={alertVisible}
+                    title={alertTitle}
+                    message={alertMessage}
+                    onConfirm={() => setAlertVisible(false)}
                 />
                 </View>
             </View>

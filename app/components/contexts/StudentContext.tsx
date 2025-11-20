@@ -1,5 +1,4 @@
 import { Student } from "lib/models/student";
-import { mockStudentData } from "lib/mockData";
 import { createContext, ReactNode, useContext, useState } from "react";
 
 
@@ -7,6 +6,7 @@ interface StudentContextType {
   students: Student[];
   selectedStudent: Student | null;
   setSelectedStudent: (student: Student | null) => void;
+  setStudents: (students: Student[]) => void;
   addStudent: (student: Student) => void;
   deleteStudent: (studentId: string) => void;
   addReportToStudent: (studentId: string, reportId: string) => void;
@@ -16,7 +16,7 @@ interface StudentContextType {
 const StudentContext = createContext<StudentContextType|undefined>(undefined);
 
 export const StudentProvider = ({ children }: {children:ReactNode}) => {
-  const [students, setStudents] = useState<Student[]>(mockStudentData);
+  const [students, setStudents] = useState<Student[]>([]);
   const [selectedStudent,setSelectedStudent] = useState<Student|null>(null);
 
   const addStudent = (student: Student) => {
@@ -80,6 +80,7 @@ export const StudentProvider = ({ children }: {children:ReactNode}) => {
       students,
       selectedStudent,
       setSelectedStudent,
+      setStudents,
       addStudent,
       deleteStudent,
       addReportToStudent,

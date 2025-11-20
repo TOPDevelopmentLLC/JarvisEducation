@@ -3,7 +3,7 @@ import { SignUpRequest, SignUpResponse, LoginRequest, LoginResponse, ChangePassw
 import { GetTeamsResponse, GetTeamResponse, CreateTeamRequest, CreateTeamResponse, UpdateTeamRequest, UpdateTeamResponse, DeleteTeamResponse } from 'lib/models/team';
 import { GetCodesResponse, GetCodeResponse, CreateCodeRequest, CreateCodeResponse, UpdateCodeRequest, UpdateCodeResponse, DeleteCodeResponse } from 'lib/models/code';
 import { GetCommentsResponse, CreateCommentRequest, CreateCommentResponse, UpdateCommentRequest, UpdateCommentResponse } from 'lib/models/comment';
-import { GetStudentsResponse, CreateStudentRequest, CreateStudentResponse } from 'lib/models/student';
+import { GetStudentsResponse, CreateStudentRequest, CreateStudentResponse, DeleteStudentResponse } from 'lib/models/student';
 import { GetTeachersResponse, CreateTeacherRequest, CreateTeacherResponse } from 'lib/models/teacher';
 import { GetParentsResponse, CreateParentRequest, CreateParentResponse } from 'lib/models/parent';
 import { GetAdministratorsResponse, CreateAdministratorRequest, CreateAdministratorResponse, DeleteAdministratorResponse } from 'lib/models/administrator';
@@ -489,6 +489,28 @@ class ApiService {
         } catch (error) {
             if (axios.isAxiosError(error)) {
                 throw new Error(error.response?.data?.message || 'Failed to create student');
+            }
+            throw error;
+        }
+    }
+
+    /**
+     * Delete a student
+     * @param studentId - ID of the student to delete
+     * @param token - JWT token for authorization
+     * @returns Promise with deletion confirmation message
+     */
+    async deleteStudent(studentId: string, token: string): Promise<DeleteStudentResponse> {
+        try {
+            const response = await this.api.delete<DeleteStudentResponse>(`/student/${studentId}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            return response.data;
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                throw new Error(error.response?.data?.message || 'Failed to delete student');
             }
             throw error;
         }
