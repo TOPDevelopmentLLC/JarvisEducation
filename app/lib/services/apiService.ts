@@ -70,7 +70,7 @@ class ApiService {
      */
     async signUp(data: SignUpRequest): Promise<SignUpResponse> {
         try {
-            const response = await this.api.post<SignUpResponse>('/auth/signup', data);
+            const response = await this.api.post<SignUpResponse>('/auth/sign-up', data);
             return response.data;
         } catch (error) {
             if (axios.isAxiosError(error)) {

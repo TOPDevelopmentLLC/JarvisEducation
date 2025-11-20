@@ -101,6 +101,7 @@ const LoginPage = () => {
                         />
                         <JarvisTextInput
                             placeholder="Password"
+                            secureTextEntry={true}
                             onTextChange={(value) => {password.current = value}}
                         />
 
