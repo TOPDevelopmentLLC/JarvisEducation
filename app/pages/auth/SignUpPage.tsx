@@ -120,10 +120,12 @@ const SignUpPage = () => {
                         />
                         <JarvisTextInput
                             placeholder="Password"
+                            secureTextEntry={true}
                             onTextChange={(value) => {password.current = value}}
                         />
                         <JarvisTextInput
                             placeholder="Confirm Password"
+                            secureTextEntry={true}
                             onTextChange={(value) => {confirmPassword.current = value}}
                         />
 

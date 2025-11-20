@@ -6,6 +6,7 @@ export interface JarvisTextInputProps {
     className?: string;
     placeholder: string;
     autoFocus?: boolean;
+    secureTextEntry?: boolean;
     onTextChange: (value:string) => void;
 }
 
@@ -13,17 +14,19 @@ const JarvisTextInput = ({
     className,
     placeholder,
     autoFocus = false,
+    secureTextEntry = false,
     onTextChange
 } : JarvisTextInputProps) => {
     const [isSelected,setSelected] = useState(autoFocus);
     const [currentValue,setCurrentValue] = useState("");
 
     return (
-        <TextInput 
+        <TextInput
             className={clsx(className, 'rounded-lg pl-8 text-black text-left h-12 bg-white')}
             placeholder={placeholder}
             placeholderTextColor='grey'
             autoFocus={autoFocus}
+            secureTextEntry={secureTextEntry}
             onBlur={() => setSelected(false)}
             onFocus={() => setSelected(true)}
             onChangeText={(text) => { onTextChange(text) }}
