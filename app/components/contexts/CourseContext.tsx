@@ -1,5 +1,4 @@
 import { Course } from "lib/models/course";
-import { mockCourseData } from "lib/mockData";
 import { createContext, ReactNode, useContext, useState } from "react";
 
 
@@ -7,6 +6,7 @@ interface CourseContextType {
   courses: Course[];
   selectedCourse: Course | null;
   setSelectedCourse: (course: Course | null) => void;
+  setCourses: (courses: Course[]) => void;
   addCourse: (course: Course) => void;
   deleteCourse: (courseId: string) => void;
   assignTeacherToCourse: (courseId: string, teacherId: string) => void;
@@ -15,7 +15,7 @@ interface CourseContextType {
 const CourseContext = createContext<CourseContextType|undefined>(undefined);
 
 export const CourseProvider = ({ children }: {children:ReactNode}) => {
-  const [courses, setCourses] = useState<Course[]>(mockCourseData);
+  const [courses, setCourses] = useState<Course[]>([]);
   const [selectedCourse,setSelectedCourse] = useState<Course|null>(null);
 
   const addCourse = (course: Course) => {
@@ -51,6 +51,7 @@ export const CourseProvider = ({ children }: {children:ReactNode}) => {
       courses,
       selectedCourse,
       setSelectedCourse,
+      setCourses,
       addCourse,
       deleteCourse,
       assignTeacherToCourse

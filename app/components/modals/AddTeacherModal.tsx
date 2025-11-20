@@ -8,6 +8,8 @@ import JarvisModal from "components/modals/JarvisModal";
 import { useState } from "react";
 import { Text, View } from "react-native";
 import { Checkbox, TextInput } from "react-native-paper";
+import { apiService } from "lib/services/apiService";
+import { useProfile } from "components/contexts/ProfileContext";
 
 
 export interface AddTeacherModalProps {
@@ -22,10 +24,12 @@ const AddTeacherModal = ({
     const [addUserAccountIsChecked,setAddUserAccountIsChecked] = useState(false);
     const [teacherName,setTeacherName] = useState('');
     const [teacherAccountEmail,setTeacherAccountEmail] = useState('');
+    const [loading, setLoading] = useState(false);
     const showErrorMessage = useErrorSnackbar();
-    const { addTeacher, teachers } = useStoredTeacherData();
+    const { addTeacher } = useStoredTeacherData();
+    const { profile } = useProfile();
 
-    const addButtonPressed = () => {
+    const addButtonPressed = async () => {
         if (teacherName.length === 0) {
             showErrorMessage("Please enter the Teacher's name");
             return;
@@ -35,18 +39,37 @@ const AddTeacherModal = ({
             return;
         }
 
-        // Generate new ID and add teacher
-        const newId = (teachers.length + 1).toString();
-        addTeacher({
-            teacherId: newId,
-            name: teacherName
-        });
+        if (!profile?.token) {
+            showErrorMessage('Authentication required. Please log in again.');
+            return;
+        }
 
-        // Reset form and close modal
-        setTeacherName('');
-        setTeacherAccountEmail('');
-        setAddUserAccountIsChecked(false);
-        onDismiss?.();
+        try {
+            setLoading(true);
+
+            // Call API to create teacher
+            const response = await apiService.createTeacher(
+                { name: teacherName },
+                profile.token
+            );
+
+            // Add to local state with converted format
+            addTeacher({
+                teacherId: response.id.toString(),
+                name: response.name
+            });
+
+            // Reset form and close modal
+            setTeacherName('');
+            setTeacherAccountEmail('');
+            setAddUserAccountIsChecked(false);
+            onDismiss?.();
+        } catch (error) {
+            console.error("Failed to create teacher:", error);
+            showErrorMessage(error instanceof Error ? error.message : 'Failed to create teacher');
+        } finally {
+            setLoading(false);
+        }
     }
 
     return (

@@ -1,6 +1,5 @@
 import { Report } from "lib/models/report";
 import { Comment } from "lib/models/comment";
-import { mockReportData } from "lib/mockData";
 import { createContext, ReactNode, useContext, useState } from "react";
 
 
@@ -8,6 +7,7 @@ interface ReportContextType {
   reports: Report[];
   selectedReport: Report | null;
   setSelectedReport: (report: Report | null) => void;
+  setReports: (reports: Report[]) => void;
   addReport: (report: Report) => void;
   deleteReport: (reportId: string) => void;
   addCommentToReport: (reportId: string, comment: Comment) => void;
@@ -17,7 +17,7 @@ interface ReportContextType {
 const ReportContext = createContext<ReportContextType|undefined>(undefined);
 
 export const ReportProvider = ({ children }: {children:ReactNode}) => {
-  const [reports, setReports] = useState<Report[]>(mockReportData);
+  const [reports, setReports] = useState<Report[]>([]);
   const [selectedReport,setSelectedReport] = useState<Report|null>(null);
 
   const addReport = (report: Report) => {
@@ -83,6 +83,7 @@ export const ReportProvider = ({ children }: {children:ReactNode}) => {
       reports,
       selectedReport,
       setSelectedReport,
+      setReports,
       addReport,
       deleteReport,
       addCommentToReport,

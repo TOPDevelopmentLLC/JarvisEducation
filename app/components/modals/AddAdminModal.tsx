@@ -6,8 +6,10 @@ import JarvisCheckbox from "components/JarvisCheckbox";
 import JarvisPaperTextInput from "components/JarvisPaperTextInput";
 import JarvisModal from "components/modals/JarvisModal";
 import { useState } from "react";
-import { Text, View } from "react-native";
+import { Text, View, ActivityIndicator } from "react-native";
 import { Checkbox, TextInput } from "react-native-paper";
+import { apiService } from "lib/services/apiService";
+import { useProfile } from "components/contexts/ProfileContext";
 
 
 export interface AddAdminModalProps {
@@ -22,10 +24,12 @@ const AddAdminModal = ({
     const [addUserAccountIsChecked,setAddUserAccountIsChecked] = useState(false);
     const [adminName,setAdminName] = useState('');
     const [adminAccountEmail,setAdminAccountEmail] = useState('');
+    const [loading, setLoading] = useState(false);
     const showErrorMessage = useErrorSnackbar();
-    const { addAdmin, admins } = useStoredAdminData();
+    const { addAdmin } = useStoredAdminData();
+    const { profile } = useProfile();
 
-    const addButtonPressed = () => {
+    const addButtonPressed = async () => {
         if (adminName.length === 0) {
             showErrorMessage("Please enter the Administrator's name");
             return;
@@ -35,17 +39,36 @@ const AddAdminModal = ({
             return;
         }
 
-        // Generate new ID and add admin
-        const newId = (admins.length + 1).toString();
-        addAdmin({
-            adminId: newId,
-            name: adminName
-        });
+        if (!profile?.token) {
+            showErrorMessage('Authentication required. Please log in again.');
+            return;
+        }
 
-        // Reset form and close modal
-        setAdminName('');
-        setAdminAccountEmail('');
-        onDismiss?.();
+        try {
+            setLoading(true);
+
+            // Call API to create administrator
+            const response = await apiService.createAdministrator(
+                { name: adminName },
+                profile.token
+            );
+
+            // Add to local state with converted format
+            addAdmin({
+                adminId: response.id.toString(),
+                name: response.name
+            });
+
+            // Reset form and close modal
+            setAdminName('');
+            setAdminAccountEmail('');
+            onDismiss?.();
+        } catch (error) {
+            console.error("Failed to create administrator:", error);
+            showErrorMessage(error instanceof Error ? error.message : 'Failed to create administrator');
+        } finally {
+            setLoading(false);
+        }
     }
 
     return (

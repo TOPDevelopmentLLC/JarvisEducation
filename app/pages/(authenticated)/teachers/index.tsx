@@ -2,7 +2,7 @@ import MenuHeaderPage from "components/pages/MenuHeaderPage";
 import { router } from 'expo-router';
 import AddTeacherModal from "components/modals/AddTeacherModal";
 import ConfirmationModal from "components/modals/ConfirmationModal";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { View, Text } from "react-native";
 import { Teacher } from "lib/models/teacher";
 import TeacherList from "components/lists/TeacherList";
@@ -10,18 +10,60 @@ import SearchBar from "components/SearchBar";
 import IconButton from "components/buttons/IconButton";
 import { IconType } from "components/IconContainer";
 import { useStoredTeacherData } from "components/contexts/TeacherContext";
+import { apiService } from "lib/services/apiService";
+import { useProfile } from "components/contexts/ProfileContext";
+import LoadingModal from "components/modals/LoadingModal";
+import AlertModal from "components/modals/AlertModal";
 
 
 const TeacherListPage = () => {
-    const { teachers, setSelectedTeacher, deleteTeacher } = useStoredTeacherData();
+    const { teachers, setSelectedTeacher, deleteTeacher, setTeachers } = useStoredTeacherData();
+    const { profile } = useProfile();
     const [addTeacherModalIsVisible, setAddTeacherModalIsVisible] = useState(false);
     const [confirmDeleteModalIsVisible, setConfirmDeleteModalIsVisible] = useState(false);
     const [teacherToDelete, setTeacherToDelete] = useState<Teacher | null>(null);
     const [searchQuery, setSearchQuery] = useState("");
+    const [loading, setLoading] = useState(false);
+    const [alertVisible, setAlertVisible] = useState(false);
+    const [alertTitle, setAlertTitle] = useState("");
+    const [alertMessage, setAlertMessage] = useState("");
 
     const filteredTeachers = teachers.filter(teacher =>
         teacher.name.toLowerCase().includes(searchQuery.toLowerCase())
     );
+
+    const showAlert = (title: string, message: string) => {
+        setAlertTitle(title);
+        setAlertMessage(message);
+        setAlertVisible(true);
+    };
+
+    // Fetch teachers on page load
+    useEffect(() => {
+        const fetchTeachers = async () => {
+            if (!profile?.token) return;
+
+            try {
+                setLoading(true);
+                const response = await apiService.getTeachers(profile.token);
+
+                // Convert API teachers to local Teacher format
+                const convertedTeachers: Teacher[] = response.map(apiTeacher => ({
+                    teacherId: apiTeacher.id.toString(),
+                    name: apiTeacher.name
+                }));
+
+                setTeachers(convertedTeachers);
+            } catch (error) {
+                console.error("Failed to fetch teachers:", error);
+                showAlert("Error", error instanceof Error ? error.message : "Failed to load teachers");
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchTeachers();
+    }, [profile?.token]);
 
     const handleAddButtonPressed = () => {
         setAddTeacherModalIsVisible(true);
@@ -42,12 +84,30 @@ const TeacherListPage = () => {
         setConfirmDeleteModalIsVisible(true);
     }
 
-    const confirmDelete = () => {
-        if (teacherToDelete) {
-            deleteTeacher(teacherToDelete.teacherId);
+    const confirmDelete = async () => {
+        if (!teacherToDelete || !profile?.token) {
+            setConfirmDeleteModalIsVisible(false);
+            setTeacherToDelete(null);
+            return;
         }
-        setConfirmDeleteModalIsVisible(false);
-        setTeacherToDelete(null);
+
+        try {
+            setLoading(true);
+            await apiService.deleteTeacher(teacherToDelete.teacherId, profile.token);
+
+            // Remove from local state
+            deleteTeacher(teacherToDelete.teacherId);
+
+            setConfirmDeleteModalIsVisible(false);
+            setTeacherToDelete(null);
+        } catch (error) {
+            console.error("Failed to delete teacher:", error);
+            showAlert("Delete Failed", error instanceof Error ? error.message : "Failed to delete teacher");
+            setConfirmDeleteModalIsVisible(false);
+            setTeacherToDelete(null);
+        } finally {
+            setLoading(false);
+        }
     }
 
     const cancelDelete = () => {
@@ -112,6 +172,16 @@ const TeacherListPage = () => {
                     message={`Are you sure you want to delete ${teacherToDelete?.name}? This action cannot be undone.`}
                     onConfirm={confirmDelete}
                     onCancel={cancelDelete}
+                />
+                <LoadingModal
+                    isVisible={loading}
+                    message="Processing..."
+                />
+                <AlertModal
+                    isVisible={alertVisible}
+                    title={alertTitle}
+                    message={alertMessage}
+                    onConfirm={() => setAlertVisible(false)}
                 />
                 </View>
             </View>

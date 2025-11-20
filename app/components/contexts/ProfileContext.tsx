@@ -1,12 +1,18 @@
-import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
+import React, { createContext, useContext, useState, ReactNode } from 'react';
 
 export interface Profile {
-  id: string;
-  name: string;
+  id: number;
+  email: string;
+  accountType: 'Master' | 'Admin' | 'Teacher';
+  token: string;
+  schoolId: number;
+  requiresPasswordReset: boolean;
+  fullName: string | null;
 }
 
 interface ProfileContextType {
   profile: Profile | null;
+  setProfile: (profile: Profile | null) => void;
   notificationsEnabled: boolean;
   setNotificationsEnabled: (enabled: boolean) => void;
 }
@@ -14,19 +20,13 @@ interface ProfileContextType {
 const ProfileContext = createContext<ProfileContextType | undefined>(undefined);
 
 export const ProfileProvider = ({ children }: { children: ReactNode }) => {
-  const [profile, setProfileState] = useState<Profile | null>(null);
+  const [profile, setProfile] = useState<Profile | null>(null);
   const [notificationsEnabled, setNotificationsEnabled] = useState<boolean>(true);
-
-  //TODO: Call API to get Profile data
-
-  useEffect(() => {
-    // Mock API call
-    setProfileState({ id: '1', name: 'Jane Doe' });
-  }, []);
 
   return (
     <ProfileContext.Provider value={{
       profile,
+      setProfile,
       notificationsEnabled,
       setNotificationsEnabled
     }}>

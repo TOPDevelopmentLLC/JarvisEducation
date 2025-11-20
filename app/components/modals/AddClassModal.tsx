@@ -5,6 +5,8 @@ import { IconType } from "components/IconContainer";
 import JarvisPaperTextInput from "components/JarvisPaperTextInput";
 import JarvisModal from "components/modals/JarvisModal";
 import { useState } from "react";
+import { apiService } from "lib/services/apiService";
+import { useProfile } from "components/contexts/ProfileContext";
 
 
 export interface AddClassModalProps {
@@ -21,10 +23,12 @@ const AddClassModal = ({
     const [classroomNumber, setClassroomNumber] = useState('');
     const [startTime, setStartTime] = useState('');
     const [endTime, setEndTime] = useState('');
+    const [loading, setLoading] = useState(false);
     const showErrorMessage = useErrorSnackbar();
-    const { addCourse, courses } = useStoredCourseData();
+    const { addCourse } = useStoredCourseData();
+    const { profile } = useProfile();
 
-    const addButtonPressed = () => {
+    const addButtonPressed = async () => {
         if (courseTitle.length === 0) {
             showErrorMessage("Please enter the Course title");
             return;
@@ -34,24 +38,46 @@ const AddClassModal = ({
             return;
         }
 
-        // Generate new ID and add course
-        const newId = (courses.length + 1).toString();
-        addCourse({
-            courseId: newId,
-            title: courseTitle,
-            description: courseDescription,
-            classroomNumber: classroomNumber.length > 0 ? classroomNumber : undefined,
-            startTime: startTime.length > 0 ? startTime : undefined,
-            endTime: endTime.length > 0 ? endTime : undefined
-        });
+        if (!profile?.token) {
+            showErrorMessage('Authentication required. Please log in again.');
+            return;
+        }
 
-        // Reset form and close modal
-        setCourseTitle('');
-        setCourseDescription('');
-        setClassroomNumber('');
-        setStartTime('');
-        setEndTime('');
-        onDismiss?.();
+        try {
+            setLoading(true);
+
+            // Call API to create course
+            const response = await apiService.createCourse(
+                {
+                    courseName: courseTitle,
+                    courseDescription: courseDescription
+                },
+                profile.token
+            );
+
+            // Add to local state with converted format
+            addCourse({
+                courseId: response.id.toString(),
+                title: response.courseName,
+                description: response.courseDescription,
+                classroomNumber: classroomNumber.length > 0 ? classroomNumber : undefined,
+                startTime: startTime.length > 0 ? startTime : undefined,
+                endTime: endTime.length > 0 ? endTime : undefined
+            });
+
+            // Reset form and close modal
+            setCourseTitle('');
+            setCourseDescription('');
+            setClassroomNumber('');
+            setStartTime('');
+            setEndTime('');
+            onDismiss?.();
+        } catch (error) {
+            console.error("Failed to create course:", error);
+            showErrorMessage(error instanceof Error ? error.message : 'Failed to create course');
+        } finally {
+            setLoading(false);
+        }
     }
 
     return (
