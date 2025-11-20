@@ -20,3 +20,7 @@ export interface CreateParentResponse {
     id: number;
     name: string;
 }
+
+export interface DeleteParentResponse {
+    message: string;
+}

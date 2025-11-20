@@ -22,3 +22,7 @@ export interface CreateTeacherResponse {
     id: number;
     name: string;
 }
+
+export interface DeleteTeacherResponse {
+    message: string;
+}

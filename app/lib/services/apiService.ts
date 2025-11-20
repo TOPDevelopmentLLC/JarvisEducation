@@ -4,8 +4,8 @@ import { GetTeamsResponse, GetTeamResponse, CreateTeamRequest, CreateTeamRespons
 import { GetCodesResponse, GetCodeResponse, CreateCodeRequest, CreateCodeResponse, UpdateCodeRequest, UpdateCodeResponse, DeleteCodeResponse } from 'lib/models/code';
 import { GetCommentsResponse, CreateCommentRequest, CreateCommentResponse, UpdateCommentRequest, UpdateCommentResponse } from 'lib/models/comment';
 import { GetStudentsResponse, CreateStudentRequest, CreateStudentResponse, DeleteStudentResponse } from 'lib/models/student';
-import { GetTeachersResponse, CreateTeacherRequest, CreateTeacherResponse } from 'lib/models/teacher';
-import { GetParentsResponse, CreateParentRequest, CreateParentResponse } from 'lib/models/parent';
+import { GetTeachersResponse, CreateTeacherRequest, CreateTeacherResponse, DeleteTeacherResponse } from 'lib/models/teacher';
+import { GetParentsResponse, CreateParentRequest, CreateParentResponse, DeleteParentResponse } from 'lib/models/parent';
 import { GetAdministratorsResponse, CreateAdministratorRequest, CreateAdministratorResponse, DeleteAdministratorResponse } from 'lib/models/administrator';
 import { GetClassCatalogueResponse, CreateCourseRequest, CreateCourseResponse, DeleteCourseResponse } from 'lib/models/course';
 import { GetReportsResponse, CreateReportRequest, CreateReportResponse } from 'lib/models/report';
@@ -502,7 +502,7 @@ class ApiService {
      */
     async deleteStudent(studentId: string, token: string): Promise<DeleteStudentResponse> {
         try {
-            const response = await this.api.delete<DeleteStudentResponse>(`/student/${studentId}`, {
+            const response = await this.api.delete<DeleteStudentResponse>(`/students/${studentId}`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -560,6 +560,28 @@ class ApiService {
     }
 
     /**
+     * Delete a teacher by ID
+     * @param teacherId - The ID of the teacher to delete
+     * @param token - JWT token for authorization
+     * @returns Promise with deletion confirmation message
+     */
+    async deleteTeacher(teacherId: string, token: string): Promise<DeleteTeacherResponse> {
+        try {
+            const response = await this.api.delete<DeleteTeacherResponse>(`/teachers/${teacherId}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            return response.data;
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                throw new Error(error.response?.data?.message || 'Failed to delete teacher');
+            }
+            throw error;
+        }
+    }
+
+    /**
      * Get all parents
      * @param token - JWT token for authorization
      * @returns Promise with array of parents
@@ -597,6 +619,28 @@ class ApiService {
         } catch (error) {
             if (axios.isAxiosError(error)) {
                 throw new Error(error.response?.data?.message || 'Failed to create parent');
+            }
+            throw error;
+        }
+    }
+
+    /**
+     * Delete a parent by ID
+     * @param parentId - The ID of the parent to delete
+     * @param token - JWT token for authorization
+     * @returns Promise with deletion confirmation message
+     */
+    async deleteParent(parentId: string, token: string): Promise<DeleteParentResponse> {
+        try {
+            const response = await this.api.delete<DeleteParentResponse>(`/parents/${parentId}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            return response.data;
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                throw new Error(error.response?.data?.message || 'Failed to delete parent');
             }
             throw error;
         }
