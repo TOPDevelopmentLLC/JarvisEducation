@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useState } from "react";
 import BasePage from "components/pages/BasePage";
 import { Image, View, Text } from "react-native";
 import { Images } from "assets/images";
@@ -15,11 +15,11 @@ import { useProfile } from "components/contexts/ProfileContext";
 const SignUpPage = () => {
     const router = useRouter();
     const { setProfile } = useProfile();
-    const username = useRef("");
-    const schoolName = useRef("");
-    const email = useRef("");
-    const password = useRef("");
-    const confirmPassword = useRef("");
+    const [username, setUsername] = useState("");
+    const [schoolName, setSchoolName] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
 
     const [loading, setLoading] = useState(false);
     const [alertVisible, setAlertVisible] = useState(false);
@@ -34,27 +34,27 @@ const SignUpPage = () => {
 
     const signUpButtonClicked = async () => {
         // Validate inputs
-        if (!username.current.trim()) {
+        if (!username.trim()) {
             showAlert("Validation Error", "Please enter a username");
             return;
         }
 
-        if (!schoolName.current.trim()) {
+        if (!schoolName.trim()) {
             showAlert("Validation Error", "Please enter a school name");
             return;
         }
 
-        if (!email.current.trim()) {
+        if (!email.trim()) {
             showAlert("Validation Error", "Please enter an email address");
             return;
         }
 
-        if (!password.current.trim()) {
+        if (!password.trim()) {
             showAlert("Validation Error", "Please enter a password");
             return;
         }
 
-        if (password.current !== confirmPassword.current) {
+        if (password !== confirmPassword) {
             showAlert("Validation Error", "Passwords do not match");
             return;
         }
@@ -62,9 +62,9 @@ const SignUpPage = () => {
         try {
             setLoading(true);
             const response = await apiService.signUp({
-                email: email.current.trim(),
-                password: password.current,
-                schoolName: schoolName.current.trim()
+                email: email.trim(),
+                password: password,
+                schoolName: schoolName.trim()
             });
 
             // Set profile with user data from response
@@ -108,25 +108,25 @@ const SignUpPage = () => {
                     <View className="w-full gap-4">
                         <JarvisTextInput
                             placeholder="Username"
-                            onTextChange={(value) => {username.current = value}}
+                            onTextChange={setUsername}
                         />
                         <JarvisTextInput
                             placeholder="School Name"
-                            onTextChange={(value) => {schoolName.current = value}}
+                            onTextChange={setSchoolName}
                         />
                         <JarvisTextInput
                             placeholder="Email"
-                            onTextChange={(value) => {email.current = value}}
+                            onTextChange={setEmail}
                         />
                         <JarvisTextInput
                             placeholder="Password"
                             secureTextEntry={true}
-                            onTextChange={(value) => {password.current = value}}
+                            onTextChange={setPassword}
                         />
                         <JarvisTextInput
                             placeholder="Confirm Password"
                             secureTextEntry={true}
-                            onTextChange={(value) => {confirmPassword.current = value}}
+                            onTextChange={setConfirmPassword}
                         />
 
                         <BaseButton

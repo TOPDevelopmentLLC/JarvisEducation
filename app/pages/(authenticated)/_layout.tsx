@@ -1,5 +1,5 @@
 import { Drawer } from 'expo-router/drawer';
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import AuthenticatedDrawer from 'components/AuthenticatedDrawer';
 import { useRouter } from 'expo-router';
 import { useProfile } from 'components/contexts/ProfileContext';
@@ -7,10 +7,16 @@ import { useProfile } from 'components/contexts/ProfileContext';
 export default function AuthenticatedDrawerLayout() {
   const router = useRouter();
   const { profile } = useProfile();
+  const hasCheckedAuth = useRef(false);
 
   useEffect(() => {
-    if (profile === null) {
-      router.replace('/pages/auth/LoginPage');
+    // Only check authentication once on mount, and only redirect if profile is null
+    // This prevents redirecting when profile transitions from null to valid
+    if (!hasCheckedAuth.current) {
+      hasCheckedAuth.current = true;
+      if (profile === null) {
+        router.replace('/pages/auth/LoginPage');
+      }
     }
   }, [profile]);
   
