@@ -9,6 +9,7 @@ export interface Student {
 export interface ApiStudent {
     id: number;
     name: string;
+    studentPoints: number;
 }
 
 export type GetStudentsResponse = ApiStudent[];
