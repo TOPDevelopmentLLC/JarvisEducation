@@ -54,3 +54,17 @@ export interface GetHistoricalSettingsResponse {
 export interface GetActiveSettingsResponse {
     settings: SchoolYearSettings;
 }
+
+export interface UpdateSettingsRequest {
+    name: string;
+    startDate: string;
+    endDate: string;
+    termType: string;
+    schoolDayStart: string;
+    schoolDayEnd: string;
+    timezone: string;
+}
+
+export interface UpdateSettingsResponse {
+    settings: SchoolYearSettings;
+}
