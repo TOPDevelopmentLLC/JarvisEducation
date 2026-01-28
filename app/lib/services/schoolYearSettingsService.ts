@@ -1,5 +1,5 @@
 import axios, { AxiosInstance } from 'axios';
-import { GetHistoricalSettingsResponse, GetActiveSettingsResponse, UpdateSettingsRequest, UpdateSettingsResponse, CreateTermRequest, CreateTermResponse, DeleteTermResponse } from 'lib/models/schoolYearSettings';
+import { GetHistoricalSettingsResponse, GetActiveSettingsResponse, UpdateSettingsRequest, UpdateSettingsResponse, CreateTermRequest, CreateTermResponse, DeleteTermResponse, CreateHolidayRequest, CreateHolidayResponse, DeleteHolidayResponse } from 'lib/models/schoolYearSettings';
 
 class SchoolYearSettingsService {
     private api: AxiosInstance;
@@ -120,6 +120,50 @@ class SchoolYearSettingsService {
         } catch (error) {
             if (axios.isAxiosError(error)) {
                 throw new Error(error.response?.data?.message || 'Failed to delete term');
+            }
+            throw error;
+        }
+    }
+
+    /**
+     * Add a holiday to the active school year
+     * @param data - Holiday creation request data
+     * @param token - JWT token for authorization
+     * @returns Promise with the updated school year settings
+     */
+    async createHoliday(data: CreateHolidayRequest, token: string): Promise<CreateHolidayResponse> {
+        try {
+            const response = await this.api.post<CreateHolidayResponse>('/api/school-year-settings/holidays', data, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            return response.data;
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                throw new Error(error.response?.data?.message || 'Failed to create holiday');
+            }
+            throw error;
+        }
+    }
+
+    /**
+     * Remove a holiday from the active school year
+     * @param holidayId - The ID of the holiday to remove
+     * @param token - JWT token for authorization
+     * @returns Promise with the deletion confirmation message
+     */
+    async deleteHoliday(holidayId: number, token: string): Promise<DeleteHolidayResponse> {
+        try {
+            const response = await this.api.delete<DeleteHolidayResponse>(`/api/school-year-settings/holidays/${holidayId}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            return response.data;
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                throw new Error(error.response?.data?.message || 'Failed to delete holiday');
             }
             throw error;
         }

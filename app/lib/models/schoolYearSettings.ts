@@ -83,3 +83,17 @@ export interface CreateTermResponse {
 export interface DeleteTermResponse {
     message: string;
 }
+
+export interface CreateHolidayRequest {
+    name: string;
+    date: string;
+    description: string;
+}
+
+export interface CreateHolidayResponse {
+    settings: SchoolYearSettings;
+}
+
+export interface DeleteHolidayResponse {
+    message: string;
+}
