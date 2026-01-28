@@ -8,6 +8,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React from 'react';
 import StateDataProvider from 'components/contexts/StateDataProvider';
 import { SnackbarProvider } from 'components/contexts/SnackbarContext';
+import { HistoricalYearProvider } from 'components/contexts/HistoricalYearContext';
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
@@ -22,7 +23,9 @@ export default function RootLayout() {
             }}
           >
             <SnackbarProvider>
-              <Slot />
+              <HistoricalYearProvider>
+                <Slot />
+              </HistoricalYearProvider>
             </SnackbarProvider>
           </PaperProvider>
         </StateDataProvider>
