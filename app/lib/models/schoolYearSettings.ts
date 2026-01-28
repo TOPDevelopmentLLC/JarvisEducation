@@ -97,3 +97,21 @@ export interface CreateHolidayResponse {
 export interface DeleteHolidayResponse {
     message: string;
 }
+
+export type BreakType = 'WinterBreak' | 'SpringBreak' | 'SummerBreak' | 'FallBreak' | 'ThanksgivingBreak' | 'Other';
+
+export interface CreateBreakPeriodRequest {
+    name: string;
+    breakType: BreakType;
+    startDate: string;
+    endDate: string;
+    description: string;
+}
+
+export interface CreateBreakPeriodResponse {
+    settings: SchoolYearSettings;
+}
+
+export interface DeleteBreakPeriodResponse {
+    message: string;
+}

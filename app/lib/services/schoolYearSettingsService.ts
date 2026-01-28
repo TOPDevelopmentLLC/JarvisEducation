@@ -1,5 +1,5 @@
 import axios, { AxiosInstance } from 'axios';
-import { GetHistoricalSettingsResponse, GetActiveSettingsResponse, UpdateSettingsRequest, UpdateSettingsResponse, CreateTermRequest, CreateTermResponse, DeleteTermResponse, CreateHolidayRequest, CreateHolidayResponse, DeleteHolidayResponse } from 'lib/models/schoolYearSettings';
+import { GetHistoricalSettingsResponse, GetActiveSettingsResponse, UpdateSettingsRequest, UpdateSettingsResponse, CreateTermRequest, CreateTermResponse, DeleteTermResponse, CreateHolidayRequest, CreateHolidayResponse, DeleteHolidayResponse, CreateBreakPeriodRequest, CreateBreakPeriodResponse, DeleteBreakPeriodResponse } from 'lib/models/schoolYearSettings';
 
 class SchoolYearSettingsService {
     private api: AxiosInstance;
@@ -164,6 +164,50 @@ class SchoolYearSettingsService {
         } catch (error) {
             if (axios.isAxiosError(error)) {
                 throw new Error(error.response?.data?.message || 'Failed to delete holiday');
+            }
+            throw error;
+        }
+    }
+
+    /**
+     * Add a break period to the active school year
+     * @param data - Break period creation request data
+     * @param token - JWT token for authorization
+     * @returns Promise with the updated school year settings
+     */
+    async createBreakPeriod(data: CreateBreakPeriodRequest, token: string): Promise<CreateBreakPeriodResponse> {
+        try {
+            const response = await this.api.post<CreateBreakPeriodResponse>('/api/school-year-settings/breaks', data, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            return response.data;
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                throw new Error(error.response?.data?.message || 'Failed to create break period');
+            }
+            throw error;
+        }
+    }
+
+    /**
+     * Remove a break period from the active school year
+     * @param breakId - The ID of the break period to remove
+     * @param token - JWT token for authorization
+     * @returns Promise with the deletion confirmation message
+     */
+    async deleteBreakPeriod(breakId: number, token: string): Promise<DeleteBreakPeriodResponse> {
+        try {
+            const response = await this.api.delete<DeleteBreakPeriodResponse>(`/api/school-year-settings/breaks/${breakId}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            return response.data;
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                throw new Error(error.response?.data?.message || 'Failed to delete break period');
             }
             throw error;
         }
