@@ -115,3 +115,21 @@ export interface CreateBreakPeriodResponse {
 export interface DeleteBreakPeriodResponse {
     message: string;
 }
+
+export type PeriodType = 'Class' | 'Lunch' | 'Homeroom' | 'Passing' | 'Assembly' | 'Other';
+
+export interface CreateSchedulePeriodRequest {
+    name: string;
+    periodNumber: number;
+    periodType: PeriodType;
+    startTime: string;
+    endTime: string;
+}
+
+export interface CreateSchedulePeriodResponse {
+    settings: SchoolYearSettings;
+}
+
+export interface DeleteSchedulePeriodResponse {
+    message: string;
+}

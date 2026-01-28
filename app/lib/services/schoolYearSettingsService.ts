@@ -1,5 +1,5 @@
 import axios, { AxiosInstance } from 'axios';
-import { GetHistoricalSettingsResponse, GetActiveSettingsResponse, UpdateSettingsRequest, UpdateSettingsResponse, CreateTermRequest, CreateTermResponse, DeleteTermResponse, CreateHolidayRequest, CreateHolidayResponse, DeleteHolidayResponse, CreateBreakPeriodRequest, CreateBreakPeriodResponse, DeleteBreakPeriodResponse } from 'lib/models/schoolYearSettings';
+import { GetHistoricalSettingsResponse, GetActiveSettingsResponse, UpdateSettingsRequest, UpdateSettingsResponse, CreateTermRequest, CreateTermResponse, DeleteTermResponse, CreateHolidayRequest, CreateHolidayResponse, DeleteHolidayResponse, CreateBreakPeriodRequest, CreateBreakPeriodResponse, DeleteBreakPeriodResponse, CreateSchedulePeriodRequest, CreateSchedulePeriodResponse, DeleteSchedulePeriodResponse } from 'lib/models/schoolYearSettings';
 
 class SchoolYearSettingsService {
     private api: AxiosInstance;
@@ -208,6 +208,50 @@ class SchoolYearSettingsService {
         } catch (error) {
             if (axios.isAxiosError(error)) {
                 throw new Error(error.response?.data?.message || 'Failed to delete break period');
+            }
+            throw error;
+        }
+    }
+
+    /**
+     * Add a schedule period to the active school year
+     * @param data - Schedule period creation request data
+     * @param token - JWT token for authorization
+     * @returns Promise with the updated school year settings
+     */
+    async createSchedulePeriod(data: CreateSchedulePeriodRequest, token: string): Promise<CreateSchedulePeriodResponse> {
+        try {
+            const response = await this.api.post<CreateSchedulePeriodResponse>('/api/school-year-settings/periods', data, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            return response.data;
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                throw new Error(error.response?.data?.message || 'Failed to create schedule period');
+            }
+            throw error;
+        }
+    }
+
+    /**
+     * Remove a schedule period from the active school year
+     * @param periodId - The ID of the schedule period to remove
+     * @param token - JWT token for authorization
+     * @returns Promise with the deletion confirmation message
+     */
+    async deleteSchedulePeriod(periodId: number, token: string): Promise<DeleteSchedulePeriodResponse> {
+        try {
+            const response = await this.api.delete<DeleteSchedulePeriodResponse>(`/api/school-year-settings/periods/${periodId}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            return response.data;
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                throw new Error(error.response?.data?.message || 'Failed to delete schedule period');
             }
             throw error;
         }
