@@ -7,14 +7,19 @@ import { useProfile } from 'components/contexts/ProfileContext';
 export default function AuthenticatedDrawerLayout() {
   const router = useRouter();
   const { profile } = useProfile();
-  const isMounted = useRef(true);
+  const hasCheckedAuth = useRef(false);
 
   useEffect(() => {
-    // Set mounted flag to false after a brief delay to allow profile to propagate
+    // Skip if we've already verified auth or if profile exists
+    if (hasCheckedAuth.current || profile !== null) {
+      return;
+    }
+
+    // Give context time to propagate on initial mount
     const timeout = setTimeout(() => {
-      isMounted.current = false;
-      // After the delay, if profile is still null, redirect to login
+      // Only redirect if profile is still null after the delay
       if (profile === null) {
+        hasCheckedAuth.current = true;
         router.replace('/pages/auth/LoginPage');
       }
     }, 100);
@@ -22,7 +27,7 @@ export default function AuthenticatedDrawerLayout() {
     return () => {
       clearTimeout(timeout);
     };
-  }, []);
+  }, [profile]);
   
   return (
   <Drawer
