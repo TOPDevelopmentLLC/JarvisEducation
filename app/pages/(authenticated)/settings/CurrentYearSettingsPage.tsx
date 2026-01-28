@@ -1,6 +1,6 @@
 import MenuHeaderPage from "components/pages/MenuHeaderPage";
 import { useState, useEffect } from "react";
-import { View, Text, ScrollView, ActivityIndicator } from "react-native";
+import { View, Text, ScrollView, ActivityIndicator, Pressable, TextInput } from "react-native";
 import { useProfile } from "components/contexts/ProfileContext";
 import { useErrorSnackbar, useSuccessSnackbar } from "components/contexts/SnackbarContext";
 import { schoolYearSettingsService } from "lib/services/schoolYearSettingsService";
@@ -16,7 +16,8 @@ import AddHolidayModal from "components/modals/AddHolidayModal";
 import AddBreakModal from "components/modals/AddBreakModal";
 import AddSchedulingPeriodModal from "components/modals/AddSchedulingPeriodModal";
 import ConfirmationModal from "components/modals/ConfirmationModal";
-
+import TimezonePickerModal from "components/modals/TimezonePickerModal";
+import TermTypePickerModal from "components/modals/TermTypePickerModal";
 
 const CurrentYearSettingsPage = () => {
     const { profile } = useProfile();
@@ -25,6 +26,19 @@ const CurrentYearSettingsPage = () => {
 
     const [settings, setSettings] = useState<SchoolYearSettings | null>(null);
     const [isLoading, setIsLoading] = useState(true);
+
+    // Inline editing states
+    const [isEditing, setIsEditing] = useState(false);
+    const [editName, setEditName] = useState('');
+    const [editStartDate, setEditStartDate] = useState('');
+    const [editEndDate, setEditEndDate] = useState('');
+    const [editSchoolDayStart, setEditSchoolDayStart] = useState('');
+    const [editSchoolDayEnd, setEditSchoolDayEnd] = useState('');
+    const [editTimezone, setEditTimezone] = useState('');
+    const [editTermType, setEditTermType] = useState('');
+    const [timezonePickerVisible, setTimezonePickerVisible] = useState(false);
+    const [termTypePickerVisible, setTermTypePickerVisible] = useState(false);
+    const [isSaving, setIsSaving] = useState(false);
 
     // Modal visibility states
     const [addTermModalVisible, setAddTermModalVisible] = useState(false);
@@ -60,6 +74,87 @@ const CurrentYearSettingsPage = () => {
 
     const handleSettingsUpdated = (updatedSettings: SchoolYearSettings) => {
         setSettings(updatedSettings);
+    };
+
+    const startEditing = () => {
+        if (!settings) return;
+        setEditName(settings.name || '');
+        setEditStartDate(settings.startDate || '');
+        setEditEndDate(settings.endDate || '');
+        setEditSchoolDayStart(settings.schoolDayStart || '');
+        setEditSchoolDayEnd(settings.schoolDayEnd || '');
+        setEditTimezone(settings.timezone || '');
+        setEditTermType(settings.termType || '');
+        setIsEditing(true);
+    };
+
+    const cancelEditing = () => {
+        setIsEditing(false);
+    };
+
+    const saveSettings = async () => {
+        if (editName.length === 0) {
+            showErrorMessage("Please enter the school year name");
+            return;
+        }
+        if (editStartDate.length === 0) {
+            showErrorMessage("Please enter the start date (YYYY-MM-DD)");
+            return;
+        }
+        if (editEndDate.length === 0) {
+            showErrorMessage("Please enter the end date (YYYY-MM-DD)");
+            return;
+        }
+        if (editSchoolDayStart.length === 0) {
+            showErrorMessage("Please enter the school day start time (HH:mm)");
+            return;
+        }
+        if (editSchoolDayEnd.length === 0) {
+            showErrorMessage("Please enter the school day end time (HH:mm)");
+            return;
+        }
+        if (editTimezone.length === 0) {
+            showErrorMessage("Please select a timezone");
+            return;
+        }
+        if (editTermType.length === 0) {
+            showErrorMessage("Please select a term type");
+            return;
+        }
+
+        if (!profile?.token || !settings) {
+            showErrorMessage("Not authenticated");
+            return;
+        }
+
+        try {
+            setIsSaving(true);
+            const response = await schoolYearSettingsService.updateSettings({
+                name: editName,
+                startDate: editStartDate,
+                endDate: editEndDate,
+                termType: editTermType,
+                schoolDayStart: editSchoolDayStart,
+                schoolDayEnd: editSchoolDayEnd,
+                timezone: editTimezone
+            }, profile.token);
+
+            showSuccessMessage("Settings updated successfully");
+            setSettings(response.settings);
+            setIsEditing(false);
+        } catch (error) {
+            showErrorMessage(error instanceof Error ? error.message : 'Failed to update settings');
+        } finally {
+            setIsSaving(false);
+        }
+    };
+
+    const getTimezoneLabel = (value: string) => {
+        return value || 'Select Timezone';
+    };
+
+    const getTermTypeLabel = (value: string) => {
+        return value || 'Select Term Type';
     };
 
     // Delete handlers
@@ -158,19 +253,146 @@ const CurrentYearSettingsPage = () => {
                 <View className="w-[60%]">
                     {/* School Year Info */}
                     <View className="bg-gray-800 rounded-xl p-4 mb-6">
-                        <Text className="text-white text-2xl font-bold">{settings.name}</Text>
-                        <Text className="text-gray-400 text-sm mt-2">
-                            {settings.startDate || 'Start date not set'} - {settings.endDate || 'End date not set'}
-                        </Text>
-                        <Text className="text-gray-400 text-sm mt-1">
-                            Term Type: {settings.termType}
-                        </Text>
-                        <Text className="text-gray-400 text-sm mt-1">
-                            School Day: {settings.schoolDayStart || 'Not set'} - {settings.schoolDayEnd || 'Not set'}
-                        </Text>
-                        <Text className="text-gray-400 text-sm mt-1">
-                            Timezone: {settings.timezone}
-                        </Text>
+                        <View className="flex-row justify-between items-start">
+                            <View className="flex-1">
+                                {isEditing ? (
+                                    <>
+                                        <View className="mb-3">
+                                            <Text className="text-gray-400 text-xs mb-1">Name</Text>
+                                            <TextInput
+                                                className="bg-white rounded-lg px-3 py-2 text-black"
+                                                value={editName}
+                                                onChangeText={setEditName}
+                                                placeholder="School Year Name"
+                                                placeholderTextColor="#9ca3af"
+                                            />
+                                        </View>
+                                        <View className="flex-row gap-3 mb-3">
+                                            <View className="flex-1">
+                                                <Text className="text-gray-400 text-xs mb-1">Start Date</Text>
+                                                <TextInput
+                                                    className="bg-white rounded-lg px-3 py-2 text-black"
+                                                    value={editStartDate}
+                                                    onChangeText={setEditStartDate}
+                                                    placeholder="YYYY-MM-DD"
+                                                    placeholderTextColor="#9ca3af"
+                                                />
+                                            </View>
+                                            <View className="flex-1">
+                                                <Text className="text-gray-400 text-xs mb-1">End Date</Text>
+                                                <TextInput
+                                                    className="bg-white rounded-lg px-3 py-2 text-black"
+                                                    value={editEndDate}
+                                                    onChangeText={setEditEndDate}
+                                                    placeholder="YYYY-MM-DD"
+                                                    placeholderTextColor="#9ca3af"
+                                                />
+                                            </View>
+                                        </View>
+                                        <View className="flex-row gap-3 mb-3">
+                                            <View className="flex-1">
+                                                <Text className="text-gray-400 text-xs mb-1">School Day Start</Text>
+                                                <TextInput
+                                                    className="bg-white rounded-lg px-3 py-2 text-black"
+                                                    value={editSchoolDayStart}
+                                                    onChangeText={setEditSchoolDayStart}
+                                                    placeholder="HH:mm"
+                                                    placeholderTextColor="#9ca3af"
+                                                />
+                                            </View>
+                                            <View className="flex-1">
+                                                <Text className="text-gray-400 text-xs mb-1">School Day End</Text>
+                                                <TextInput
+                                                    className="bg-white rounded-lg px-3 py-2 text-black"
+                                                    value={editSchoolDayEnd}
+                                                    onChangeText={setEditSchoolDayEnd}
+                                                    placeholder="HH:mm"
+                                                    placeholderTextColor="#9ca3af"
+                                                />
+                                            </View>
+                                        </View>
+                                        <View className="flex-row gap-3 mb-3">
+                                            <View className="flex-1">
+                                                <Text className="text-gray-400 text-xs mb-1">Timezone</Text>
+                                                <Pressable
+                                                    onPress={() => setTimezonePickerVisible(true)}
+                                                    className="bg-white rounded-lg px-3 py-2"
+                                                >
+                                                    <Text className={editTimezone ? "text-black" : "text-gray-400"}>
+                                                        {getTimezoneLabel(editTimezone)}
+                                                    </Text>
+                                                </Pressable>
+                                            </View>
+                                            <View className="flex-1">
+                                                <Text className="text-gray-400 text-xs mb-1">Term Type</Text>
+                                                <Pressable
+                                                    onPress={() => setTermTypePickerVisible(true)}
+                                                    className="bg-white rounded-lg px-3 py-2"
+                                                >
+                                                    <Text className={editTermType ? "text-black" : "text-gray-400"}>
+                                                        {getTermTypeLabel(editTermType)}
+                                                    </Text>
+                                                </Pressable>
+                                            </View>
+                                        </View>
+                                    </>
+                                ) : (
+                                    <>
+                                        <Text className="text-white text-2xl font-bold">{settings.name}</Text>
+                                        <Text className="text-gray-400 text-sm mt-2">
+                                            {settings.startDate || 'Start date not set'} - {settings.endDate || 'End date not set'}
+                                        </Text>
+                                        <Text className="text-gray-400 text-sm mt-1">
+                                            Term Type: {settings.termType}
+                                        </Text>
+                                        <Text className="text-gray-400 text-sm mt-1">
+                                            School Day: {settings.schoolDayStart || 'Not set'} - {settings.schoolDayEnd || 'Not set'}
+                                        </Text>
+                                        <Text className="text-gray-400 text-sm mt-1">
+                                            Timezone: {settings.timezone}
+                                        </Text>
+                                    </>
+                                )}
+                            </View>
+                            <View className="flex-row gap-2">
+                                {isEditing ? (
+                                    <>
+                                        <IconButton
+                                            className="bg-gray-600"
+                                            iconProps={{
+                                                name: 'close',
+                                                color: '#FFFFFF',
+                                                size: 20,
+                                                type: IconType.MaterialCommunityIcons
+                                            }}
+                                            onIconClicked={cancelEditing}
+                                        />
+                                        <IconButton
+                                            className="bg-jarvisPrimary"
+                                            iconProps={{
+                                                name: 'check',
+                                                color: '#000000',
+                                                size: 20,
+                                                type: IconType.MaterialCommunityIcons
+                                            }}
+                                            onIconClicked={saveSettings}
+                                            disabled={isSaving}
+                                        />
+                                    </>
+                                ) : (
+                                    <IconButton
+                                        className="bg-jarvisPrimary"
+                                        iconProps={{
+                                            name: 'pencil',
+                                            color: '#000000',
+                                            size: 20,
+                                            type: IconType.MaterialCommunityIcons
+                                        }}
+                                        onIconClicked={startEditing}
+                                    />
+                                )}
+                            </View>
+                        </View>
                     </View>
 
                     {/* Terms Section */}
@@ -275,7 +497,22 @@ const CurrentYearSettingsPage = () => {
                 </View>
             </ScrollView>
 
-            {/* Modals */}
+            {/* Picker Modals */}
+            <TimezonePickerModal
+                isVisible={timezonePickerVisible}
+                selectedTimezone={editTimezone}
+                onTimezoneSelected={setEditTimezone}
+                onDismiss={() => setTimezonePickerVisible(false)}
+            />
+
+            <TermTypePickerModal
+                isVisible={termTypePickerVisible}
+                selectedTermType={editTermType}
+                onTermTypeSelected={setEditTermType}
+                onDismiss={() => setTermTypePickerVisible(false)}
+            />
+
+            {/* Other Modals */}
             <AddTermModal
                 isVisible={addTermModalVisible}
                 onDismiss={() => setAddTermModalVisible(false)}
