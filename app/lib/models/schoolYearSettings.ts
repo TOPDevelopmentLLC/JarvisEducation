@@ -34,11 +34,11 @@ export interface SchedulePeriod {
 export interface SchoolYearSettings {
     id: number;
     name: string;
-    startDate: string;
-    endDate: string;
+    startDate: string | null;
+    endDate: string | null;
     termType: string;
-    schoolDayStart: string;
-    schoolDayEnd: string;
+    schoolDayStart: string | null;
+    schoolDayEnd: string | null;
     timezone: string;
     isActive: boolean;
     terms: Term[];
@@ -49,4 +49,8 @@ export interface SchoolYearSettings {
 
 export interface GetHistoricalSettingsResponse {
     settings: SchoolYearSettings[];
+}
+
+export interface GetActiveSettingsResponse {
+    settings: SchoolYearSettings;
 }

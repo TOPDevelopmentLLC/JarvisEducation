@@ -1,5 +1,5 @@
 import axios, { AxiosInstance } from 'axios';
-import { GetHistoricalSettingsResponse } from 'lib/models/schoolYearSettings';
+import { GetHistoricalSettingsResponse, GetActiveSettingsResponse } from 'lib/models/schoolYearSettings';
 
 class SchoolYearSettingsService {
     private api: AxiosInstance;
@@ -33,6 +33,27 @@ class SchoolYearSettingsService {
         } catch (error) {
             if (axios.isAxiosError(error)) {
                 throw new Error(error.response?.data?.message || 'Failed to fetch historical settings');
+            }
+            throw error;
+        }
+    }
+
+    /**
+     * Get active school year settings
+     * @param token - JWT token for authorization
+     * @returns Promise with the active school year settings
+     */
+    async getActiveSettings(token: string): Promise<GetActiveSettingsResponse> {
+        try {
+            const response = await this.api.get<GetActiveSettingsResponse>('/api/school-year-settings/active', {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            return response.data;
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                throw new Error(error.response?.data?.message || 'Failed to fetch active settings');
             }
             throw error;
         }
