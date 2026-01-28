@@ -9,6 +9,14 @@ import { useProfile } from "components/contexts/ProfileContext";
 const SettingsPage = () => {
     const { notificationsEnabled, setNotificationsEnabled } = useProfile();
 
+    const handleCurrentYearSettingsPressed = () => {
+        router.push('/pages/settings/CurrentYearSettingsPage');
+    };
+
+    const handleHistoricalYearsPressed = () => {
+        router.push('/pages/settings/HistoricalYearsPage');
+    };
+
     const handleCodesPressed = () => {
         router.push('/pages/settings/CodeSettings');
     };
@@ -35,6 +43,18 @@ const SettingsPage = () => {
                     {/* Other Settings Section */}
                     <View className="mt-4">
                         <Text className="text-white text-xl font-bold mb-3">Other Settings</Text>
+                        <BaseButton
+                            title="Current Year Settings"
+                            className="bg-jarvisPrimary rounded-lg items-center active:opacity-70 mb-3"
+                            textClassName="text-black text-base font-semibold"
+                            onPress={handleCurrentYearSettingsPressed}
+                        />
+                        <BaseButton
+                            title="Historical Years"
+                            className="bg-jarvisPrimary rounded-lg items-center active:opacity-70 mb-3"
+                            textClassName="text-black text-base font-semibold"
+                            onPress={handleHistoricalYearsPressed}
+                        />
                         <BaseButton
                             title="Codes"
                             className="bg-jarvisPrimary rounded-lg items-center active:opacity-70 mb-3"
