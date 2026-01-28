@@ -93,7 +93,7 @@ const StudentDetailsPage = () => {
                         </View>
 
                         {/* Full Name Field */}
-                        <View className="mb-0">
+                        <View className="mb-4">
                             <Text className="text-gray-400 text-sm mb-2">Full Name</Text>
                             {inEditMode ? (
                                 <TextInput
@@ -107,6 +107,14 @@ const StudentDetailsPage = () => {
                                     <Text className="text-white text-base">{currentStudentName}</Text>
                                 </View>
                             )}
+                        </View>
+
+                        {/* Student Points Field */}
+                        <View className="mb-0">
+                            <Text className="text-gray-400 text-sm mb-2">Student Points</Text>
+                            <View className="px-4 py-3">
+                                <Text className="text-white text-base">{selectedStudent.studentPoints}</Text>
+                            </View>
                         </View>
 
                         {/* Action Buttons - Only show when in edit mode */}

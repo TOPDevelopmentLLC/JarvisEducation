@@ -3,12 +3,14 @@
 export interface Student {
     studentId: string;
     name: string;
+    studentPoints: number;
     reportIds?: string[];
 }
 
 export interface ApiStudent {
     id: number;
     name: string;
+    studentPoints: number;
 }
 
 export type GetStudentsResponse = ApiStudent[];
