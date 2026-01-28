@@ -1,5 +1,5 @@
 import axios, { AxiosInstance } from 'axios';
-import { GetHistoricalSettingsResponse, GetActiveSettingsResponse, UpdateSettingsRequest, UpdateSettingsResponse } from 'lib/models/schoolYearSettings';
+import { GetHistoricalSettingsResponse, GetActiveSettingsResponse, UpdateSettingsRequest, UpdateSettingsResponse, CreateTermRequest, CreateTermResponse, DeleteTermResponse } from 'lib/models/schoolYearSettings';
 
 class SchoolYearSettingsService {
     private api: AxiosInstance;
@@ -76,6 +76,50 @@ class SchoolYearSettingsService {
         } catch (error) {
             if (axios.isAxiosError(error)) {
                 throw new Error(error.response?.data?.message || 'Failed to update settings');
+            }
+            throw error;
+        }
+    }
+
+    /**
+     * Add a term to the active school year
+     * @param data - Term creation request data
+     * @param token - JWT token for authorization
+     * @returns Promise with the updated school year settings
+     */
+    async createTerm(data: CreateTermRequest, token: string): Promise<CreateTermResponse> {
+        try {
+            const response = await this.api.post<CreateTermResponse>('/api/school-year-settings/terms', data, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            return response.data;
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                throw new Error(error.response?.data?.message || 'Failed to create term');
+            }
+            throw error;
+        }
+    }
+
+    /**
+     * Remove a term from the active school year
+     * @param termId - The ID of the term to remove
+     * @param token - JWT token for authorization
+     * @returns Promise with the deletion confirmation message
+     */
+    async deleteTerm(termId: number, token: string): Promise<DeleteTermResponse> {
+        try {
+            const response = await this.api.delete<DeleteTermResponse>(`/api/school-year-settings/terms/${termId}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            return response.data;
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                throw new Error(error.response?.data?.message || 'Failed to delete term');
             }
             throw error;
         }

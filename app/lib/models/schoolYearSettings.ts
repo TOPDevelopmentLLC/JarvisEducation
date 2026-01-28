@@ -68,3 +68,18 @@ export interface UpdateSettingsRequest {
 export interface UpdateSettingsResponse {
     settings: SchoolYearSettings;
 }
+
+export interface CreateTermRequest {
+    name: string;
+    termNumber: number;
+    startDate: string;
+    endDate: string;
+}
+
+export interface CreateTermResponse {
+    settings: SchoolYearSettings;
+}
+
+export interface DeleteTermResponse {
+    message: string;
+}
