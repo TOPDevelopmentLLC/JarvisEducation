@@ -60,16 +60,16 @@ const SettingsPage = () => {
                             onPress={handleHistoricalYearsPressed}
                         />
                         <BaseButton
-                            title="Codes"
-                            className="bg-jarvisPrimary rounded-lg items-center active:opacity-70 mb-3"
-                            textClassName="text-black text-base font-semibold"
-                            onPress={handleCodesPressed}
-                        />
-                        <BaseButton
                             title="Points System Settings"
                             className="bg-jarvisPrimary rounded-lg items-center active:opacity-70 mb-3"
                             textClassName="text-black text-base font-semibold"
                             onPress={handlePointsSystemSettingsPressed}
+                        />
+                        <BaseButton
+                            title="Codes"
+                            className="bg-jarvisPrimary rounded-lg items-center active:opacity-70 mb-3"
+                            textClassName="text-black text-base font-semibold"
+                            onPress={handleCodesPressed}
                         />
                         <BaseButton
                             title="Teams"
