@@ -335,6 +335,23 @@ const CurrentYearSettingsPage = () => {
                                                 </Pressable>
                                             </View>
                                         </View>
+                                        <View className="flex-row gap-3 mt-4">
+                                            <Pressable
+                                                onPress={cancelEditing}
+                                                className="flex-1 bg-gray-600 rounded-lg py-3"
+                                            >
+                                                <Text className="text-white text-center font-semibold">Cancel</Text>
+                                            </Pressable>
+                                            <Pressable
+                                                onPress={saveSettings}
+                                                disabled={isSaving}
+                                                className={`flex-1 bg-jarvisPrimary rounded-lg py-3 ${isSaving ? 'opacity-50' : ''}`}
+                                            >
+                                                <Text className="text-black text-center font-semibold">
+                                                    {isSaving ? 'Saving...' : 'Save'}
+                                                </Text>
+                                            </Pressable>
+                                        </View>
                                     </>
                                 ) : (
                                     <>
@@ -354,44 +371,18 @@ const CurrentYearSettingsPage = () => {
                                     </>
                                 )}
                             </View>
-                            <View className="flex-row gap-2">
-                                {isEditing ? (
-                                    <>
-                                        <IconButton
-                                            className="bg-gray-600"
-                                            iconProps={{
-                                                name: 'close',
-                                                color: '#FFFFFF',
-                                                size: 20,
-                                                type: IconType.MaterialCommunityIcons
-                                            }}
-                                            onIconClicked={cancelEditing}
-                                        />
-                                        <IconButton
-                                            className="bg-jarvisPrimary"
-                                            iconProps={{
-                                                name: 'check',
-                                                color: '#000000',
-                                                size: 20,
-                                                type: IconType.MaterialCommunityIcons
-                                            }}
-                                            onIconClicked={saveSettings}
-                                            disabled={isSaving}
-                                        />
-                                    </>
-                                ) : (
-                                    <IconButton
-                                        className="bg-jarvisPrimary"
-                                        iconProps={{
-                                            name: 'pencil',
-                                            color: '#000000',
-                                            size: 20,
-                                            type: IconType.MaterialCommunityIcons
-                                        }}
-                                        onIconClicked={startEditing}
-                                    />
-                                )}
-                            </View>
+                            {!isEditing && (
+                                <IconButton
+                                    className="bg-jarvisPrimary"
+                                    iconProps={{
+                                        name: 'pencil',
+                                        color: '#000000',
+                                        size: 20,
+                                        type: IconType.MaterialCommunityIcons
+                                    }}
+                                    onIconClicked={startEditing}
+                                />
+                            )}
                         </View>
                     </View>
 
