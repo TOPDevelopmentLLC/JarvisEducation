@@ -133,3 +133,8 @@ export interface CreateSchedulePeriodResponse {
 export interface DeleteSchedulePeriodResponse {
     message: string;
 }
+
+export interface GetCurrentPeriodResponse {
+    period: SchedulePeriod | null;
+    time: string;
+}

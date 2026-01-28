@@ -1,5 +1,5 @@
 import axios, { AxiosInstance } from 'axios';
-import { GetHistoricalSettingsResponse, GetActiveSettingsResponse, UpdateSettingsRequest, UpdateSettingsResponse, CreateTermRequest, CreateTermResponse, DeleteTermResponse, CreateHolidayRequest, CreateHolidayResponse, DeleteHolidayResponse, CreateBreakPeriodRequest, CreateBreakPeriodResponse, DeleteBreakPeriodResponse, CreateSchedulePeriodRequest, CreateSchedulePeriodResponse, DeleteSchedulePeriodResponse } from 'lib/models/schoolYearSettings';
+import { GetHistoricalSettingsResponse, GetActiveSettingsResponse, UpdateSettingsRequest, UpdateSettingsResponse, CreateTermRequest, CreateTermResponse, DeleteTermResponse, CreateHolidayRequest, CreateHolidayResponse, DeleteHolidayResponse, CreateBreakPeriodRequest, CreateBreakPeriodResponse, DeleteBreakPeriodResponse, CreateSchedulePeriodRequest, CreateSchedulePeriodResponse, DeleteSchedulePeriodResponse, GetCurrentPeriodResponse } from 'lib/models/schoolYearSettings';
 
 class SchoolYearSettingsService {
     private api: AxiosInstance;
@@ -252,6 +252,29 @@ class SchoolYearSettingsService {
         } catch (error) {
             if (axios.isAxiosError(error)) {
                 throw new Error(error.response?.data?.message || 'Failed to delete schedule period');
+            }
+            throw error;
+        }
+    }
+
+    /**
+     * Get the current schedule period for a given time
+     * @param time - Time in HH:mm:ss format
+     * @param token - JWT token for authorization
+     * @returns Promise with the current period (or null if not in a period) and the queried time
+     */
+    async getCurrentPeriod(time: string, token: string): Promise<GetCurrentPeriodResponse> {
+        try {
+            const response = await this.api.get<GetCurrentPeriodResponse>('/api/school-year-settings/current-period', {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                },
+                params: { time }
+            });
+            return response.data;
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                throw new Error(error.response?.data?.message || 'Failed to fetch current period');
             }
             throw error;
         }
