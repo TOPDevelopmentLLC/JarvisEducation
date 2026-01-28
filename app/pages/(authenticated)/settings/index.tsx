@@ -21,6 +21,10 @@ const SettingsPage = () => {
         router.push('/pages/settings/CodeSettings');
     };
 
+    const handlePointsSystemSettingsPressed = () => {
+        router.push('/pages/settings/SystemPointsSettingsPage');
+    };
+
     const handleTeamsPressed = () => {
         router.push('/pages/teams');
     };
@@ -60,6 +64,12 @@ const SettingsPage = () => {
                             className="bg-jarvisPrimary rounded-lg items-center active:opacity-70 mb-3"
                             textClassName="text-black text-base font-semibold"
                             onPress={handleCodesPressed}
+                        />
+                        <BaseButton
+                            title="Points System Settings"
+                            className="bg-jarvisPrimary rounded-lg items-center active:opacity-70 mb-3"
+                            textClassName="text-black text-base font-semibold"
+                            onPress={handlePointsSystemSettingsPressed}
                         />
                         <BaseButton
                             title="Teams"
