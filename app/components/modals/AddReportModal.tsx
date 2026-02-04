@@ -1,6 +1,6 @@
-import { View, Text, Dimensions, Pressable, ActivityIndicator } from "react-native";
+import { View, Text, Dimensions, ActivityIndicator } from "react-native";
 import JarvisModal from "./JarvisModal";
-import IconContainer, { IconType } from "components/IconContainer";
+import { IconType } from "components/IconContainer";
 import { useState, useEffect } from "react";
 import { MoodType, ReportType } from "lib/models/report";
 import StudentList from "components/lists/StudentList";
@@ -235,8 +235,7 @@ const AddReportModal = ({
             case ReportType.Attendance:
                 return (
                     <View className="items-center">
-                        <Text className="text-white text-lg mb-2">Attendance Report</Text>
-                        <Text className="text-gray-400 text-base mb-4">
+                        <Text className="text-gray-400 text-base">
                             You are about to add an Attendance report for {selectedStudent?.name}.
                         </Text>
                     </View>
@@ -245,10 +244,6 @@ const AddReportModal = ({
             case ReportType.Behavior:
                 return (
                     <View className="items-center">
-                        <Text className="text-white text-lg mb-2">Behavior Report</Text>
-                        <Text className="text-gray-400 text-base mb-4">
-                            Adding a Behavior report for {selectedStudent?.name}
-                        </Text>
                         <JarvisPaperTextInput
                             placeholder={"Description"}
                             onTextChange={(description) => setReportDescription(description)}
@@ -264,10 +259,6 @@ const AddReportModal = ({
             case ReportType.CheckIn:
                 return (
                     <View className="items-center">
-                        <Text className="text-white text-lg mb-2">Check-In Report</Text>
-                        <Text className="text-gray-400 text-base mb-4">
-                            Adding a Check-In report for {selectedStudent?.name}
-                        </Text>
                         <View style={{ width: 500 }}>
                             <JarvisPaperTextInput
                                 placeholder={"Attitude"}
@@ -289,10 +280,6 @@ const AddReportModal = ({
             case ReportType.Conflict:
                 return (
                     <View className="items-center">
-                        <Text className="text-white text-lg mb-2">Conflict Report</Text>
-                        <Text className="text-gray-400 text-base mb-4">
-                            Adding a Conflict report for {selectedStudent?.name}
-                        </Text>
                         <JarvisPaperTextInput
                             placeholder={"Description"}
                             onTextChange={(description) => setReportDescription(description)}
@@ -308,10 +295,6 @@ const AddReportModal = ({
             case ReportType.Expelled:
                 return (
                     <View className="items-center">
-                        <Text className="text-white text-lg mb-2">Expelled Report</Text>
-                        <Text className="text-gray-400 text-base mb-4">
-                            Adding an Expelled report for {selectedStudent?.name}
-                        </Text>
                         <JarvisPaperTextInput
                             placeholder={"Description"}
                             onTextChange={(description) => setReportDescription(description)}
@@ -327,10 +310,6 @@ const AddReportModal = ({
             case ReportType.Mood:
                 return (
                     <View className="items-center">
-                        <Text className="text-white text-lg mb-2">Mood Report</Text>
-                        <Text className="text-gray-400 text-base mb-4">
-                            Adding a Mood report for {selectedStudent?.name}
-                        </Text>
                         <MoodLabelList
                             selectedMoodType={selectedMoodtype}
                             moodTypeSelected={(moodtype) => setSelectedMoodType(moodtype)}
@@ -351,10 +330,6 @@ const AddReportModal = ({
             case ReportType.Secluded:
                 return (
                     <View className="items-center">
-                        <Text className="text-white text-lg mb-2">Secluded Report</Text>
-                        <Text className="text-gray-400 text-base mb-4">
-                            Adding a Secluded report for {selectedStudent?.name}
-                        </Text>
                         <JarvisPaperTextInput
                             placeholder={"Description"}
                             onTextChange={(description) => setReportDescription(description)}
@@ -370,10 +345,6 @@ const AddReportModal = ({
             case ReportType.SIP:
                 return (
                     <View className="items-center">
-                        <Text className="text-white text-lg mb-2">SIP Report</Text>
-                        <Text className="text-gray-400 text-base mb-4">
-                            Adding a SIP report for {selectedStudent?.name}
-                        </Text>
                         <JarvisPaperTextInput
                             placeholder={"Description"}
                             onTextChange={(description) => setReportDescription(description)}
@@ -389,27 +360,6 @@ const AddReportModal = ({
             default:
                 return null;
         }
-    };
-
-    const renderBackButton = () => {
-        if (currentStep === 1) return null;
-
-        return (
-            <Pressable
-                onPress={handleBack}
-                className="flex-row items-center mb-4"
-            >
-                <IconContainer
-                    iconProps={{
-                        name: 'arrow-left',
-                        size: 20,
-                        color: '#9cb43c',
-                        type: IconType.MaterialCommunityIcons
-                    }}
-                />
-                <Text className="text-jarvisPrimary text-base ml-2">Back</Text>
-            </Pressable>
-        );
     };
 
     const getConfirmButtonProps = () => {
@@ -437,10 +387,10 @@ const AddReportModal = ({
             }}
             isVisible={isVisible}
             onDismiss={handleDismiss}
+            onBack={currentStep > 1 ? handleBack : undefined}
             confirmButtonProps={getConfirmButtonProps()}
         >
             <View>
-                {renderBackButton()}
                 {currentStep === 1 && renderStep1()}
                 {currentStep === 2 && renderStep2()}
                 {currentStep === 3 && renderStep3()}

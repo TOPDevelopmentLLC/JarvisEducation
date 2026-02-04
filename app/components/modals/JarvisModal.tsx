@@ -10,6 +10,7 @@ export interface JarvisModalProps {
     headerProps: ModalHeaderProps;
     isVisible: boolean;
     onDismiss?: () => void;
+    onBack?: () => void;
     confirmButtonProps?: BaseButtonProps;
 }
 
@@ -17,6 +18,7 @@ const JarvisModal: React.FC<React.PropsWithChildren<JarvisModalProps>> = ({
     headerProps,
     isVisible,
     onDismiss,
+    onBack,
     confirmButtonProps,
     children
 }) => {
@@ -37,16 +39,30 @@ const JarvisModal: React.FC<React.PropsWithChildren<JarvisModalProps>> = ({
                 borderRadius: 16,
             }}>
                 {/* Close button in top left */}
-                <IconButton 
+                <IconButton
                     className="absolute top-4 left-4 z-10"
                     iconProps={{
                         name: 'close',
                         size: 24,
                         color: "#9CA3AF",
                         type: IconType.MaterialCommunityIcons
-                    }} 
-                    onIconClicked={onDismiss} 
+                    }}
+                    onIconClicked={onDismiss}
                 />
+
+                {/* Back button next to close button */}
+                {onBack && (
+                    <IconButton
+                        className="absolute top-4 left-14 z-10"
+                        iconProps={{
+                            name: 'arrow-left',
+                            size: 24,
+                            color: "#9cb43c",
+                            type: IconType.MaterialCommunityIcons
+                        }}
+                        onIconClicked={onBack}
+                    />
+                )}
 
                 <ScrollView
                     showsVerticalScrollIndicator={true}
