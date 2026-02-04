@@ -104,3 +104,23 @@ export interface CreateReportRequest {
 export interface CreateReportResponse {
     report: ApiReport;
 }
+
+export interface StudentReportStudent {
+    id: number;
+    name: string;
+    isActive: boolean;
+}
+
+export interface StudentReport {
+    id: number;
+    reportType: string;
+    description: string;
+    reportedByName: string;
+    reportedById: number;
+    moodType: string | null;
+    student: StudentReportStudent;
+}
+
+export interface GetStudentReportsResponse {
+    reports: StudentReport[];
+}

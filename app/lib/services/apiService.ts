@@ -8,7 +8,7 @@ import { GetTeachersResponse, CreateTeacherRequest, CreateTeacherResponse, Delet
 import { GetParentsResponse, CreateParentRequest, CreateParentResponse, DeleteParentResponse } from 'lib/models/parent';
 import { GetAdministratorsResponse, CreateAdministratorRequest, CreateAdministratorResponse, DeleteAdministratorResponse } from 'lib/models/administrator';
 import { GetClassCatalogueResponse, CreateCourseRequest, CreateCourseResponse, DeleteCourseResponse } from 'lib/models/course';
-import { GetReportsResponse, CreateReportRequest, CreateReportResponse } from 'lib/models/report';
+import { GetReportsResponse, CreateReportRequest, CreateReportResponse, GetStudentReportsResponse } from 'lib/models/report';
 
 class ApiService {
     private api: AxiosInstance;
@@ -814,6 +814,28 @@ class ApiService {
         } catch (error) {
             if (axios.isAxiosError(error)) {
                 throw new Error(error.response?.data?.message || 'Failed to create report');
+            }
+            throw error;
+        }
+    }
+
+    /**
+     * Get all reports for a specific student
+     * @param studentId - The ID of the student to fetch reports for
+     * @param token - JWT token for authorization
+     * @returns Promise with array of student reports
+     */
+    async getStudentReports(studentId: string, token: string): Promise<GetStudentReportsResponse> {
+        try {
+            const response = await this.api.get<GetStudentReportsResponse>(`/api/reports/student/${studentId}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            return response.data;
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                throw new Error(error.response?.data?.message || 'Failed to fetch student reports');
             }
             throw error;
         }
