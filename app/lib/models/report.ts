@@ -5,6 +5,7 @@ export interface Report {
     type: ReportType;
     description?: string;
     studentId?: string;
+    studentName?: string;
     comments?: Comment[];
     reportedById: string;
     reportedByName: string;
@@ -86,6 +87,8 @@ export interface ApiReport {
     moodType: string | null;
     reportedByName: string;
     reportedById: number;
+    studentName: string;
+    studentId: number;
 }
 
 export interface GetReportsResponse {

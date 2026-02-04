@@ -1,5 +1,4 @@
 import { useStoredReportData } from "components/contexts/ReportContext";
-import { useStoredStudentData } from "components/contexts/StudentContext";
 import DetailsHeaderPage from "components/pages/DetailsHeaderPage";
 import { useLocalSearchParams } from "expo-router";
 import { useState } from "react";
@@ -17,7 +16,6 @@ import { reportExportService } from "lib/services/reportExportService";
 
 const ReportDetailsPage = () => {
     const { selectedReport, setSelectedReport, addCommentToReport, updateCommentInReport } = useStoredReportData();
-    const { students } = useStoredStudentData();
     const { edit } = useLocalSearchParams();
     const [inEditMode, setEditMode] = useState<boolean>(edit === '1');
     const [currentReportDescription, setCurrentReportDescription] = useState(selectedReport.description ?? '');
@@ -33,9 +31,6 @@ const ReportDetailsPage = () => {
     // Using mock data for testing - currently set to admin:1 (Patricia Henderson)
     const currentUserId = mockCurrentUserId;
     const currentUserName = 'Patricia Henderson'; // TODO: Get from auth context
-
-    // Get the assigned student
-    const assignedStudent = students.find(student => student.studentId === selectedReport.studentId);
 
     // Get comments for this report
     const reportComments = selectedReport.comments || [];
@@ -111,7 +106,7 @@ const ReportDetailsPage = () => {
 
         try {
             setExporting(true);
-            await reportExportService.exportSingleReport(selectedReport, assignedStudent?.name);
+            await reportExportService.exportSingleReport(selectedReport, selectedReport.studentName);
         } catch (error) {
             console.error('Failed to export report:', error);
             setExportError(true);
@@ -196,7 +191,7 @@ const ReportDetailsPage = () => {
                             <Text className="text-gray-400 text-sm mb-2">Assigned Student</Text>
                             <View className="px-4 py-3">
                                 <Text className="text-white text-base">
-                                    {assignedStudent ? assignedStudent.name : 'None'}
+                                    {selectedReport.studentName || 'None'}
                                 </Text>
                             </View>
                         </View>
