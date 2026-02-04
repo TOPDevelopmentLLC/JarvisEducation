@@ -1,7 +1,6 @@
-import { Document, Packer, Paragraph, TextRun, HeadingLevel, Table, TableRow, TableCell, WidthType, BorderStyle } from 'docx';
-import * as FileSystem from 'expo-file-system';
-import * as Sharing from 'expo-sharing';
-import { Report, ReportType } from 'lib/models/report';
+import { Document, Packer, Paragraph, TextRun, HeadingLevel } from 'docx';
+import { Platform } from 'react-native';
+import { Report } from 'lib/models/report';
 import { StudentReport } from 'lib/models/report';
 
 interface ReportExportData {
@@ -209,40 +208,72 @@ class ReportExportService {
             // Generate the document as a blob
             const blob = await Packer.toBlob(doc);
 
-            // Convert blob to base64
-            const reader = new FileReader();
-            const base64Promise = new Promise<string>((resolve, reject) => {
-                reader.onloadend = () => {
-                    const base64data = reader.result as string;
-                    // Remove the data URL prefix to get just the base64 string
-                    const base64 = base64data.split(',')[1];
-                    resolve(base64);
-                };
-                reader.onerror = reject;
-            });
-            reader.readAsDataURL(blob);
-
-            const base64 = await base64Promise;
-
-            // Save to file system
-            const fileUri = FileSystem.documentDirectory + filename;
-            await FileSystem.writeAsStringAsync(fileUri, base64, {
-                encoding: FileSystem.EncodingType.Base64
-            });
-
-            // Check if sharing is available
-            const isAvailable = await Sharing.isAvailableAsync();
-            if (isAvailable) {
-                await Sharing.shareAsync(fileUri, {
-                    mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-                    dialogTitle: 'Export Report'
-                });
+            if (Platform.OS === 'web') {
+                // Web: Create a download link and trigger download
+                await this.downloadOnWeb(blob, filename);
             } else {
-                throw new Error('Sharing is not available on this device');
+                // Native (iOS/Android): Use expo-file-system and expo-sharing
+                await this.shareOnNative(blob, filename);
             }
         } catch (error) {
             console.error('Failed to export document:', error);
             throw error;
+        }
+    }
+
+    private async downloadOnWeb(blob: Blob, filename: string): Promise<void> {
+        // Create a URL for the blob
+        const url = URL.createObjectURL(blob);
+
+        // Create a temporary anchor element to trigger download
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = filename;
+
+        // Append to body, click, and remove
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+        // Clean up the URL object
+        URL.revokeObjectURL(url);
+    }
+
+    private async shareOnNative(blob: Blob, filename: string): Promise<void> {
+        // Dynamically import native modules to avoid web bundling issues
+        const FileSystem = await import('expo-file-system');
+        const Sharing = await import('expo-sharing');
+
+        // Convert blob to base64
+        const reader = new FileReader();
+        const base64Promise = new Promise<string>((resolve, reject) => {
+            reader.onloadend = () => {
+                const base64data = reader.result as string;
+                // Remove the data URL prefix to get just the base64 string
+                const base64 = base64data.split(',')[1];
+                resolve(base64);
+            };
+            reader.onerror = reject;
+        });
+        reader.readAsDataURL(blob);
+
+        const base64 = await base64Promise;
+
+        // Save to file system
+        const fileUri = FileSystem.documentDirectory + filename;
+        await FileSystem.writeAsStringAsync(fileUri, base64, {
+            encoding: FileSystem.EncodingType.Base64
+        });
+
+        // Check if sharing is available
+        const isAvailable = await Sharing.isAvailableAsync();
+        if (isAvailable) {
+            await Sharing.shareAsync(fileUri, {
+                mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                dialogTitle: 'Export Report'
+            });
+        } else {
+            throw new Error('Sharing is not available on this device');
         }
     }
 }
