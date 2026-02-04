@@ -27,6 +27,7 @@ const ReportDetailsPage = () => {
     const [selectedComment, setSelectedComment] = useState<Comment | null>(null);
     const [exporting, setExporting] = useState(false);
     const [exportError, setExportError] = useState(false);
+    const [noDataToExport, setNoDataToExport] = useState(false);
 
     // TODO: Get current user ID and name from auth context
     // Using mock data for testing - currently set to admin:1 (Patricia Henderson)
@@ -102,6 +103,12 @@ const ReportDetailsPage = () => {
     }
 
     const handleExportReport = async () => {
+        // Check if there's meaningful data to export
+        if (!selectedReport || !selectedReport.type) {
+            setNoDataToExport(true);
+            return;
+        }
+
         try {
             setExporting(true);
             await reportExportService.exportSingleReport(selectedReport, assignedStudent?.name);
@@ -289,6 +296,14 @@ const ReportDetailsPage = () => {
                 title="Export Failed"
                 message="Failed to export report. Please try again."
                 onConfirm={() => setExportError(false)}
+            />
+
+            {/* No Data to Export Alert */}
+            <AlertModal
+                isVisible={noDataToExport}
+                title="No Data"
+                message="There is no report data available to export."
+                onConfirm={() => setNoDataToExport(false)}
             />
         </DetailsHeaderPage>
     )

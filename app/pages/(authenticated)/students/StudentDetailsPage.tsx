@@ -24,6 +24,7 @@ const StudentDetailsPage = () => {
     const [loadingReports, setLoadingReports] = useState(false);
     const [exporting, setExporting] = useState(false);
     const [exportError, setExportError] = useState(false);
+    const [noDataToExport, setNoDataToExport] = useState(false);
     const { height } = useWindowDimensions();
 
     // Calculate max height for reports section (20% of screen height)
@@ -69,7 +70,7 @@ const StudentDetailsPage = () => {
 
     const handleExportReports = async () => {
         if (studentReports.length === 0) {
-            setExportError(true);
+            setNoDataToExport(true);
             return;
         }
 
@@ -202,10 +203,16 @@ const StudentDetailsPage = () => {
             <AlertModal
                 isVisible={exportError}
                 title="Export Failed"
-                message={studentReports.length === 0
-                    ? "No reports available to export."
-                    : "Failed to export reports. Please try again."}
+                message="Failed to export reports. Please try again."
                 onConfirm={() => setExportError(false)}
+            />
+
+            {/* No Data to Export Alert */}
+            <AlertModal
+                isVisible={noDataToExport}
+                title="No Data"
+                message="There are no reports available to export for this student."
+                onConfirm={() => setNoDataToExport(false)}
             />
         </DetailsHeaderPage>
     )
