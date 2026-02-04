@@ -19,6 +19,14 @@ const ReportTypeList = ({
         <View className={clsx("flex-row flex-wrap items-center gap-2",className)}>
             <Text className="text-white font-semibold">Report Type: </Text>
             <Chip
+                onPress={() => reportTypeSelected(ReportType.ABC)}
+                selected={selectedReportType === ReportType.ABC}
+                style={[
+                    { alignSelf: 'flex-start', backgroundColor: selectedReportType === ReportType.ABC ? '#9cb43c' : '#374151' }
+                ]}
+                textStyle={{ color: selectedReportType === ReportType.ABC ? '#000000' : '#FFFFFF' }}
+            >ABC</Chip>
+            <Chip
                 onPress={() => reportTypeSelected(ReportType.Attendance)}
                 selected={selectedReportType === ReportType.Attendance}
                 style={[

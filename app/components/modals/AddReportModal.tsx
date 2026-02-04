@@ -1,8 +1,8 @@
-import { View, Text, Dimensions, ActivityIndicator } from "react-native";
+import { View, Text, Dimensions, ActivityIndicator, Pressable, ScrollView } from "react-native";
 import JarvisModal from "./JarvisModal";
 import { IconType } from "components/IconContainer";
 import { useState, useEffect } from "react";
-import { MoodType, ReportType } from "lib/models/report";
+import { MoodType, ReportType, ABC_ANTECEDENTS, ABC_BEHAVIORS, ABC_CONSEQUENCES } from "lib/models/report";
 import StudentList from "components/lists/StudentList";
 import { useStoredStudentData } from "components/contexts/StudentContext";
 import { useStoredReportData } from "components/contexts/ReportContext";
@@ -13,6 +13,8 @@ import { useErrorSnackbar } from "components/contexts/SnackbarContext";
 import { Student } from "lib/models/student";
 import { apiService } from "lib/services/apiService";
 import { useProfile } from "components/contexts/ProfileContext";
+import { Checkbox } from "react-native-paper";
+import BaseButton from "components/buttons/BaseButton";
 
 export interface AddReportModalProps {
     isVisible: boolean;
@@ -34,6 +36,11 @@ const AddReportModal = ({
     const [socialization, setSocialization] = useState('');
     const [loading, setLoading] = useState(false);
     const [loadingStudents, setLoadingStudents] = useState(false);
+    // ABC specific state
+    const [abcSubStep, setAbcSubStep] = useState<1 | 2 | 3>(1);
+    const [selectedAntecedents, setSelectedAntecedents] = useState<string[]>([]);
+    const [selectedBehaviors, setSelectedBehaviors] = useState<string[]>([]);
+    const [selectedConsequences, setSelectedConsequences] = useState<string[]>([]);
     const showErrorMessage = useErrorSnackbar();
     const { students, setStudents, addReportToStudent } = useStoredStudentData();
     const { addReport } = useStoredReportData();
@@ -76,6 +83,11 @@ const AddReportModal = ({
         setSelectedStudent(null);
         setAttitude('');
         setSocialization('');
+        // Reset ABC state
+        setAbcSubStep(1);
+        setSelectedAntecedents([]);
+        setSelectedBehaviors([]);
+        setSelectedConsequences([]);
     };
 
     const handleDismiss = () => {
@@ -98,12 +110,27 @@ const AddReportModal = ({
             setSelectedStudent(null);
             setCurrentStep(1);
         } else if (currentStep === 3) {
-            // Reset step 3 specific data
-            setReportDescription('');
-            setSelectedMoodType(null);
-            setAttitude('');
-            setSocialization('');
-            setCurrentStep(2);
+            // Handle ABC sub-steps back navigation
+            if (selectedReportType === ReportType.ABC) {
+                if (abcSubStep === 1) {
+                    // Go back to student selection
+                    setSelectedAntecedents([]);
+                    setCurrentStep(2);
+                } else if (abcSubStep === 2) {
+                    setSelectedBehaviors([]);
+                    setAbcSubStep(1);
+                } else if (abcSubStep === 3) {
+                    setSelectedConsequences([]);
+                    setAbcSubStep(2);
+                }
+            } else {
+                // Reset step 3 specific data for other report types
+                setReportDescription('');
+                setSelectedMoodType(null);
+                setAttitude('');
+                setSocialization('');
+                setCurrentStep(2);
+            }
         }
     };
 
@@ -132,6 +159,20 @@ const AddReportModal = ({
             reportDescription.length === 0) {
             showErrorMessage('Please enter a description to continue.');
             return;
+        }
+        if (selectedReportType === ReportType.ABC) {
+            if (selectedAntecedents.length === 0) {
+                showErrorMessage('Please select at least one antecedent.');
+                return;
+            }
+            if (selectedBehaviors.length === 0) {
+                showErrorMessage('Please select at least one behavior.');
+                return;
+            }
+            if (selectedConsequences.length === 0) {
+                showErrorMessage('Please select at least one consequence.');
+                return;
+            }
         }
 
         if (!profile?.token || !profile?.id) {
@@ -169,6 +210,9 @@ const AddReportModal = ({
                 reportedByName: response.report.reportedByName,
                 attitude: selectedReportType === ReportType.CheckIn ? attitude : undefined,
                 socialization: selectedReportType === ReportType.CheckIn ? socialization : undefined,
+                antecedents: selectedReportType === ReportType.ABC ? selectedAntecedents : undefined,
+                behaviors: selectedReportType === ReportType.ABC ? selectedBehaviors : undefined,
+                consequences: selectedReportType === ReportType.ABC ? selectedConsequences : undefined,
             });
 
             // Add report to student's reportIds
@@ -192,9 +236,101 @@ const AddReportModal = ({
             case 2:
                 return 'Select Student';
             case 3:
+                if (selectedReportType === ReportType.ABC) {
+                    switch (abcSubStep) {
+                        case 1:
+                            return 'ABC Report - Antecedent';
+                        case 2:
+                            return 'ABC Report - Behavior';
+                        case 3:
+                            return 'ABC Report - Consequence';
+                    }
+                }
                 return `Add ${selectedReportType} Report`;
             default:
                 return 'Add Report';
+        }
+    };
+
+    // ABC checkbox toggle helpers
+    const toggleAntecedent = (item: string) => {
+        setSelectedAntecedents(prev =>
+            prev.includes(item) ? prev.filter(i => i !== item) : [...prev, item]
+        );
+    };
+
+    const toggleBehavior = (item: string) => {
+        setSelectedBehaviors(prev =>
+            prev.includes(item) ? prev.filter(i => i !== item) : [...prev, item]
+        );
+    };
+
+    const toggleConsequence = (item: string) => {
+        setSelectedConsequences(prev =>
+            prev.includes(item) ? prev.filter(i => i !== item) : [...prev, item]
+        );
+    };
+
+    const renderCheckboxList = (
+        items: readonly string[],
+        selectedItems: string[],
+        toggleItem: (item: string) => void
+    ) => (
+        <ScrollView style={{ maxHeight: windowHeight * 0.4, width: '100%' }}>
+            {items.map((item) => (
+                <Pressable
+                    key={item}
+                    onPress={() => toggleItem(item)}
+                    className="flex-row items-center py-2 px-2"
+                >
+                    <Checkbox
+                        status={selectedItems.includes(item) ? 'checked' : 'unchecked'}
+                        onPress={() => toggleItem(item)}
+                        color="#9cb43c"
+                    />
+                    <Text className="text-white text-base ml-2 flex-1">{item}</Text>
+                </Pressable>
+            ))}
+        </ScrollView>
+    );
+
+    const renderABCStep = () => {
+        switch (abcSubStep) {
+            case 1:
+                return (
+                    <View className="items-center w-full">
+                        <Text className="text-gray-400 text-base mb-4">Select all antecedents that apply</Text>
+                        {renderCheckboxList(ABC_ANTECEDENTS, selectedAntecedents, toggleAntecedent)}
+                        <BaseButton
+                            title="Next"
+                            className="bg-jarvisPrimary rounded-lg items-center active:opacity-70 mt-4 w-full"
+                            textClassName="text-black text-base font-semibold"
+                            onPress={() => setAbcSubStep(2)}
+                        />
+                    </View>
+                );
+            case 2:
+                return (
+                    <View className="items-center w-full">
+                        <Text className="text-gray-400 text-base mb-4">Select all behaviors that apply</Text>
+                        {renderCheckboxList(ABC_BEHAVIORS, selectedBehaviors, toggleBehavior)}
+                        <BaseButton
+                            title="Next"
+                            className="bg-jarvisPrimary rounded-lg items-center active:opacity-70 mt-4 w-full"
+                            textClassName="text-black text-base font-semibold"
+                            onPress={() => setAbcSubStep(3)}
+                        />
+                    </View>
+                );
+            case 3:
+                return (
+                    <View className="items-center w-full">
+                        <Text className="text-gray-400 text-base mb-4">Select all consequences that apply</Text>
+                        {renderCheckboxList(ABC_CONSEQUENCES, selectedConsequences, toggleConsequence)}
+                    </View>
+                );
+            default:
+                return null;
         }
     };
 
@@ -232,6 +368,9 @@ const AddReportModal = ({
 
     const renderStep3 = () => {
         switch (selectedReportType) {
+            case ReportType.ABC:
+                return renderABCStep();
+
             case ReportType.Attendance:
                 return (
                     <View className="items-center">
@@ -364,6 +503,11 @@ const AddReportModal = ({
 
     const getConfirmButtonProps = () => {
         if (currentStep !== 3) {
+            return undefined;
+        }
+
+        // For ABC, only show confirm button on the final sub-step
+        if (selectedReportType === ReportType.ABC && abcSubStep !== 3) {
             return undefined;
         }
 
