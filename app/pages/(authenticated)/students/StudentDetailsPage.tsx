@@ -9,6 +9,9 @@ import { StudentReport } from "lib/models/report";
 import StudentReportsList from "components/lists/StudentReportsList";
 import { apiService } from "lib/services/apiService";
 import { useProfile } from "components/contexts/ProfileContext";
+import { reportExportService } from "lib/services/reportExportService";
+import LoadingModal from "components/modals/LoadingModal";
+import AlertModal from "components/modals/AlertModal";
 
 
 const StudentDetailsPage = () => {
@@ -19,6 +22,9 @@ const StudentDetailsPage = () => {
     const [currentStudentName, setCurrentStudentName] = useState(selectedStudent.name);
     const [studentReports, setStudentReports] = useState<StudentReport[]>([]);
     const [loadingReports, setLoadingReports] = useState(false);
+    const [exporting, setExporting] = useState(false);
+    const [exportError, setExportError] = useState(false);
+    const [noDataToExport, setNoDataToExport] = useState(false);
     const { height } = useWindowDimensions();
 
     // Calculate max height for reports section (20% of screen height)
@@ -62,10 +68,36 @@ const StudentDetailsPage = () => {
         console.log("Report pressed:", report);
     }
 
+    const handleExportReports = async () => {
+        if (studentReports.length === 0) {
+            setNoDataToExport(true);
+            return;
+        }
+
+        try {
+            setExporting(true);
+            await reportExportService.exportStudentReports(studentReports, selectedStudent.name);
+        } catch (error) {
+            console.error('Failed to export reports:', error);
+            setExportError(true);
+        } finally {
+            setExporting(false);
+        }
+    };
+
     return (
         <DetailsHeaderPage
             title="Student Details"
             backButtonAction={() => setSelectedStudent(null)}
+            rightActionIcon={{
+                iconProps: {
+                    name: 'file-export',
+                    size: 24,
+                    color: '#9cb43c',
+                    type: IconType.MaterialCommunityIcons
+                },
+                onIconClicked: handleExportReports
+            }}
         >
             <ScrollView className="flex-1 px-6 pt-6">
                 <View className="max-w-2xl w-full mx-auto">
@@ -160,6 +192,28 @@ const StudentDetailsPage = () => {
                     </View>
                 </View>
             </ScrollView>
+
+            {/* Loading Modal for Export */}
+            <LoadingModal
+                isVisible={exporting}
+                message="Exporting reports..."
+            />
+
+            {/* Export Error Alert */}
+            <AlertModal
+                isVisible={exportError}
+                title="Export Failed"
+                message="Failed to export reports. Please try again."
+                onConfirm={() => setExportError(false)}
+            />
+
+            {/* No Data to Export Alert */}
+            <AlertModal
+                isVisible={noDataToExport}
+                title="No Data"
+                message="There are no reports available to export for this student."
+                onConfirm={() => setNoDataToExport(false)}
+            />
         </DetailsHeaderPage>
     )
 }

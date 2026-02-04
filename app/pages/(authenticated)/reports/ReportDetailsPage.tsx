@@ -10,7 +10,9 @@ import CommentList from "components/lists/CommentList";
 import { Comment } from "lib/models/comment";
 import AlertModal from "components/modals/AlertModal";
 import EditCommentModal from "components/modals/EditCommentModal";
+import LoadingModal from "components/modals/LoadingModal";
 import { mockCurrentUserId } from "lib/mockData";
+import { reportExportService } from "lib/services/reportExportService";
 
 
 const ReportDetailsPage = () => {
@@ -23,6 +25,9 @@ const ReportDetailsPage = () => {
     const [showEmptyCommentAlert, setShowEmptyCommentAlert] = useState(false);
     const [editCommentModalVisible, setEditCommentModalVisible] = useState(false);
     const [selectedComment, setSelectedComment] = useState<Comment | null>(null);
+    const [exporting, setExporting] = useState(false);
+    const [exportError, setExportError] = useState(false);
+    const [noDataToExport, setNoDataToExport] = useState(false);
 
     // TODO: Get current user ID and name from auth context
     // Using mock data for testing - currently set to admin:1 (Patricia Henderson)
@@ -97,10 +102,37 @@ const ReportDetailsPage = () => {
         setSelectedComment(null);
     }
 
+    const handleExportReport = async () => {
+        // Check if there's meaningful data to export
+        if (!selectedReport || !selectedReport.type) {
+            setNoDataToExport(true);
+            return;
+        }
+
+        try {
+            setExporting(true);
+            await reportExportService.exportSingleReport(selectedReport, assignedStudent?.name);
+        } catch (error) {
+            console.error('Failed to export report:', error);
+            setExportError(true);
+        } finally {
+            setExporting(false);
+        }
+    };
+
     return (
         <DetailsHeaderPage
             title="Report Details"
             backButtonAction={() => setSelectedReport(null)}
+            rightActionIcon={{
+                iconProps: {
+                    name: 'file-export',
+                    size: 24,
+                    color: '#9cb43c',
+                    type: IconType.MaterialCommunityIcons
+                },
+                onIconClicked: handleExportReport
+            }}
         >
             <ScrollView className="flex-1 px-6 pt-6">
                 <View className="max-w-2xl w-full mx-auto">
@@ -250,6 +282,28 @@ const ReportDetailsPage = () => {
                 comment={selectedComment}
                 onDismiss={closeEditCommentModal}
                 onSave={handleSaveEditedComment}
+            />
+
+            {/* Loading Modal for Export */}
+            <LoadingModal
+                isVisible={exporting}
+                message="Exporting report..."
+            />
+
+            {/* Export Error Alert */}
+            <AlertModal
+                isVisible={exportError}
+                title="Export Failed"
+                message="Failed to export report. Please try again."
+                onConfirm={() => setExportError(false)}
+            />
+
+            {/* No Data to Export Alert */}
+            <AlertModal
+                isVisible={noDataToExport}
+                title="No Data"
+                message="There is no report data available to export."
+                onConfirm={() => setNoDataToExport(false)}
             />
         </DetailsHeaderPage>
     )
