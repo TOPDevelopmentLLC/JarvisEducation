@@ -1,7 +1,7 @@
-import { View, Text, Dimensions, Pressable } from "react-native";
+import { View, Text, Dimensions, Pressable, ActivityIndicator } from "react-native";
 import JarvisModal from "./JarvisModal";
 import IconContainer, { IconType } from "components/IconContainer";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { MoodType, ReportType } from "lib/models/report";
 import StudentList from "components/lists/StudentList";
 import { useStoredStudentData } from "components/contexts/StudentContext";
@@ -33,11 +33,40 @@ const AddReportModal = ({
     const [attitude, setAttitude] = useState('');
     const [socialization, setSocialization] = useState('');
     const [loading, setLoading] = useState(false);
+    const [loadingStudents, setLoadingStudents] = useState(false);
     const showErrorMessage = useErrorSnackbar();
-    const { students, addReportToStudent } = useStoredStudentData();
+    const { students, setStudents, addReportToStudent } = useStoredStudentData();
     const { addReport } = useStoredReportData();
     const { profile } = useProfile();
     const windowHeight = Dimensions.get('window').height;
+
+    // Fetch students when modal opens if they haven't been loaded yet
+    useEffect(() => {
+        const fetchStudents = async () => {
+            if (!isVisible || !profile?.token || students.length > 0) return;
+
+            try {
+                setLoadingStudents(true);
+                const response = await apiService.getStudents(profile.token);
+
+                // Convert API students to local Student format
+                const convertedStudents: Student[] = response.map(apiStudent => ({
+                    studentId: apiStudent.id.toString(),
+                    name: apiStudent.name,
+                    studentPoints: apiStudent.studentPoints
+                }));
+
+                setStudents(convertedStudents);
+            } catch (error) {
+                console.error("Failed to fetch students:", error);
+                showErrorMessage(error instanceof Error ? error.message : 'Failed to load students');
+            } finally {
+                setLoadingStudents(false);
+            }
+        };
+
+        fetchStudents();
+    }, [isVisible, profile?.token, students.length]);
 
     const resetForm = () => {
         setCurrentStep(1);
@@ -182,15 +211,22 @@ const AddReportModal = ({
     const renderStep2 = () => (
         <View className="items-center">
             <Text className="text-gray-400 text-base mb-4">Select the student for this {selectedReportType} report</Text>
-            <StudentList
-                className="w-[100%]"
-                students={students}
-                selectedStudent={selectedStudent}
-                studentItemPressed={handleStudentSelected}
-                style={{
-                    maxHeight: windowHeight * 0.4
-                }}
-            />
+            {loadingStudents ? (
+                <View className="py-8">
+                    <ActivityIndicator size="large" color="#9cb43c" />
+                    <Text className="text-gray-400 text-base mt-4">Loading students...</Text>
+                </View>
+            ) : (
+                <StudentList
+                    className="w-[100%]"
+                    students={students}
+                    selectedStudent={selectedStudent}
+                    studentItemPressed={handleStudentSelected}
+                    style={{
+                        maxHeight: windowHeight * 0.4
+                    }}
+                />
+            )}
         </View>
     );
 
