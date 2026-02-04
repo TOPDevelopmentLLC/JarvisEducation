@@ -184,18 +184,26 @@ const AddReportModal = ({
             setLoading(true);
 
             // Prepare description based on report type
-            const description = selectedReportType === ReportType.Mood
-                ? selectedMoodtype?.toString() || ''
-                : reportDescription;
+            let description = reportDescription;
+
+            if (selectedReportType === ReportType.CheckIn) {
+                description = `Attitude: ${attitude}.\nSocialization: ${socialization}`;
+            } else if (selectedReportType === ReportType.ABC) {
+                const antecedentStr = selectedAntecedents.join(', ');
+                const behaviorStr = selectedBehaviors.join(', ');
+                const consequenceStr = selectedConsequences.join(', ');
+                description = `Antecedent: ${antecedentStr}. Behavior: ${behaviorStr}. Consequences: ${consequenceStr}.`;
+            }
 
             // Call API to create report
             const response = await apiService.createReport(
                 {
                     reportType: selectedReportType,
                     description: description,
-                    moodType: selectedReportType === ReportType.Mood ? selectedMoodtype?.toString() : undefined,
+                    moodType: selectedReportType === ReportType.Mood ? selectedMoodtype?.toString() : null,
                     reportedByName: profile.fullName || profile.email,
-                    reportedById: profile.id
+                    reportedById: profile.id,
+                    studentId: parseInt(selectedStudent.studentId, 10)
                 },
                 profile.token
             );

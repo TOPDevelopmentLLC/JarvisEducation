@@ -95,9 +95,10 @@ export interface GetReportsResponse {
 export interface CreateReportRequest {
     reportType: string;
     description: string;
-    moodType?: string;
+    moodType?: string | null;
     reportedByName: string;
     reportedById: number;
+    studentId: number;
 }
 
 export interface CreateReportResponse {
