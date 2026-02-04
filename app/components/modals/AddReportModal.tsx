@@ -1,6 +1,6 @@
-import { View, Dimensions } from "react-native";
+import { View, Text, Dimensions, Pressable } from "react-native";
 import JarvisModal from "./JarvisModal";
-import { IconType } from "components/IconContainer";
+import IconContainer, { IconType } from "components/IconContainer";
 import { useState } from "react";
 import { MoodType, ReportType } from "lib/models/report";
 import StudentList from "components/lists/StudentList";
@@ -14,20 +14,22 @@ import { Student } from "lib/models/student";
 import { apiService } from "lib/services/apiService";
 import { useProfile } from "components/contexts/ProfileContext";
 
-
 export interface AddReportModalProps {
     isVisible: boolean;
     onDismiss?: () => void;
 }
 
+type Step = 1 | 2 | 3;
+
 const AddReportModal = ({
     isVisible,
     onDismiss,
 }: AddReportModalProps) => {
-    const [selectedReportType,setSelectedReportType] = useState<ReportType|null>(null);
-    const [reportDescription,setReportDescription] = useState('');
-    const [selectedMoodtype,setSelectedMoodType] = useState<MoodType|null>(null);
-    const [selectedStudent,setSelectedStudent] = useState<Student|null>(null);
+    const [currentStep, setCurrentStep] = useState<Step>(1);
+    const [selectedReportType, setSelectedReportType] = useState<ReportType | null>(null);
+    const [reportDescription, setReportDescription] = useState('');
+    const [selectedMoodtype, setSelectedMoodType] = useState<MoodType | null>(null);
+    const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
     const [attitude, setAttitude] = useState('');
     const [socialization, setSocialization] = useState('');
     const [loading, setLoading] = useState(false);
@@ -36,6 +38,45 @@ const AddReportModal = ({
     const { addReport } = useStoredReportData();
     const { profile } = useProfile();
     const windowHeight = Dimensions.get('window').height;
+
+    const resetForm = () => {
+        setCurrentStep(1);
+        setSelectedReportType(null);
+        setReportDescription('');
+        setSelectedMoodType(null);
+        setSelectedStudent(null);
+        setAttitude('');
+        setSocialization('');
+    };
+
+    const handleDismiss = () => {
+        resetForm();
+        onDismiss?.();
+    };
+
+    const handleReportTypeSelected = (reportType: ReportType) => {
+        setSelectedReportType(reportType);
+        setCurrentStep(2);
+    };
+
+    const handleStudentSelected = (student: Student) => {
+        setSelectedStudent(student);
+        setCurrentStep(3);
+    };
+
+    const handleBack = () => {
+        if (currentStep === 2) {
+            setSelectedStudent(null);
+            setCurrentStep(1);
+        } else if (currentStep === 3) {
+            // Reset step 3 specific data
+            setReportDescription('');
+            setSelectedMoodType(null);
+            setAttitude('');
+            setSocialization('');
+            setCurrentStep(2);
+        }
+    };
 
     const addButtonPressed = async () => {
         if (!selectedStudent) {
@@ -105,12 +146,7 @@ const AddReportModal = ({
             addReportToStudent(selectedStudent.studentId, response.report.id.toString());
 
             // Reset form and close modal
-            setSelectedReportType(null);
-            setReportDescription('');
-            setSelectedMoodType(null);
-            setSelectedStudent(null);
-            setAttitude('');
-            setSocialization('');
+            resetForm();
             onDismiss?.();
         } catch (error) {
             console.error("Failed to create report:", error);
@@ -118,71 +154,89 @@ const AddReportModal = ({
         } finally {
             setLoading(false);
         }
-    }
+    };
 
-    const reportTypeClicked = (reportType:ReportType) => {
-        if (selectedReportType === ReportType.Mood && selectedMoodtype !== null) {
-            setSelectedMoodType(null);
+    const getStepTitle = () => {
+        switch (currentStep) {
+            case 1:
+                return 'Select Report Type';
+            case 2:
+                return 'Select Student';
+            case 3:
+                return `Add ${selectedReportType} Report`;
+            default:
+                return 'Add Report';
         }
-        if (selectedReportType === reportType) {
-            setSelectedReportType(null);
-            return;
-        }
-        setSelectedReportType(reportType);
-    }
+    };
 
-    return (
-        <JarvisModal
-            headerProps={{
-                title: 'Add Report',
-                icon: {
-                    type: IconType.Feather,
-                    name: 'file-plus',
-                    color: '#000000',
-                    size: 32
-                }
-            }}
-            isVisible={isVisible}
-            onDismiss={onDismiss}
-            confirmButtonProps={{
-                title: "Add",
-                onPress: addButtonPressed
-            }}
-        >
-            <View className="items-center">
-                <StudentList
-                    className="w-[100%]"
-                    students={students}
-                    selectedStudent={selectedStudent}
-                    studentItemPressed={setSelectedStudent}
-                    style={{
-                        maxHeight: windowHeight * 0.4
-                    }}
-                />
-                <ReportTypeList 
-                    className="mt-2"
-                    selectedReportType={selectedReportType} 
-                    reportTypeSelected={(reportType) => reportTypeClicked(reportType)} 
-                />
-                {
-                    selectedReportType === ReportType.Mood && (
-                        <MoodLabelList
-                            className="mt-2"
-                            selectedMoodType={selectedMoodtype}
-                            moodTypeSelected={(moodtype) => setSelectedMoodType(moodtype)}
+    const renderStep1 = () => (
+        <View className="items-center">
+            <Text className="text-gray-400 text-base mb-4">Choose the type of report you want to create</Text>
+            <ReportTypeList
+                selectedReportType={selectedReportType}
+                reportTypeSelected={handleReportTypeSelected}
+            />
+        </View>
+    );
+
+    const renderStep2 = () => (
+        <View className="items-center">
+            <Text className="text-gray-400 text-base mb-4">Select the student for this {selectedReportType} report</Text>
+            <StudentList
+                className="w-[100%]"
+                students={students}
+                selectedStudent={selectedStudent}
+                studentItemPressed={handleStudentSelected}
+                style={{
+                    maxHeight: windowHeight * 0.4
+                }}
+            />
+        </View>
+    );
+
+    const renderStep3 = () => {
+        switch (selectedReportType) {
+            case ReportType.Attendance:
+                return (
+                    <View className="items-center">
+                        <Text className="text-white text-lg mb-2">Attendance Report</Text>
+                        <Text className="text-gray-400 text-base mb-4">
+                            You are about to add an Attendance report for {selectedStudent?.name}.
+                        </Text>
+                    </View>
+                );
+
+            case ReportType.Behavior:
+                return (
+                    <View className="items-center">
+                        <Text className="text-white text-lg mb-2">Behavior Report</Text>
+                        <Text className="text-gray-400 text-base mb-4">
+                            Adding a Behavior report for {selectedStudent?.name}
+                        </Text>
+                        <JarvisPaperTextInput
+                            placeholder={"Description"}
+                            onTextChange={(description) => setReportDescription(description)}
+                            defaultValue={reportDescription}
+                            multiline={true}
+                            style={{
+                                width: 500,
+                            }}
                         />
-                    )
-                }
-                {
-                    selectedReportType === ReportType.CheckIn && (
+                    </View>
+                );
+
+            case ReportType.CheckIn:
+                return (
+                    <View className="items-center">
+                        <Text className="text-white text-lg mb-2">Check-In Report</Text>
+                        <Text className="text-gray-400 text-base mb-4">
+                            Adding a Check-In report for {selectedStudent?.name}
+                        </Text>
                         <View style={{ width: 500 }}>
                             <JarvisPaperTextInput
                                 placeholder={"Attitude"}
                                 onTextChange={(text) => setAttitude(text)}
                                 defaultValue={attitude}
-                                style={{
-                                    marginTop: 12
-                                }}
                             />
                             <JarvisPaperTextInput
                                 placeholder={"Socialization"}
@@ -193,33 +247,170 @@ const AddReportModal = ({
                                 }}
                             />
                         </View>
-                    )
-                }
-                {
-                    (
-                        selectedReportType === ReportType.Behavior ||
-                        selectedReportType === ReportType.Conflict ||
-                        selectedReportType === ReportType.Expelled ||
-                        selectedReportType === ReportType.Mood ||
-                        selectedReportType === ReportType.Secluded ||
-                        selectedReportType === ReportType.SIP
-                    ) && (
+                    </View>
+                );
+
+            case ReportType.Conflict:
+                return (
+                    <View className="items-center">
+                        <Text className="text-white text-lg mb-2">Conflict Report</Text>
+                        <Text className="text-gray-400 text-base mb-4">
+                            Adding a Conflict report for {selectedStudent?.name}
+                        </Text>
                         <JarvisPaperTextInput
                             placeholder={"Description"}
                             onTextChange={(description) => setReportDescription(description)}
-                            disabled={selectedReportType === ReportType.Mood}
-                            defaultValue={selectedReportType === ReportType.Mood ? selectedMoodtype?.toString() : reportDescription}
+                            defaultValue={reportDescription}
+                            multiline={true}
+                            style={{
+                                width: 500,
+                            }}
+                        />
+                    </View>
+                );
+
+            case ReportType.Expelled:
+                return (
+                    <View className="items-center">
+                        <Text className="text-white text-lg mb-2">Expelled Report</Text>
+                        <Text className="text-gray-400 text-base mb-4">
+                            Adding an Expelled report for {selectedStudent?.name}
+                        </Text>
+                        <JarvisPaperTextInput
+                            placeholder={"Description"}
+                            onTextChange={(description) => setReportDescription(description)}
+                            defaultValue={reportDescription}
+                            multiline={true}
+                            style={{
+                                width: 500,
+                            }}
+                        />
+                    </View>
+                );
+
+            case ReportType.Mood:
+                return (
+                    <View className="items-center">
+                        <Text className="text-white text-lg mb-2">Mood Report</Text>
+                        <Text className="text-gray-400 text-base mb-4">
+                            Adding a Mood report for {selectedStudent?.name}
+                        </Text>
+                        <MoodLabelList
+                            selectedMoodType={selectedMoodtype}
+                            moodTypeSelected={(moodtype) => setSelectedMoodType(moodtype)}
+                        />
+                        <JarvisPaperTextInput
+                            placeholder={"Description"}
+                            onTextChange={(description) => setReportDescription(description)}
+                            defaultValue={reportDescription}
                             multiline={true}
                             style={{
                                 width: 500,
                                 marginTop: 12
                             }}
                         />
-                    )
+                    </View>
+                );
+
+            case ReportType.Secluded:
+                return (
+                    <View className="items-center">
+                        <Text className="text-white text-lg mb-2">Secluded Report</Text>
+                        <Text className="text-gray-400 text-base mb-4">
+                            Adding a Secluded report for {selectedStudent?.name}
+                        </Text>
+                        <JarvisPaperTextInput
+                            placeholder={"Description"}
+                            onTextChange={(description) => setReportDescription(description)}
+                            defaultValue={reportDescription}
+                            multiline={true}
+                            style={{
+                                width: 500,
+                            }}
+                        />
+                    </View>
+                );
+
+            case ReportType.SIP:
+                return (
+                    <View className="items-center">
+                        <Text className="text-white text-lg mb-2">SIP Report</Text>
+                        <Text className="text-gray-400 text-base mb-4">
+                            Adding a SIP report for {selectedStudent?.name}
+                        </Text>
+                        <JarvisPaperTextInput
+                            placeholder={"Description"}
+                            onTextChange={(description) => setReportDescription(description)}
+                            defaultValue={reportDescription}
+                            multiline={true}
+                            style={{
+                                width: 500,
+                            }}
+                        />
+                    </View>
+                );
+
+            default:
+                return null;
+        }
+    };
+
+    const renderBackButton = () => {
+        if (currentStep === 1) return null;
+
+        return (
+            <Pressable
+                onPress={handleBack}
+                className="flex-row items-center mb-4"
+            >
+                <IconContainer
+                    iconProps={{
+                        name: 'arrow-left',
+                        size: 20,
+                        color: '#9cb43c',
+                        type: IconType.MaterialCommunityIcons
+                    }}
+                />
+                <Text className="text-jarvisPrimary text-base ml-2">Back</Text>
+            </Pressable>
+        );
+    };
+
+    const getConfirmButtonProps = () => {
+        if (currentStep !== 3) {
+            return undefined;
+        }
+
+        return {
+            title: loading ? "Adding..." : "Add Report",
+            onPress: addButtonPressed,
+            disabled: loading
+        };
+    };
+
+    return (
+        <JarvisModal
+            headerProps={{
+                title: getStepTitle(),
+                icon: {
+                    type: IconType.Feather,
+                    name: 'file-plus',
+                    color: '#000000',
+                    size: 32
                 }
+            }}
+            isVisible={isVisible}
+            onDismiss={handleDismiss}
+            confirmButtonProps={getConfirmButtonProps()}
+        >
+            <View>
+                {renderBackButton()}
+                {currentStep === 1 && renderStep1()}
+                {currentStep === 2 && renderStep2()}
+                {currentStep === 3 && renderStep3()}
             </View>
         </JarvisModal>
-    )
-}
+    );
+};
 
 export default AddReportModal;
