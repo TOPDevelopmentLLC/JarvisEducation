@@ -1,30 +1,47 @@
 import { useStoredStudentData } from "components/contexts/StudentContext";
-import { useStoredReportData } from "components/contexts/ReportContext";
 import DetailsHeaderPage from "components/pages/DetailsHeaderPage";
-import { useLocalSearchParams, router } from "expo-router";
-import { useState } from "react";
+import { useLocalSearchParams } from "expo-router";
+import { useState, useEffect } from "react";
 import { View, Text, TextInput, ScrollView, useWindowDimensions } from "react-native";
 import BaseButton from "components/buttons/BaseButton";
 import IconContainer, { IconType } from "components/IconContainer";
-import { Report } from "lib/models/report";
-import ReportListItem from "components/lists/ReportListItem";
+import { StudentReport } from "lib/models/report";
+import StudentReportsList from "components/lists/StudentReportsList";
+import { apiService } from "lib/services/apiService";
+import { useProfile } from "components/contexts/ProfileContext";
 
 
 const StudentDetailsPage = () => {
     const { selectedStudent, setSelectedStudent } = useStoredStudentData();
-    const { reports, setSelectedReport } = useStoredReportData();
+    const { profile } = useProfile();
     const { edit } = useLocalSearchParams();
     const [inEditMode, setEditMode] = useState<boolean>(edit === '1');
     const [currentStudentName, setCurrentStudentName] = useState(selectedStudent.name);
+    const [studentReports, setStudentReports] = useState<StudentReport[]>([]);
+    const [loadingReports, setLoadingReports] = useState(false);
     const { height } = useWindowDimensions();
-
-    // Get all reports assigned to this student
-    const assignedReports = reports.filter(report =>
-        selectedStudent.reportIds?.includes(report.reportId)
-    );
 
     // Calculate max height for reports section (20% of screen height)
     const maxReportsHeight = height * 0.2;
+
+    // Fetch student reports when page loads
+    useEffect(() => {
+        const fetchStudentReports = async () => {
+            if (!profile?.token || !selectedStudent?.studentId) return;
+
+            try {
+                setLoadingReports(true);
+                const response = await apiService.getStudentReports(selectedStudent.studentId, profile.token);
+                setStudentReports(response.reports);
+            } catch (error) {
+                console.error("Failed to fetch student reports:", error);
+            } finally {
+                setLoadingReports(false);
+            }
+        };
+
+        fetchStudentReports();
+    }, [profile?.token, selectedStudent?.studentId]);
 
     const saveButtonPressed = () => {
         setEditMode(false);
@@ -40,14 +57,9 @@ const StudentDetailsPage = () => {
         setCurrentStudentName(selectedStudent.name);
     }
 
-    const handleReportPressed = (report: Report) => {
-        setSelectedReport(report);
-        router.push({
-            pathname: '/pages/reports/ReportDetailsPage',
-            params: {
-                edit: 0
-            }
-        });
+    const handleReportPressed = (report: StudentReport) => {
+        // Reports from this API endpoint are view-only for now
+        console.log("Report pressed:", report);
     }
 
     return (
@@ -139,24 +151,12 @@ const StudentDetailsPage = () => {
                     {/* Reports Section */}
                     <View className="bg-gray-800 rounded-xl p-6 mb-6">
                         <Text className="text-white text-xl font-bold mb-6">Reports</Text>
-                        {assignedReports.length > 0 ? (
-                            <ScrollView
-                                style={{ maxHeight: maxReportsHeight }}
-                                showsVerticalScrollIndicator={true}
-                            >
-                                {assignedReports.map((report) => (
-                                    <ReportListItem
-                                        key={report.reportId}
-                                        report={report}
-                                        onPress={handleReportPressed}
-                                    />
-                                ))}
-                            </ScrollView>
-                        ) : (
-                            <View className="px-4 py-3">
-                                <Text className="text-white text-base">None</Text>
-                            </View>
-                        )}
+                        <StudentReportsList
+                            reports={studentReports}
+                            loading={loadingReports}
+                            maxHeight={maxReportsHeight}
+                            onReportPress={handleReportPressed}
+                        />
                     </View>
                 </View>
             </ScrollView>
